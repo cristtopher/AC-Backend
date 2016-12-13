@@ -34,7 +34,7 @@ describe('Register API:', function() {
         .post('/api/registers')
         .send({
           name: 'New Register',
-          info: 'This is the brand new thing!!!'
+          info: 'This is the brand new company!!!'
         })
         .expect(201)
         .expect('Content-Type', /json/)
@@ -47,14 +47,14 @@ describe('Register API:', function() {
         });
     });
 
-    it('should respond with the newly created thing', function() {
+    it('should respond with the newly created company', function() {
       expect(newRegister.name).to.equal('New Register');
-      expect(newRegister.info).to.equal('This is the brand new thing!!!');
+      expect(newRegister.info).to.equal('This is the brand new company!!!');
     });
   });
 
   describe('GET /api/registers/:id', function() {
-    var thing;
+    var company;
 
     beforeEach(function(done) {
       request(app)
@@ -65,18 +65,18 @@ describe('Register API:', function() {
           if(err) {
             return done(err);
           }
-          thing = res.body;
+          company = res.body;
           done();
         });
     });
 
     afterEach(function() {
-      thing = {};
+      company = {};
     });
 
-    it('should respond with the requested thing', function() {
-      expect(thing.name).to.equal('New Register');
-      expect(thing.info).to.equal('This is the brand new thing!!!');
+    it('should respond with the requested company', function() {
+      expect(company.name).to.equal('New Register');
+      expect(company.info).to.equal('This is the brand new company!!!');
     });
   });
 
@@ -88,7 +88,7 @@ describe('Register API:', function() {
         .put(`/api/registers/${newRegister._id}`)
         .send({
           name: 'Updated Register',
-          info: 'This is the updated thing!!!'
+          info: 'This is the updated company!!!'
         })
         .expect(200)
         .expect('Content-Type', /json/)
@@ -105,12 +105,12 @@ describe('Register API:', function() {
       updatedRegister = {};
     });
 
-    it('should respond with the original thing', function() {
+    it('should respond with the original company', function() {
       expect(updatedRegister.name).to.equal('New Register');
-      expect(updatedRegister.info).to.equal('This is the brand new thing!!!');
+      expect(updatedRegister.info).to.equal('This is the brand new company!!!');
     });
 
-    it('should respond with the updated thing on a subsequent GET', function(done) {
+    it('should respond with the updated company on a subsequent GET', function(done) {
       request(app)
         .get(`/api/registers/${newRegister._id}`)
         .expect(200)
@@ -119,10 +119,10 @@ describe('Register API:', function() {
           if(err) {
             return done(err);
           }
-          let thing = res.body;
+          let company = res.body;
 
-          expect(thing.name).to.equal('Updated Register');
-          expect(thing.info).to.equal('This is the updated thing!!!');
+          expect(company.name).to.equal('Updated Register');
+          expect(company.info).to.equal('This is the updated company!!!');
 
           done();
         });
@@ -137,7 +137,7 @@ describe('Register API:', function() {
         .patch(`/api/registers/${newRegister._id}`)
         .send([
           { op: 'replace', path: '/name', value: 'Patched Register' },
-          { op: 'replace', path: '/info', value: 'This is the patched thing!!!' }
+          { op: 'replace', path: '/info', value: 'This is the patched company!!!' }
         ])
         .expect(200)
         .expect('Content-Type', /json/)
@@ -154,9 +154,9 @@ describe('Register API:', function() {
       patchedRegister = {};
     });
 
-    it('should respond with the patched thing', function() {
+    it('should respond with the patched company', function() {
       expect(patchedRegister.name).to.equal('Patched Register');
-      expect(patchedRegister.info).to.equal('This is the patched thing!!!');
+      expect(patchedRegister.info).to.equal('This is the patched company!!!');
     });
   });
 
@@ -173,7 +173,7 @@ describe('Register API:', function() {
         });
     });
 
-    it('should respond with 404 when thing does not exist', function(done) {
+    it('should respond with 404 when company does not exist', function(done) {
       request(app)
         .delete(`/api/registers/${newRegister._id}`)
         .expect(404)

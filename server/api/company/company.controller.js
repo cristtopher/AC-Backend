@@ -63,7 +63,7 @@ function handleError(res, statusCode) {
   };
 }
 
-// Gets a list of Things
+// Gets a list of Companies
 export function index(req, res) {
   return Company.find().exec()
     .then(respondWithResult(res))

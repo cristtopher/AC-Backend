@@ -1,5 +1,5 @@
 /**
- * Thing model events
+ * Register model events
  */
 
 'use strict';
@@ -20,7 +20,7 @@ var events = {
 // Register the event emitter to the model events
 for(var e in events) {
   let event = events[e];
-  Thing.schema.post(e, emitEvent(event));
+  Register.schema.post(e, emitEvent(event));
 }
 
 function emitEvent(event) {

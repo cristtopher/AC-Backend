@@ -1,5 +1,5 @@
 /**
- * Thing model events
+ * Company model events
  */
 
 'use strict';
