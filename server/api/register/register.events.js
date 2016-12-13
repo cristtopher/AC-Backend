@@ -5,11 +5,11 @@
 'use strict';
 
 import {EventEmitter} from 'events';
-import Thing from './thing.model';
-var ThingEvents = new EventEmitter();
+import Register from './register.model';
+var RegisterEvents = new EventEmitter();
 
 // Set max event listeners (0 == unlimited)
-ThingEvents.setMaxListeners(0);
+RegisterEvents.setMaxListeners(0);
 
 // Model events
 var events = {
@@ -25,9 +25,9 @@ for(var e in events) {
 
 function emitEvent(event) {
   return function(doc) {
-    ThingEvents.emit(`${event}:${doc._id}`, doc);
-    ThingEvents.emit(event, doc);
+    RegisterEvents.emit(`${event}:${doc._id}`, doc);
+    RegisterEvents.emit(event, doc);
   };
 }
 
-export default ThingEvents;
+export default RegisterEvents;

@@ -3,37 +3,37 @@
 var app = require('../..');
 import request from 'supertest';
 
-var newThing;
+var newRegister;
 
-describe('Thing API:', function() {
-  describe('GET /api/things', function() {
-    var things;
+describe('Register API:', function() {
+  describe('GET /api/registers', function() {
+    var registers;
 
     beforeEach(function(done) {
       request(app)
-        .get('/api/things')
+        .get('/api/registers')
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if(err) {
             return done(err);
           }
-          things = res.body;
+          registers = res.body;
           done();
         });
     });
 
     it('should respond with JSON array', function() {
-      expect(things).to.be.instanceOf(Array);
+      expect(registers).to.be.instanceOf(Array);
     });
   });
 
-  describe('POST /api/things', function() {
+  describe('POST /api/registers', function() {
     beforeEach(function(done) {
       request(app)
-        .post('/api/things')
+        .post('/api/registers')
         .send({
-          name: 'New Thing',
+          name: 'New Register',
           info: 'This is the brand new thing!!!'
         })
         .expect(201)
@@ -42,23 +42,23 @@ describe('Thing API:', function() {
           if(err) {
             return done(err);
           }
-          newThing = res.body;
+          newRegister = res.body;
           done();
         });
     });
 
     it('should respond with the newly created thing', function() {
-      expect(newThing.name).to.equal('New Thing');
-      expect(newThing.info).to.equal('This is the brand new thing!!!');
+      expect(newRegister.name).to.equal('New Register');
+      expect(newRegister.info).to.equal('This is the brand new thing!!!');
     });
   });
 
-  describe('GET /api/things/:id', function() {
+  describe('GET /api/registers/:id', function() {
     var thing;
 
     beforeEach(function(done) {
       request(app)
-        .get(`/api/things/${newThing._id}`)
+        .get(`/api/registers/${newRegister._id}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
@@ -75,19 +75,19 @@ describe('Thing API:', function() {
     });
 
     it('should respond with the requested thing', function() {
-      expect(thing.name).to.equal('New Thing');
+      expect(thing.name).to.equal('New Register');
       expect(thing.info).to.equal('This is the brand new thing!!!');
     });
   });
 
-  describe('PUT /api/things/:id', function() {
-    var updatedThing;
+  describe('PUT /api/registers/:id', function() {
+    var updatedRegister;
 
     beforeEach(function(done) {
       request(app)
-        .put(`/api/things/${newThing._id}`)
+        .put(`/api/registers/${newRegister._id}`)
         .send({
-          name: 'Updated Thing',
+          name: 'Updated Register',
           info: 'This is the updated thing!!!'
         })
         .expect(200)
@@ -96,23 +96,23 @@ describe('Thing API:', function() {
           if(err) {
             return done(err);
           }
-          updatedThing = res.body;
+          updatedRegister = res.body;
           done();
         });
     });
 
     afterEach(function() {
-      updatedThing = {};
+      updatedRegister = {};
     });
 
     it('should respond with the original thing', function() {
-      expect(updatedThing.name).to.equal('New Thing');
-      expect(updatedThing.info).to.equal('This is the brand new thing!!!');
+      expect(updatedRegister.name).to.equal('New Register');
+      expect(updatedRegister.info).to.equal('This is the brand new thing!!!');
     });
 
     it('should respond with the updated thing on a subsequent GET', function(done) {
       request(app)
-        .get(`/api/things/${newThing._id}`)
+        .get(`/api/registers/${newRegister._id}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
@@ -121,7 +121,7 @@ describe('Thing API:', function() {
           }
           let thing = res.body;
 
-          expect(thing.name).to.equal('Updated Thing');
+          expect(thing.name).to.equal('Updated Register');
           expect(thing.info).to.equal('This is the updated thing!!!');
 
           done();
@@ -129,14 +129,14 @@ describe('Thing API:', function() {
     });
   });
 
-  describe('PATCH /api/things/:id', function() {
-    var patchedThing;
+  describe('PATCH /api/registers/:id', function() {
+    var patchedRegister;
 
     beforeEach(function(done) {
       request(app)
-        .patch(`/api/things/${newThing._id}`)
+        .patch(`/api/registers/${newRegister._id}`)
         .send([
-          { op: 'replace', path: '/name', value: 'Patched Thing' },
+          { op: 'replace', path: '/name', value: 'Patched Register' },
           { op: 'replace', path: '/info', value: 'This is the patched thing!!!' }
         ])
         .expect(200)
@@ -145,25 +145,25 @@ describe('Thing API:', function() {
           if(err) {
             return done(err);
           }
-          patchedThing = res.body;
+          patchedRegister = res.body;
           done();
         });
     });
 
     afterEach(function() {
-      patchedThing = {};
+      patchedRegister = {};
     });
 
     it('should respond with the patched thing', function() {
-      expect(patchedThing.name).to.equal('Patched Thing');
-      expect(patchedThing.info).to.equal('This is the patched thing!!!');
+      expect(patchedRegister.name).to.equal('Patched Register');
+      expect(patchedRegister.info).to.equal('This is the patched thing!!!');
     });
   });
 
-  describe('DELETE /api/things/:id', function() {
+  describe('DELETE /api/registers/:id', function() {
     it('should respond with 204 on successful removal', function(done) {
       request(app)
-        .delete(`/api/things/${newThing._id}`)
+        .delete(`/api/registers/${newRegister._id}`)
         .expect(204)
         .end(err => {
           if(err) {
@@ -175,7 +175,7 @@ describe('Thing API:', function() {
 
     it('should respond with 404 when thing does not exist', function(done) {
       request(app)
-        .delete(`/api/things/${newThing._id}`)
+        .delete(`/api/registers/${newRegister._id}`)
         .expect(404)
         .end(err => {
           if(err) {
