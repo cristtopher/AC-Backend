@@ -158,7 +158,7 @@ UserSchema.methods = {
    */
   makeSalt(byteSize, callback) {
     var defaultByteSize = 16;
-
+    
     if(typeof arguments[0] === 'function') {
       callback = arguments[0];
       byteSize = defaultByteSize;
@@ -203,11 +203,11 @@ UserSchema.methods = {
     var salt = new Buffer(this.salt, 'base64');
 
     if(!callback) {
-      return crypto.pbkdf2Sync(password, salt, defaultIterations, defaultKeyLength)
-        .toString('base64');
+      return crypto.pbkdf2Sync(password, salt, defaultIterations, defaultKeyLength, 'sha1') 
+        .toString('base64'); /* eslint no-sync:0 */
     }
 
-    return crypto.pbkdf2(password, salt, defaultIterations, defaultKeyLength, (err, key) => {
+    return crypto.pbkdf2(password, salt, defaultIterations, defaultKeyLength, 'sha1', (err, key) => {
       if(err) {
         return callback(err);
       } else {

@@ -2,10 +2,6 @@ import passport from 'passport';
 import {Strategy as LocalStrategy} from 'passport-local';
 
 function localAuthenticate(User, email, password, done) {
-  console.log('email:' + email);
-  console.log('password:' + password);
-
-
   User.findOne({
     email: email.toLowerCase()
   }).exec()

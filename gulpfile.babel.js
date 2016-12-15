@@ -163,15 +163,13 @@ gulp.task('transpile:server', () => {
         .pipe(gulp.dest(`${paths.dist}/${serverPath}`));
 });
 
-gulp.task('lint:scripts', cb => runSequence(['lint:scripts:server'], cb));
 
+gulp.task('lint', cb => runSequence(['lint:scripts:server'], cb));
 
 gulp.task('lint:scripts:server', () => {
     return gulp.src(_.union(paths.server.scripts, _.map(paths.server.test, blob => '!' + blob)))
         .pipe(lintServerScripts());
 });
-
-
 
 gulp.task('lint:scripts:serverTest', () => {
     return gulp.src(paths.server.test)
@@ -229,7 +227,7 @@ gulp.task('watch', () => {
 gulp.task('serve', cb => {
     runSequence(
         [
-            'lint:scripts',
+            'lint',
             'env:all'
         ],
         ['start:server'],
@@ -241,7 +239,7 @@ gulp.task('serve', cb => {
 gulp.task('serve:debug', cb => {
     runSequence(
         [
-            'lint:scripts',
+            'lint',
             'env:all'
         ],
         'start:inspector',

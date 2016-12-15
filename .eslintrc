@@ -194,7 +194,7 @@
         "no-restricted-syntax": 0,                                  //disallow use of certain syntax in code
         "no-spaced-func": 2,                                        //disallow space between function identifier and application
         "no-ternary": 0,                                            //disallow the use of ternary operators
-        "no-trailing-spaces": 2,                                    //disallow trailing whitespace at the end of lines
+        "no-trailing-spaces": 0,                                    //disallow trailing whitespace at the end of lines
         "no-underscore-dangle": 0,                                  //disallow dangling underscores in identifiers
         "no-unneeded-ternary": 2,                                   //disallow the use of ternary operators when a simpler alternative exists
         "no-whitespace-before-property": 2,                         //disallow whitespace before properties
@@ -242,8 +242,8 @@
         "object-shorthand": 1,                                      //require method and property shorthand syntax for object literals
         "prefer-arrow-callback": 0,                                 //suggest using arrow functions as callbacks
         "prefer-const": 0,                                          //suggest using const declaration for variables that are never modified after declared
-        "prefer-reflect": 1,                                        //suggest using Reflect methods where applicable
-        "prefer-rest-params": 1,                                    //suggest using the rest parameters instead of arguments
+        "prefer-reflect": 0,                                        //suggest using Reflect methods where applicable
+        "prefer-rest-params": 0,                                    //suggest using the rest parameters instead of arguments
         "prefer-spread": 1,                                         //suggest using the spread operator instead of .apply().
         "prefer-template": 1,                                       //suggest using template literals instead of strings concatenation
         "require-yield": 2,                                         //disallow generator functions that do not have yield

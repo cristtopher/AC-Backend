@@ -26,6 +26,7 @@ export function index(req, res) {
   return User.find({}, '-salt -password').exec()
     .then(users => {
       res.status(200).json(users);
+      return null;
     })
     .catch(handleError(res));
 }
@@ -39,10 +40,10 @@ export function create(req, res) {
   newUser.role = 'user';
   newUser.save()
     .then(function(user) {
-      var token = jwt.sign({ _id: user._id }, config.secrets.session, {
-        expiresIn: 60 * 60 * 5
-      });
+      var token = jwt.sign({ _id: user._id }, config.secrets.session, {});
+      
       res.json({ token });
+      return null;
     })
     .catch(validationError(res));
 }
@@ -56,7 +57,9 @@ export function show(req, res, next) {
   return User.findById(userId).exec()
     .then(user => {
       if(!user) {
-        return res.status(404).end();
+        res.status(404).end();
+        
+        return null;
       }
       res.json(user.profile);
     })
@@ -71,6 +74,8 @@ export function destroy(req, res) {
   return User.findByIdAndRemove(req.params.id).exec()
     .then(function() {
       res.status(204).end();
+      
+      return null;
     })
     .catch(handleError(res));
 }
@@ -90,10 +95,14 @@ export function changePassword(req, res) {
         return user.save()
           .then(() => {
             res.status(204).end();
+            
+            return null;
           })
           .catch(validationError(res));
       } else {
-        return res.status(403).end();
+        res.status(403).end();
+        
+        return null;
       }
     });
 }
@@ -110,6 +119,8 @@ export function me(req, res, next) {
         return res.status(401).end();
       }
       res.json(user);
+      
+      return null;
     })
     .catch(err => next(err));
 }

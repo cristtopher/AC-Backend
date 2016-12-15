@@ -5,7 +5,7 @@
 'use strict';
 
 import express from 'express';
-import favicon from 'serve-favicon';
+import favicon from 'serve-favicon'; /* eslint no-unused-vars:0 */
 import morgan from 'morgan';
 import shrinkRay from 'shrink-ray';
 import bodyParser from 'body-parser';
@@ -22,7 +22,7 @@ import mongoose from 'mongoose';
 var MongoStore = connectMongo(session);
 
 export default function(app) {
-  var env = app.get('env');
+  var env = app.get('env'); /* eslint no-process-env: 0 */
 
   if(env === 'development' || env === 'test') {
     //app.use(express.static(path.join(config.root, '.tmp')));
@@ -80,10 +80,6 @@ export default function(app) {
       },
       xssProtection: true
     }));
-  }
-
-  if(env === 'development') {
-
   }
 
   if(env === 'development' || env === 'test') {
