@@ -125,6 +125,11 @@ export function me(req, res, next) {
     .catch(err => next(err));
 }
 
+
+export function importUsers(req, res, next) {
+  return res.status(200).end();
+}
+
 /**
  * Authentication callback
  */
