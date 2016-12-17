@@ -151,7 +151,9 @@
         "id-match": 0,                                              //require identifiers to match the provided regular expression
         "indent": ["error", 2],                                     //specify tab or space width for your code
         "jsx-quotes": 0,                                            //specify whether double or single quotes should be used in JSX attributes
-        "key-spacing": 2,                                           //enforce spacing between keys and values in object literal properties
+        "key-spacing": [2, {
+          "mode": "minimum"
+        }],                                           //enforce spacing between keys and values in object literal properties
         "keyword-spacing": [2, {
             "before": true,
             "after": true,

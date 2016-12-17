@@ -4,27 +4,18 @@ import crypto from 'crypto';
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
 
+import config from '../../config/environment';
 
 var UserSchema = new Schema({
-  name: String,
-  RUT: String,
-  email: {
-    type: String,
-    lowercase: true,
-    required: true
-  },
-  role: {
-    type: String,
-    default: 'user'
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  provider: String,
-  salt: String
+  name:     { type: String },
+  email:    { type: String, lowercase: true, required: true },
+  role:     { type: String, enum: config.userRoles, default: 'user' },
+  password: { type: String, required: true },
+  provider: { type: String },
+  salt:     { type: String }
 });
 
+UserSchema.index({ email: 1 }, { unique: true });
 
 //-------------------------------------------------------
 //                  Getters/Setters

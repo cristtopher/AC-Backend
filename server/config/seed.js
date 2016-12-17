@@ -7,7 +7,6 @@
 
 import User from '../api/user/user.model';
 
-
 User.find({}).remove()
   .then(() => {
     User.create({
@@ -15,7 +14,7 @@ User.find({}).remove()
       name: 'Normal User',
       email: 'user@example.com',
       password: 'user'
-    },{
+    }, {
       provider: 'local',
       role: 'supervisor',
       name: 'Supervisor User',
