@@ -4,8 +4,10 @@ import crypto from 'crypto';
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
 
+
 var UserSchema = new Schema({
   name: String,
+  RUT: String,
   email: {
     type: String,
     lowercase: true,
@@ -23,9 +25,15 @@ var UserSchema = new Schema({
   salt: String
 });
 
-/**
- * Virtuals
- */
+
+//-------------------------------------------------------
+//                  Getters/Setters
+//-------------------------------------------------------
+
+
+//-------------------------------------------------------
+//                     Virtuals
+//-------------------------------------------------------
 
 // Public profile information
 UserSchema
@@ -47,10 +55,10 @@ UserSchema
     };
   });
 
-/**
- * Validations
- */
-
+//-------------------------------------------------------
+//                      Validations
+//-------------------------------------------------------
+  
 // Validate empty email
 UserSchema
   .path('email')
@@ -118,9 +126,11 @@ UserSchema
     });
   });
 
-/**
- * Methods
- */
+
+//-------------------------------------------------------
+//                      Methods
+//-------------------------------------------------------
+
 UserSchema.methods = {
   /**
    * Authenticate - check if the passwords are the same

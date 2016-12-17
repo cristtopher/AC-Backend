@@ -126,7 +126,7 @@ export function me(req, res, next) {
 }
 
 
-export function importUsers(req, res, next) {
+export function importUsers(req, res) {
   return res.status(200).end();
 }
 
