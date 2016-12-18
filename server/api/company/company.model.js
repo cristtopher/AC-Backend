@@ -3,9 +3,10 @@
 import mongoose from 'mongoose';
 
 var CompanySchema = new mongoose.Schema({
-  name: String,
-  info: String,
-  active: Boolean
+  name: { type: String },
+  rut:  { type: String },
+  logo: { type: String },
+  info: { type: String },
 });
 
 export default mongoose.model('Company', CompanySchema);
