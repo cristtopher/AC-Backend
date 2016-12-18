@@ -3,9 +3,31 @@
 var app = require('../..');
 import request from 'supertest';
 
+import Person from '../person/person.model';
+
 var newRegister;
 
 describe('Register API:', function() {
+  
+  before(function(done) {
+    Person.remove().then(function() {
+      var persons = [{
+        "_id": "5855ce0c7f45b135cbb73acf",
+        "name": "Fake Person 1",
+        "company": "585597684f6ad8244e26748e",
+        "card":  1  
+      }, {
+        "_id": "5855ce0e7f45b135cbb73ad0",
+        "name": "Fake Person 2",
+        "company": "585597684f6ad8244e26748e",
+        "card":  2  
+      }];
+      
+      return Person.create(persons)
+    })
+    .then(() => done())
+  })
+  
   describe('GET /api/registers', function() {
     var registers;
 
@@ -33,8 +55,8 @@ describe('Register API:', function() {
       request(app)
         .post('/api/registers')
         .send({
-          name: 'New Register',
-          info: 'This is the brand new register!!!'
+          person: '5855ce0c7f45b135cbb73acf',
+          card: 33
         })
         .expect(201)
         .expect('Content-Type', /json/)
@@ -48,8 +70,8 @@ describe('Register API:', function() {
     });
 
     it('should respond with the newly created register', function() {
-      expect(newRegister.name).to.equal('New Register');
-      expect(newRegister.info).to.equal('This is the brand new register!!!');
+      expect(newRegister.person).to.equal('5855ce0c7f45b135cbb73acf');
+      expect(newRegister.card).to.equal(33);
     });
   });
 
@@ -75,8 +97,8 @@ describe('Register API:', function() {
     });
 
     it('should respond with the requested register', function() {
-      expect(register.name).to.equal('New Register');
-      expect(register.info).to.equal('This is the brand new register!!!');
+      expect(newRegister.person).to.equal('5855ce0c7f45b135cbb73acf');
+      expect(newRegister.card).to.equal(33);
     });
   });
 
@@ -87,8 +109,8 @@ describe('Register API:', function() {
       request(app)
         .put(`/api/registers/${newRegister._id}`)
         .send({
-          name: 'Updated Register',
-          info: 'This is the updated register!!!'
+          person: '5855ce0e7f45b135cbb73ad0',
+          card: 34
         })
         .expect(200)
         .expect('Content-Type', /json/)
@@ -106,24 +128,27 @@ describe('Register API:', function() {
     });
 
     it('should respond with the original register', function() {
-      expect(updatedRegister.name).to.equal('New Register');
-      expect(updatedRegister.info).to.equal('This is the brand new register!!!');
+      expect(newRegister.person).to.equal('5855ce0c7f45b135cbb73acf');
+      expect(newRegister.card).to.equal(33);
     });
 
     it('should respond with the updated register on a subsequent GET', function(done) {
+      
+      
       request(app)
-        .get(`/api/registers/${newRegister._id}`)
+        .get(`/api/registers/${updatedRegister._id}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if(err) {
             return done(err);
           }
+          
           let register = res.body;
-
-          expect(register.name).to.equal('Updated Register');
-          expect(register.info).to.equal('This is the updated register!!!');
-
+          
+          expect(register.person).to.equal('5855ce0e7f45b135cbb73ad0');
+          expect(register.card).to.equal(34);
+          
           done();
         });
     });
@@ -136,8 +161,7 @@ describe('Register API:', function() {
       request(app)
         .patch(`/api/registers/${newRegister._id}`)
         .send([
-          { op: 'replace', path: '/name', value: 'Patched Register' },
-          { op: 'replace', path: '/info', value: 'This is the patched register!!!' }
+          { op: 'replace', path: '/card', value: 35 }
         ])
         .expect(200)
         .expect('Content-Type', /json/)
@@ -155,8 +179,7 @@ describe('Register API:', function() {
     });
 
     it('should respond with the patched register', function() {
-      expect(patchedRegister.name).to.equal('Patched Register');
-      expect(patchedRegister.info).to.equal('This is the patched register!!!');
+      expect(patchedRegister.card).to.equal(35);
     });
   });
 
@@ -185,4 +208,11 @@ describe('Register API:', function() {
         });
     });
   });
+  
+  
+  after(function(done){
+    Person.remove()
+    .then(() => done());
+  })
+  
 });

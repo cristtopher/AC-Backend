@@ -34,7 +34,7 @@ describe('Person API:', function() {
         .post('/api/persons')
         .send({
           name: 'New Person',
-          info: 'This is the brand new person!!!'
+          card: 33
         })
         .expect(201)
         .expect('Content-Type', /json/)
@@ -49,7 +49,7 @@ describe('Person API:', function() {
 
     it('should respond with the newly created person', function() {
       expect(newPerson.name).to.equal('New Person');
-      expect(newPerson.info).to.equal('This is the brand new person!!!');
+      expect(newPerson.card).to.equal(33);
     });
   });
 
@@ -76,7 +76,7 @@ describe('Person API:', function() {
 
     it('should respond with the requested person', function() {
       expect(person.name).to.equal('New Person');
-      expect(person.info).to.equal('This is the brand new person!!!');
+      expect(person.card).to.equal(33);
     });
   });
 
@@ -88,7 +88,7 @@ describe('Person API:', function() {
         .put(`/api/persons/${newPerson._id}`)
         .send({
           name: 'Updated Person',
-          info: 'This is the updated person!!!'
+          card: 34
         })
         .expect(200)
         .expect('Content-Type', /json/)
@@ -107,10 +107,12 @@ describe('Person API:', function() {
 
     it('should respond with the original person', function() {
       expect(updatedPerson.name).to.equal('New Person');
-      expect(updatedPerson.info).to.equal('This is the brand new person!!!');
+      expect(updatedPerson.card).to.equal(33);
     });
 
     it('should respond with the updated person on a subsequent GET', function(done) {
+      console.log('newPerson:' + JSON.stringify(newPerson))
+      
       request(app)
         .get(`/api/persons/${newPerson._id}`)
         .expect(200)
@@ -122,7 +124,7 @@ describe('Person API:', function() {
           let person = res.body;
 
           expect(person.name).to.equal('Updated Person');
-          expect(person.info).to.equal('This is the updated person!!!');
+          expect(person.card).to.equal(34);
 
           done();
         });
@@ -131,13 +133,13 @@ describe('Person API:', function() {
 
   describe('PATCH /api/persons/:id', function() {
     var patchedPerson;
-
+    
     beforeEach(function(done) {
       request(app)
         .patch(`/api/persons/${newPerson._id}`)
         .send([
           { op: 'replace', path: '/name', value: 'Patched Person' },
-          { op: 'replace', path: '/info', value: 'This is the patched person!!!' }
+          { op: 'replace', path: '/card', value: 35 }
         ])
         .expect(200)
         .expect('Content-Type', /json/)
@@ -156,7 +158,7 @@ describe('Person API:', function() {
 
     it('should respond with the patched person', function() {
       expect(patchedPerson.name).to.equal('Patched Person');
-      expect(patchedPerson.info).to.equal('This is the patched person!!!');
+      expect(patchedPerson.card).to.equal(35);
     });
   });
 

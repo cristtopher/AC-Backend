@@ -262,6 +262,10 @@ gulp.task('test', cb => {
     return runSequence('test:server', cb);
 });
 
+gulp.task('cov', cb => {
+    return runSequence('test:server:coverage', cb);
+});
+
 gulp.task('test:server', cb => {
     runSequence(
         'env:all',

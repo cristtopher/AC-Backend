@@ -15,6 +15,7 @@
 1. Run `npm install` to install server dependencies.
 2. Run `mongod` in a separate shell to keep an instance of the MongoDB Daemon running
 3. Run `gulp serve` to start the development server.
+4. Debug mode: `gulp serve:debug`
 
 ## Building for production
 
@@ -25,5 +26,5 @@
 
 - Static code analysis: `gulp lint`
 - Run tests: `gulp test`
-
+- test coverage: `gulp cov`
 

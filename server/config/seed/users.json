@@ -1,0 +1,21 @@
+[{
+  "_id": "585597684f6ad8244e26748b",
+  "provider": "local",
+  "name": "Normal User",
+  "email": "user@example.com",
+  "password": "user"
+}, {
+  "_id": "585597684f6ad8244e26748c",
+  "provider": "local",
+  "role": "supervisor",
+  "name": "Supervisor User",
+  "email": "supervisor@example.com",
+  "password": "supervisor"
+}, {
+  "_id": "585597684f6ad8244e26748d",
+  "provider": "local",
+  "role": "admin",
+  "name": "Admin",
+  "email": "admin@example.com",
+  "password": "admin"
+}]

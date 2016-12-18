@@ -3,9 +3,12 @@
 import mongoose from 'mongoose';
 
 var PersonSchema = new mongoose.Schema({
-  name: String,
-  info: String,
-  active: Boolean
+  name:    { type: String },
+  company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
+  card:  { type: Number },
+  active:  { type: Boolean }
 });
+
+PersonSchema.index({ company: 1 });
 
 export default mongoose.model('Person', PersonSchema);
