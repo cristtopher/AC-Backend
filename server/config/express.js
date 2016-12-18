@@ -24,14 +24,6 @@ var MongoStore = connectMongo(session);
 export default function(app) {
   var env = app.get('env'); /* eslint no-process-env: 0 */
 
-  if(env === 'development' || env === 'test') {
-    //app.use(express.static(path.join(config.root, '.tmp')));
-  }
-
-  if(env === 'production') {
-    //app.use(favicon(path.join(config.root, 'client', 'favicon.ico')));
-  }
-
   app.set('appPath', path.join(config.root, 'client'));
   app.use(express.static(app.get('appPath')));
   app.use(morgan('dev'));

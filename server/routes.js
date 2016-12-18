@@ -11,6 +11,7 @@ export default function(app) {
   // Insert routes below
   app.use('/api/users', require('./api/user'));
   app.use('/api/companies', require('./api/company'));
+  app.use('/api/sectors', require('./api/sector'));
   app.use('/api/persons', require('./api/person'));
   app.use('/api/registers', require('./api/register'));
   

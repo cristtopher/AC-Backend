@@ -1,11 +1,13 @@
 'use strict';
 
-var express = require('express');
-var controller = require('./person.controller');
+import { Router } from 'express';
 
-var router = express.Router();
+import * as controller from './sector.controller';
+import * as auth from '../../auth/auth.service';
 
-router.get('/',  controller.index);
+var router = new Router();
+
+router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/:id', controller.show);
 router.post('/', controller.create);
 router.put('/:id', controller.upsert);

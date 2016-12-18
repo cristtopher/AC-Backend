@@ -24,4 +24,4 @@ Company.find({}).remove()
   .then(() => User.create(users))
   .then(() => Person.create(persons))
   .then(() => Register.create(registers))
-  .then(() => console.log('=== DB seeding done.'))
+  .then(() => console.log('=== DB seeding done.')); /* eslint eol-last: 0 */
