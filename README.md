@@ -1,5 +1,38 @@
 # Universal Web Platform
 
+## Structure
+
+```
+├──./server                                                  
+    ├── ./server/api                                         - Contains all api entities
+    │   ├── ./server/api/company                             - Company entity (contains model, controller, router, socket handling and test files)
+    │   │   ├── ./server/api/company/company.controller.js   - Here all controllers are defined
+    │   │   ├── ./server/api/company/company.events.js       - Socket.io events logic
+    │   │   ├── ./server/api/company/company.integration.js  - integration testing
+    │   │   ├── ./server/api/company/company.model.js        - Company model definition and logic
+    │   │   ├── ./server/api/company/company.model.spec.js   - model related tests
+    │   │   ├── ./server/api/company/company.socket.js       - socket.io facade for register events
+    │   │   ├── ./server/api/company/index.js                - router definition relative to entity
+    │   │   └── ./server/api/company/index.spec.js           - router related tests
+    │   ├── ./server/api/person                              - Person entity
+    │   ├── ./server/api/register                            - Register entity
+    │   ├── ./server/api/sector                              - Sector entity
+    │   └── ./server/api/user                                - User entity
+    ├── ./server/auth                                        - Auth related logic (endpoint definition and strategies)
+    │   └── ./server/auth/local                              - JWT based startegy definition
+    ├── ./server/components                                  - Utils
+    │   └── ./server/components/errors                       - 404 error handling
+    ├── ./server/config                                      - Environment and server configurations
+    │   ├── ./server/config/environment                      - Configuration specific to the node environment (production, testing, development)
+    │   └── ./server/config/seed                             - DB seed data (if needed)
+    │   ├── ./server/config/express.js                       - Express related configurations
+    │   ├── ./server/config/local.env.sample.js              - Sensitive configs shuld go here as local.env.js (local.env.js added in .gitignore)
+    └── ./server/views                                       - Static views 
+    ├── ./server/index.js                                    - Script to expose API
+    ├── ./server/routes.js                                   - Global router definitions
+    └── ./server/app.js                                      - API startup logic
+```
+
 ## Getting Started
 
 ### Prerequisites
