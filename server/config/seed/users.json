@@ -5,6 +5,13 @@
   "company": "585597684f6ad8244e26748e",
   "email": "user@example.com",
   "password": "user"
+}, {  
+  "_id": "585597684f6ad8244e26748e",
+    "provider": "local",
+    "name": "Normal User 2",
+    "company": "585597684f6ad8244e26748f",
+    "email": "user2@example.com",
+    "password": "user"
 }, {
   "_id": "585597684f6ad8244e26748c",
   "provider": "local",
