@@ -3,9 +3,11 @@
 import mongoose from 'mongoose';
 
 var PersonSchema = new mongoose.Schema({
+  rut:     { type: String },
   name:    { type: String },
-  company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
-  card:  { type: Number },
+  // company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
+  company: { type: String },
+  card:    { type: Number },
   active:  { type: Boolean }
 });
 
