@@ -14,13 +14,12 @@ UserEvents.setMaxListeners(0);
 // Model events
 var events = {
   save: 'save',
-  remove: 'findByIdAndRemove'
+  remove: 'remove'
 };
 
 // Register the event emitter to the model events
 for(var e in events) {
   let event = events[e];
-  console.log(`Done user:${event} that will be emitted via socket.io...`);
   User.schema.post(e, emitEvent(event));
 }
 
