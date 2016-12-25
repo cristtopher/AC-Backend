@@ -27,7 +27,7 @@ for(var e in events) {
 
 function emitEvent(event) {
   return function(doc) {
-    console.log(`emitting ${event}:${doc._id}`)
+    console.log(`emitting ${event}:${doc._id}`);
     PersonEvents.emit(`${event}:${doc._id}`, doc);
     PersonEvents.emit(event, doc);
   };
