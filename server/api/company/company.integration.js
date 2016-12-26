@@ -2,16 +2,51 @@
 
 var app = require('../..');
 import request from 'supertest';
+import User from '../user/user.model';
 
-var newCompany;
+var token, 
+    newCompany;
 
 describe('Company API:', function() {
+  
+  before(function() {
+    return User.remove().then(function() {
+      var user = new User({
+        name: 'Fake User',
+        email: 'test@example.com',
+        password: 'password'
+      });
+
+      return user.save()
+    })
+  });
+  
+  beforeEach(function(done) {
+    request(app)
+      .post('/auth/local')
+      .send({
+        email: 'test@example.com',
+        password: 'password'
+      })
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        token = res.body.token;
+        done();
+      });
+  });
+  
+  after(function() {
+    return User.remove();
+  });
+  
   describe('GET /api/companies', function() {
     var companies;
 
     beforeEach(function(done) {
       request(app)
         .get('/api/companies')
+        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
@@ -32,6 +67,7 @@ describe('Company API:', function() {
     beforeEach(function(done) {
       request(app)
         .post('/api/companies')
+        .set('authorization', `Bearer ${token}`)
         .send({
           name: 'New Company',
           info: 'This is the brand new company!!!'
@@ -59,6 +95,7 @@ describe('Company API:', function() {
     beforeEach(function(done) {
       request(app)
         .get(`/api/companies/${newCompany._id}`)
+        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
@@ -86,6 +123,7 @@ describe('Company API:', function() {
     beforeEach(function(done) {
       request(app)
         .put(`/api/companies/${newCompany._id}`)
+        .set('authorization', `Bearer ${token}`)
         .send({
           name: 'Updated Company',
           info: 'This is the updated company!!!'
@@ -113,6 +151,7 @@ describe('Company API:', function() {
     it('should respond with the updated company on a subsequent GET', function(done) {
       request(app)
         .get(`/api/companies/${newCompany._id}`)
+        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
@@ -135,6 +174,7 @@ describe('Company API:', function() {
     beforeEach(function(done) {
       request(app)
         .patch(`/api/companies/${newCompany._id}`)
+        .set('authorization', `Bearer ${token}`)
         .send([
           { op: 'replace', path: '/name', value: 'Patched Company' },
           { op: 'replace', path: '/info', value: 'This is the patched company!!!' }
@@ -164,6 +204,7 @@ describe('Company API:', function() {
     it('should respond with 204 on successful removal', function(done) {
       request(app)
         .delete(`/api/companies/${newCompany._id}`)
+        .set('authorization', `Bearer ${token}`)
         .expect(204)
         .end(err => {
           if(err) {
@@ -176,6 +217,7 @@ describe('Company API:', function() {
     it('should respond with 404 when company does not exist', function(done) {
       request(app)
         .delete(`/api/companies/${newCompany._id}`)
+        .set('authorization', `Bearer ${token}`)
         .expect(404)
         .end(err => {
           if(err) {

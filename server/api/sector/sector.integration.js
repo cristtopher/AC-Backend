@@ -23,29 +23,28 @@ describe('Sector API:', function() {
     })
   });
   
+  beforeEach(function(done) {
+    request(app)
+      .post('/auth/local')
+      .send({
+        email: 'test@example.com',
+        password: 'password'
+      })
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        token = res.body.token;
+        done();
+      });
+  });
+  
   after(function() {
     return User.remove();
   });
   
   describe('GET /api/sectors', function() {
     var sectors;
-
-    before(function(done) {
-      request(app)
-        .post('/auth/local')
-        .send({
-          email: 'test@example.com',
-          password: 'password'
-        })
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          token = res.body.token;
-          done();
-        });
-    });
     
-
     beforeEach(function(done) {
       request(app)
         .get('/api/sectors')
@@ -98,6 +97,7 @@ describe('Sector API:', function() {
     beforeEach(function(done) {
       request(app)
         .get(`/api/sectors/${newSector._id}`)
+        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
@@ -125,6 +125,7 @@ describe('Sector API:', function() {
     beforeEach(function(done) {
       request(app)
         .put(`/api/sectors/${newSector._id}`)
+        .set('authorization', `Bearer ${token}`)
         .send({
           name: 'Updated Sector',
           info: 'This is the updated sector!!!'
@@ -152,6 +153,7 @@ describe('Sector API:', function() {
     it('should respond with the updated sector on a subsequent GET', function(done) {
       request(app)
         .get(`/api/sectors/${newSector._id}`)
+        .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
@@ -174,6 +176,7 @@ describe('Sector API:', function() {
     beforeEach(function(done) {
       request(app)
         .patch(`/api/sectors/${newSector._id}`)
+        .set('authorization', `Bearer ${token}`)
         .send([
           { op: 'replace', path: '/name', value: 'Patched Sector' },
           { op: 'replace', path: '/info', value: 'This is the patched sector!!!' }
@@ -203,6 +206,7 @@ describe('Sector API:', function() {
     it('should respond with 204 on successful removal', function(done) {
       request(app)
         .delete(`/api/sectors/${newSector._id}`)
+        .set('authorization', `Bearer ${token}`)
         .expect(204)
         .end(err => {
           if(err) {
@@ -215,6 +219,7 @@ describe('Sector API:', function() {
     it('should respond with 404 when sector does not exist', function(done) {
       request(app)
         .delete(`/api/sectors/${newSector._id}`)
+        .set('authorization', `Bearer ${token}`)
         .expect(404)
         .end(err => {
           if(err) {

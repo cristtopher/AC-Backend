@@ -11,6 +11,15 @@ var personCtrlStub = {
   destroy: 'personCtrl.destroy'
 };
 
+var authServiceStub = {
+  isAuthenticated() {
+    return 'authService.isAuthenticated';
+  },
+  hasRole(role) {
+    return `authService.hasRole.${role}`;
+  }
+};
+
 var routerStub = {
   get: sinon.spy(),
   put: sinon.spy(),
@@ -26,7 +35,8 @@ var personIndex = proxyquire('./index.js', {
       return routerStub;
     }
   },
-  './person.controller': personCtrlStub
+  './person.controller': personCtrlStub,
+  '../../auth/auth.service': authServiceStub
 });
 
 describe('Person API Router:', function() {
@@ -37,7 +47,7 @@ describe('Person API Router:', function() {
   describe('GET /api/persons', function() {
     it('should route to person.controller.index', function() {
       expect(routerStub.get
-        .withArgs('/', 'personCtrl.index')
+        .withArgs('/', 'authService.isAuthenticated', 'personCtrl.index')
         ).to.have.been.calledOnce;
     });
   });
@@ -45,7 +55,7 @@ describe('Person API Router:', function() {
   describe('GET /api/persons/:id', function() {
     it('should route to person.controller.show', function() {
       expect(routerStub.get
-        .withArgs('/:id', 'personCtrl.show')
+        .withArgs('/:id', 'authService.isAuthenticated', 'personCtrl.show')
         ).to.have.been.calledOnce;
     });
   });
@@ -53,7 +63,7 @@ describe('Person API Router:', function() {
   describe('POST /api/persons', function() {
     it('should route to person.controller.create', function() {
       expect(routerStub.post
-        .withArgs('/', 'personCtrl.create')
+        .withArgs('/', 'authService.isAuthenticated', 'personCtrl.create')
         ).to.have.been.calledOnce;
     });
   });
@@ -61,7 +71,7 @@ describe('Person API Router:', function() {
   describe('PUT /api/persons/:id', function() {
     it('should route to person.controller.upsert', function() {
       expect(routerStub.put
-        .withArgs('/:id', 'personCtrl.upsert')
+        .withArgs('/:id', 'authService.isAuthenticated', 'personCtrl.upsert')
         ).to.have.been.calledOnce;
     });
   });
@@ -69,7 +79,7 @@ describe('Person API Router:', function() {
   describe('PATCH /api/persons/:id', function() {
     it('should route to person.controller.patch', function() {
       expect(routerStub.patch
-        .withArgs('/:id', 'personCtrl.patch')
+        .withArgs('/:id', 'authService.isAuthenticated', 'personCtrl.patch')
         ).to.have.been.calledOnce;
     });
   });
@@ -77,7 +87,7 @@ describe('Person API Router:', function() {
   describe('DELETE /api/persons/:id', function() {
     it('should route to person.controller.destroy', function() {
       expect(routerStub.delete
-        .withArgs('/:id', 'personCtrl.destroy')
+        .withArgs('/:id', 'authService.isAuthenticated', 'personCtrl.destroy')
         ).to.have.been.calledOnce;
     });
   });

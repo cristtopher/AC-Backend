@@ -10,6 +10,7 @@ var UserSchema = new Schema({
   name:     { type: String },
   email:    { type: String, lowercase: true, required: true },
   company:  { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
+  sector:   { type: mongoose.Schema.Types.ObjectId, ref: 'Sector' }, // refactor this relation ASAP.
   role:     { type: String, enum: config.userRoles, default: 'user' },
   password: { type: String, required: true },
   provider: { type: String },

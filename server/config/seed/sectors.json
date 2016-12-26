@@ -1,0 +1,26 @@
+[{
+  "_id": "5860838c3970532794a746b3",
+  "name": "Sector 1",
+  "info": "Sector 1 company 1",
+  "company": "585597684f6ad8244e26748e"
+}, {
+  "_id": "586083923970532794a746b4",
+  "name": "Sector 2",
+  "info": "Sector 2 company 1",
+  "company": "585597684f6ad8244e26748e"
+}, {
+  "_id": "586083923970532794a746b5",
+  "name": "Sector 3",
+  "info": "Sector 3 company 1",
+  "company": "585597684f6ad8244e26748e"
+}, {
+  "_id": "586083923970532794a746b6",
+  "name": "Sector 1",
+  "info": "Sector 1 company 2",
+  "company": "585597684f6ad8244e26748f"
+}, {
+  "_id": "586083923970532794a746b7",
+  "name": "Sector 1",
+  "info": "Sector 1 company 2",
+  "company": "585597684f6ad8244e26748f"
+}]

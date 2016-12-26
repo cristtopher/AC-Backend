@@ -65,7 +65,15 @@ function handleError(res, statusCode) {
 
 // Gets a list of Registers
 export function index(req, res) {
-  return Register.find().exec()
+  let user = req.user;
+  
+  var baseQuery = Register.find();
+  
+  if(user.role !== 'admin') {
+    baseQuery.where('sector').equals(user.sector);
+  }
+  
+  return baseQuery.populate('sector').exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
@@ -91,7 +99,6 @@ export function upsert(req, res) {
     delete req.body._id;
   }
   return Register.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
-
     .then(respondWithResult(res))
     .catch(handleError(res));
 }

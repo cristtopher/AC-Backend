@@ -55,7 +55,7 @@ describe('Sector API Router:', function() {
   describe('GET /api/sectors/:id', function() {
     it('should route to sector.controller.show', function() {
       expect(routerStub.get
-        .withArgs('/:id', 'sectorCtrl.show')
+        .withArgs('/:id', 'authService.isAuthenticated', 'sectorCtrl.show')
         ).to.have.been.calledOnce;
     });
   });
@@ -63,7 +63,7 @@ describe('Sector API Router:', function() {
   describe('POST /api/sectors', function() {
     it('should route to sector.controller.create', function() {
       expect(routerStub.post
-        .withArgs('/', 'sectorCtrl.create')
+        .withArgs('/', 'authService.isAuthenticated', 'sectorCtrl.create')
         ).to.have.been.calledOnce;
     });
   });
@@ -71,7 +71,7 @@ describe('Sector API Router:', function() {
   describe('PUT /api/sectors/:id', function() {
     it('should route to sector.controller.upsert', function() {
       expect(routerStub.put
-        .withArgs('/:id', 'sectorCtrl.upsert')
+        .withArgs('/:id', 'authService.isAuthenticated', 'sectorCtrl.upsert')
         ).to.have.been.calledOnce;
     });
   });
@@ -79,7 +79,7 @@ describe('Sector API Router:', function() {
   describe('PATCH /api/sectors/:id', function() {
     it('should route to sector.controller.patch', function() {
       expect(routerStub.patch
-        .withArgs('/:id', 'sectorCtrl.patch')
+        .withArgs('/:id', 'authService.isAuthenticated', 'sectorCtrl.patch')
         ).to.have.been.calledOnce;
     });
   });
@@ -87,7 +87,7 @@ describe('Sector API Router:', function() {
   describe('DELETE /api/sectors/:id', function() {
     it('should route to sector.controller.destroy', function() {
       expect(routerStub.delete
-        .withArgs('/:id', 'sectorCtrl.destroy')
+        .withArgs('/:id', 'authService.isAuthenticated', 'sectorCtrl.destroy')
         ).to.have.been.calledOnce;
     });
   });
