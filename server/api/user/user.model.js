@@ -8,16 +8,15 @@ import config from '../../config/environment';
 
 var UserSchema = new Schema({
   name:     { type: String },
-  email:    { type: String, lowercase: true, required: true },
+  rut:      { type: String, lowercase: true, required: true },
   company:  { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
-  sector:   { type: mongoose.Schema.Types.ObjectId, ref: 'Sector' }, // refactor this relation ASAP.
+  sector:   [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sector' }],
   role:     { type: String, enum: config.userRoles, default: 'user' },
   password: { type: String, required: true },
-  provider: { type: String },
   salt:     { type: String }
 });
 
-UserSchema.index({ email: 1 }, { unique: true });
+UserSchema.index({ rut: 1 }, { unique: true });
 
 //-------------------------------------------------------
 //                  Getters/Setters
@@ -52,12 +51,12 @@ UserSchema
 //                      Validations
 //-------------------------------------------------------
   
-// Validate empty email
+// Validate empty rut
 UserSchema
-  .path('email')
-  .validate(function(email) {
-    return email.length;
-  }, 'Email cannot be blank');
+  .path('rut')
+  .validate(function(rut) {
+    return rut.length;
+  }, 'rut cannot be blank');
 
 // Validate empty password
 UserSchema
@@ -66,11 +65,11 @@ UserSchema
     return password.length;
   }, 'Password cannot be blank');
 
-// Validate email is not taken
+// Validate rut is not taken
 UserSchema
-  .path('email')
+  .path('rut')
   .validate(function(value, respond) {
-    return this.constructor.findOne({ email: value }).exec()
+    return this.constructor.findOne({ rut: value }).exec()
       .then(user => {
         if(user) {
           if(this.id === user.id) {
@@ -83,7 +82,7 @@ UserSchema
       .catch(function(err) {
         throw err;
       });
-  }, 'The specified email address is already in use.');
+  }, 'The specified rut address is already in use.');
 
 var validatePresenceOf = function(value) {
   return value && value.length;

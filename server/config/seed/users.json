@@ -1,31 +1,28 @@
 [{
   "_id": "585597684f6ad8244e26748b",
-  "provider": "local",
   "name": "Normal User",
   "company": "585597684f6ad8244e26748e",
-  "email": "user@example.com",
+  "sector": "5860838c3970532794a746b3",
+  "rut": "user@example.com",
   "password": "user"
 }, {  
   "_id": "585597684f6ad8244e26748e",
-    "provider": "local",
-    "name": "Normal User 2",
-    "company": "585597684f6ad8244e26748f",
-    "email": "user2@example.com",
-    "password": "user"
+  "name": "Normal User 2",
+  "company": "585597684f6ad8244e26748f",
+  "rut": "user2@example.com",
+  "password": "user"
 }, {
   "_id": "585597684f6ad8244e26748c",
-  "provider": "local",
   "role": "supervisor",
   "name": "Supervisor User",
   "company": "585597684f6ad8244e26748e",
-  "email": "supervisor@example.com",
+  "rut": "supervisor@example.com",
   "password": "supervisor"
 }, {
   "_id": "585597684f6ad8244e26748d",
-  "provider": "local",
   "role": "admin",
   "name": "Admin",
   "company": "585597684f6ad8244e26748e",
-  "email": "admin@example.com",
+  "rut": "admin@example.com",
   "password": "admin"
 }]

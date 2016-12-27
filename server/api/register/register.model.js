@@ -5,8 +5,7 @@ import mongoose from 'mongoose';
 var RegisterSchema = new mongoose.Schema({
   person: { type: mongoose.Schema.Types.ObjectId, ref: 'Person' },
   sector: { type: mongoose.Schema.Types.ObjectId, ref: 'Sector' },
-  time:   { type: Date, default: Date.now },
-  card:   { type: Number }
+  time:   { type: Date, default: Date.now }
 });
 
 RegisterSchema.index({ time: 1 });

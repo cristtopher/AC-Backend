@@ -32,7 +32,7 @@ describe('Register API:', function() {
         .then(function() {
           var user = new User({
             name: 'Fake User',
-            email: 'test@example.com',
+            rut: 'test@example.com',
             password: 'password'
           });
 
@@ -46,7 +46,7 @@ describe('Register API:', function() {
     request(app)
       .post('/auth/local')
       .send({
-        email: 'test@example.com',
+        rut: 'test@example.com',
         password: 'password'
       })
       .expect(200)
@@ -73,10 +73,16 @@ describe('Register API:', function() {
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
+          console.log(`response: ${JSON.stringify(res)}`)
+          
           if(err) {
+            console.log(`error: ${error}`);
             return done(err);
           }
+          
           registers = res.body;
+          
+          console.log(`registers: ${JSON.stringify(registers)}`);
           done();
         });
     });
