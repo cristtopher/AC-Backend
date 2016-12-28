@@ -65,15 +65,18 @@ function handleError(res, statusCode) {
 
 // Gets a list of Registers
 export function index(req, res) {
-  let user = req.user;
+  //let user = req.user;
   
   var baseQuery = Register.find();
   
-  if(user.role !== 'admin') {
-    baseQuery.where('sector').equals(user.sector);
-  }
+  // TODO: Commented this query for testing purpose (uncomment asap)
+  // if(user.role !== 'admin') {
+  //   baseQuery.where('sector').equals(user.sector);
+  // }
   
-  return baseQuery.populate('sector').exec()
+  return baseQuery
+    .populate('person')
+    .populate('sector').exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
