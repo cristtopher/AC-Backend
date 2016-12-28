@@ -12,7 +12,7 @@ describe('User API:', function() {
     return User.remove().then(function() {
       user = new User({
         name: 'Fake User',
-        rut: 'test@example.com',
+        rut: '1234567-7',
         password: 'password'
       });
 
@@ -32,7 +32,7 @@ describe('User API:', function() {
       request(app)
         .post('/auth/local')
         .send({
-          rut: 'test@example.com',
+          rut: '1234567-7',
           password: 'password'
         })
         .expect(200)

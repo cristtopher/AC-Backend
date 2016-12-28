@@ -1,28 +1,27 @@
 [{
   "_id": "585597684f6ad8244e26748b",
+  "rut": "user",
   "name": "Normal User",
-  "company": "585597684f6ad8244e26748e",
-  "sector": "5860838c3970532794a746b3",
-  "rut": "user@example.com",
-  "password": "user"
+  "password": "user",
+  "company": "585597684f6ad8244e26748e"
 }, {  
   "_id": "585597684f6ad8244e26748e",
+  "rut": "user2",
   "name": "Normal User 2",
-  "company": "585597684f6ad8244e26748f",
-  "rut": "user2@example.com",
-  "password": "user"
+  "password": "user",
+  "company": "585597684f6ad8244e26748f"
 }, {
   "_id": "585597684f6ad8244e26748c",
   "role": "supervisor",
+  "rut": "supervisor",
   "name": "Supervisor User",
-  "company": "585597684f6ad8244e26748e",
-  "rut": "supervisor@example.com",
-  "password": "supervisor"
+  "password": "supervisor",
+  "company": "585597684f6ad8244e26748e"
 }, {
   "_id": "585597684f6ad8244e26748d",
   "role": "admin",
+  "rut": "admin",
   "name": "Admin",
   "company": "585597684f6ad8244e26748e",
-  "rut": "admin@example.com",
   "password": "admin"
 }]

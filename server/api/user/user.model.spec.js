@@ -7,7 +7,7 @@ var genUser = function() {
   user = new User({
     provider: 'local',
     name: 'Fake User',
-    rut: 'test@example.com',
+    rut: '1234567-7',
     password: 'password'
   });
   return user;

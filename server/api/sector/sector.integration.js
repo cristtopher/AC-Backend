@@ -15,7 +15,7 @@ describe('Sector API:', function() {
     return User.remove().then(function() {
       user = new User({
         name: 'Fake User',
-        rut: 'test@example.com',
+        rut: '1234567-7',
         password: 'password'
       });
 
@@ -27,7 +27,7 @@ describe('Sector API:', function() {
     request(app)
       .post('/auth/local')
       .send({
-        rut: 'test@example.com',
+        rut: '1234567-7',
         password: 'password'
       })
       .expect(200)
@@ -72,7 +72,7 @@ describe('Sector API:', function() {
         .set('authorization', `Bearer ${token}`)
         .send({
           name: 'New Sector',
-          info: 'This is the brand new sector!!!'
+          description: 'This is the brand new sector!!!'
         })
         .expect(201)
         .expect('Content-Type', /json/)
@@ -87,7 +87,7 @@ describe('Sector API:', function() {
 
     it('should respond with the newly created sector', function() {
       expect(newSector.name).to.equal('New Sector');
-      expect(newSector.info).to.equal('This is the brand new sector!!!');
+      expect(newSector.description).to.equal('This is the brand new sector!!!');
     });
   });
 
@@ -115,7 +115,7 @@ describe('Sector API:', function() {
 
     it('should respond with the requested sector', function() {
       expect(sector.name).to.equal('New Sector');
-      expect(sector.info).to.equal('This is the brand new sector!!!');
+      expect(sector.description).to.equal('This is the brand new sector!!!');
     });
   });
 
@@ -128,7 +128,7 @@ describe('Sector API:', function() {
         .set('authorization', `Bearer ${token}`)
         .send({
           name: 'Updated Sector',
-          info: 'This is the updated sector!!!'
+          description: 'This is the updated sector!!!'
         })
         .expect(200)
         .expect('Content-Type', /json/)
@@ -147,7 +147,7 @@ describe('Sector API:', function() {
 
     it('should respond with the original sector', function() {
       expect(updatedSector.name).to.equal('New Sector');
-      expect(updatedSector.info).to.equal('This is the brand new sector!!!');
+      expect(updatedSector.description).to.equal('This is the brand new sector!!!');
     });
 
     it('should respond with the updated sector on a subsequent GET', function(done) {
@@ -163,7 +163,7 @@ describe('Sector API:', function() {
           let sector = res.body;
 
           expect(sector.name).to.equal('Updated Sector');
-          expect(sector.info).to.equal('This is the updated sector!!!');
+          expect(sector.description).to.equal('This is the updated sector!!!');
 
           done();
         });
@@ -179,7 +179,7 @@ describe('Sector API:', function() {
         .set('authorization', `Bearer ${token}`)
         .send([
           { op: 'replace', path: '/name', value: 'Patched Sector' },
-          { op: 'replace', path: '/info', value: 'This is the patched sector!!!' }
+          { op: 'replace', path: '/description', value: 'This is the patched sector!!!' }
         ])
         .expect(200)
         .expect('Content-Type', /json/)
@@ -198,7 +198,7 @@ describe('Sector API:', function() {
 
     it('should respond with the patched sector', function() {
       expect(patchedSector.name).to.equal('Patched Sector');
-      expect(patchedSector.info).to.equal('This is the patched sector!!!');
+      expect(patchedSector.description).to.equal('This is the patched sector!!!');
     });
   });
 
