@@ -10,13 +10,15 @@ var UserSchema = new Schema({
   name:     { type: String },
   rut:      { type: String, lowercase: true, required: true },
   company:  { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
-  sector:   [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sector' }],
+  sector:   { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sector' }] },
   role:     { type: String, enum: config.userRoles, default: 'user' },
   password: { type: String, required: true },
   salt:     { type: String }
 });
 
 UserSchema.index({ rut: 1 }, { unique: true });
+UserSchema.index({ company: 1 });
+UserSchema.index({ sector: 1 });
 
 //-------------------------------------------------------
 //                  Getters/Setters

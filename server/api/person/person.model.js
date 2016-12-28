@@ -11,6 +11,8 @@ var PersonSchema = new mongoose.Schema({
   active:  { type: Boolean }
 });
 
-PersonSchema.index({ rut: 1 });
+PersonSchema.index({ rut: 1 }, { unique: true });
+PersonSchema.index({ card: 1 }, { unique: true });
+PersonSchema.index({ company: 1 });
 
 export default mongoose.model('Person', PersonSchema);

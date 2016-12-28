@@ -8,4 +8,6 @@ var SectorSchema = new mongoose.Schema({
   company:     { type: mongoose.Schema.Types.ObjectId, ref: 'Company' }
 });
 
+SectorSchema.index({ company: 1 });
+
 export default mongoose.model('Sector', SectorSchema);
