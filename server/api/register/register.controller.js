@@ -76,7 +76,8 @@ export function index(req, res) {
   
   return baseQuery
     .populate('person')
-    .populate('sector').exec()
+    .populate('sector')
+    .exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }

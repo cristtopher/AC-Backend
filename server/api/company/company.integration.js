@@ -70,7 +70,7 @@ describe('Company API:', function() {
         .set('authorization', `Bearer ${token}`)
         .send({
           name: 'New Company',
-          info: 'This is the brand new company!!!'
+          description: 'This is the brand new company!!!'
         })
         .expect(201)
         .expect('Content-Type', /json/)
@@ -85,7 +85,7 @@ describe('Company API:', function() {
 
     it('should respond with the newly created company', function() {
       expect(newCompany.name).to.equal('New Company');
-      expect(newCompany.info).to.equal('This is the brand new company!!!');
+      expect(newCompany.description).to.equal('This is the brand new company!!!');
     });
   });
 
@@ -113,7 +113,7 @@ describe('Company API:', function() {
 
     it('should respond with the requested company', function() {
       expect(company.name).to.equal('New Company');
-      expect(company.info).to.equal('This is the brand new company!!!');
+      expect(company.description).to.equal('This is the brand new company!!!');
     });
   });
 
@@ -126,7 +126,7 @@ describe('Company API:', function() {
         .set('authorization', `Bearer ${token}`)
         .send({
           name: 'Updated Company',
-          info: 'This is the updated company!!!'
+          description: 'This is the updated company!!!'
         })
         .expect(200)
         .expect('Content-Type', /json/)
@@ -145,7 +145,7 @@ describe('Company API:', function() {
 
     it('should respond with the original company', function() {
       expect(updatedCompany.name).to.equal('New Company');
-      expect(updatedCompany.info).to.equal('This is the brand new company!!!');
+      expect(updatedCompany.description).to.equal('This is the brand new company!!!');
     });
 
     it('should respond with the updated company on a subsequent GET', function(done) {
@@ -161,7 +161,7 @@ describe('Company API:', function() {
           let company = res.body;
 
           expect(company.name).to.equal('Updated Company');
-          expect(company.info).to.equal('This is the updated company!!!');
+          expect(company.description).to.equal('This is the updated company!!!');
 
           done();
         });
@@ -177,7 +177,7 @@ describe('Company API:', function() {
         .set('authorization', `Bearer ${token}`)
         .send([
           { op: 'replace', path: '/name', value: 'Patched Company' },
-          { op: 'replace', path: '/info', value: 'This is the patched company!!!' }
+          { op: 'replace', path: '/description', value: 'This is the patched company!!!' }
         ])
         .expect(200)
         .expect('Content-Type', /json/)
@@ -196,7 +196,7 @@ describe('Company API:', function() {
 
     it('should respond with the patched company', function() {
       expect(patchedCompany.name).to.equal('Patched Company');
-      expect(patchedCompany.info).to.equal('This is the patched company!!!');
+      expect(patchedCompany.description).to.equal('This is the patched company!!!');
     });
   });
 
