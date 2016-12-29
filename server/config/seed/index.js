@@ -28,4 +28,5 @@ Company.find({}).remove()
   .then(() => User.create(users))
   .then(() => Person.create(persons))
   .then(() => Register.create(registers))
-  .then(() => console.log('=== DB seeding done.')); /* eslint eol-last: 0 */
+  .then(() => console.log('=== DB seeding done.')) 
+  .catch(err => console.log(`[DB Seed] error: ${err.stack}`)); /* eslint eol-last: 0 */
