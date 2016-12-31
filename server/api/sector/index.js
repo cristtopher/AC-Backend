@@ -14,4 +14,6 @@ router.put('/:id', auth.isAuthenticated(), controller.upsert);
 router.patch('/:id', auth.isAuthenticated(), controller.patch);
 router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 
+router.get('/:id/registers', auth.isAuthenticated(), controller.sectorRegisters);
+
 module.exports = router;

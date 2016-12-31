@@ -12,6 +12,7 @@
 
 import jsonpatch from 'fast-json-patch';
 import Sector from './sector.model';
+import Register from '../register/register.model';
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -91,7 +92,6 @@ export function upsert(req, res) {
     delete req.body._id;
   }
   return Sector.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
-
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
@@ -115,3 +115,14 @@ export function destroy(req, res) {
     .then(removeEntity(res))
     .catch(handleError(res));
 }
+
+
+export function sectorRegisters(req, res) {
+  return Register.find()
+    .populate('company')
+    .or({ 'entrySector': req.params.id }, { 'departSector': req.params.id })
+    .exec()
+    .then(respondWithResult(res))
+    .catch(handleError(res))
+}
+
