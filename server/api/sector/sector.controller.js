@@ -120,9 +120,8 @@ export function destroy(req, res) {
 export function sectorRegisters(req, res) {
   return Register.find()
     .populate('company')
-    .or({ 'entrySector': req.params.id }, { 'departSector': req.params.id })
+    .or({ entrySector: req.params.id }, { departSector: req.params.id })
     .exec()
     .then(respondWithResult(res))
-    .catch(handleError(res))
+    .catch(handleError(res));
 }
-
