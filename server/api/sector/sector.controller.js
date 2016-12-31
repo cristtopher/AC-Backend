@@ -118,10 +118,18 @@ export function destroy(req, res) {
 
 
 export function sectorRegisters(req, res) {
-  return Register.find()
-    .populate('company')
-    .or({ entrySector: req.params.id }, { departSector: req.params.id })
-    .exec()
+  let baseQuery = Register.find()
+    .populate('person')
+    .populate('entrySector')
+    .populate('departSector')
+    .or({ entrySector: req.params.id }, { departSector: req.params.id });
+  
+  if (req.query) {
+    let topQuery = parseInt(req.query.top);
+    if (topQuery) { baseQuery.sort({ entrySector: -1, departSector: -1 }).limit(topQuery) }
+  }
+  
+  return baseQuery.exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
