@@ -124,9 +124,12 @@ export function sectorRegisters(req, res) {
     .populate('departSector')
     .or({ entrySector: req.params.id }, { departSector: req.params.id });
   
-  if (req.query) {
-    let topQuery = parseInt(req.query.top);
-    if (topQuery) { baseQuery.sort({ entrySector: -1, departSector: -1 }).limit(topQuery) }
+  if(req.query) {
+    let topQuery = parseInt(req.query.top, 10);
+    
+    if(topQuery) { 
+      baseQuery.sort({ entrySector: -1, departSector: -1 }).limit(topQuery);
+    }
   }
   
   return baseQuery.exec()
