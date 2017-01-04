@@ -15,5 +15,7 @@ router.patch('/:id', auth.isAuthenticated(), controller.patch);
 router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 
 router.get('/:id/registers', auth.isAuthenticated(), controller.sectorRegisters);
+router.get('/:id/statistics', auth.isAuthenticated(), controller.sectorStatistics);
+
 
 module.exports = router;

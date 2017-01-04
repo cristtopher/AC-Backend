@@ -10,6 +10,9 @@
 
 'use strict';
 
+import * as _ from 'lodash';
+import * as moment from 'moment';
+
 import jsonpatch from 'fast-json-patch';
 import Sector from './sector.model';
 import Register from '../register/register.model';
@@ -125,14 +128,55 @@ export function sectorRegisters(req, res) {
     .or({ entrySector: req.params.id }, { departSector: req.params.id });
   
   if(req.query) {
+    // top queryString (number)
     let topQuery = parseInt(req.query.top, 10);
-    
     if(topQuery) { 
-      baseQuery.sort({ entrySector: -1, departSector: -1 }).limit(topQuery);
+      baseQuery.sort({ entryTime: -1, departTime: -1 }).limit(topQuery);
+    }
+    
+    // TODO: from/to queryString (unixTime)
+    let fromQuery = moment(req.query.from);
+    let toQuery = moment(req.query.to);
+    
+    if (fromQuery) { 
+      /* eslint keyword-spacing:0 */
+      // where entryTime > fromQuery 
+    }
+
+    if (toQuery) {
+      /* eslint keyword-spacing:0 */
+      // where entryTime > fromQuery
+    }
+    
+    // TODO: personType queryString (ObjectId)
+    if (req.query.personType) {
+      /* eslint keyword-spacing:0 */
+      // where person._id == req.query.personType
     }
   }
   
   return baseQuery.exec()
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
+export function sectorStatistics(req, res) {
+  let baseQuery = Register.find()
+    .populate('person')
+    .populate('entrySector')
+    .populate('departSector')
+    .or({ entrySector: req.params.id }, { departSector: req.params.id });
+    
+  return baseQuery.exec()
+    .then(function(registers) {
+      // TODO: fill object with statistics to be used in dashboard
+      return {
+        staffNumber: _.size(_.every(registers, { 'person.type': 'staff' })),
+        contractorNumber: _.size(_.every(registers, { 'person.type': 'contractor' })),
+        visitNumber: _.size(_.every(registers, { 'person.type': 'visit' })),
+        weeklyHistory: []
+      };
+    })
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
