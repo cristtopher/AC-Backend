@@ -1,27 +1,31 @@
 [{
   "_id": "5855da457f45b135cbb73ad4",
   "person": "5855d9b97f45b135cbb73ad1",
-  "entrySector": "586083923970532794a746b4",
-  "departSector": "586083923970532794a746b4",
-  "departTime": "2016-12-31T07:01:47.272Z",
-  "card": 1
+  "sector": "586083923970532794a746b4",
+  "time": "2017-01-04T04:01:47.272Z",
+  "type": "entry"
 }, {
   "_id": "5855da457f45b135cbb73ad5",
   "person": "5855d9b97f45b135cbb73ad1",
-  "entrySector": "586083923970532794a746b4",
-  "departSector": "586083923970532794a746b4",
-  "departTime": "2016-12-31T07:02:12.921Z",
-  "card": 1  
+  "sector": "586083923970532794a746b4",
+  "time": "2017-01-04T08:02:12.921Z",
+  "type": "depart"
 }, {
   "_id": "5855da457f45b135cbb73ad6",
   "person": "5855d9b97f45b135cbb73ad1",
-  "entrySector": "586083923970532794a746b4",
-  "departSector": "586083923970532794a746b4",
-  "departTime": "2016-12-31T07:02:24.644Z",
-  "card": 1
+  "sector": "586083923970532794a746b5",
+  "time": "2017-01-03T02:02:12.921Z",
+  "type": "entry"
 }, {
   "_id": "5855da457f45b135cbb73ad7",
   "person": "5855d9b97f45b135cbb73ad1",
-  "entrySector": "586083923970532794a746b4",
-  "card": 1
+  "sector": "586083923970532794a746b4",
+  "time": "2017-01-03T04:02:12.921Z",
+  "type": "depart"
+}, {
+  "_id": "5855da457f45b135cbb73ad8",
+  "person": "5855d9b97f45b135cbb73ad1",
+  "sector": "586083923970532794a746b4",
+  "time": "2017-01-03T04:02:12.921Z",
+  "type": "entry"
 }]

@@ -10,8 +10,7 @@
 
 'use strict';
 
-import * as _ from 'lodash';
-import * as moment from 'moment';
+import moment from 'moment';
 
 import jsonpatch from 'fast-json-patch';
 import Sector from './sector.model';
@@ -63,6 +62,7 @@ function handleEntityNotFound(res) {
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
+    console.error(err.stack);
     res.status(statusCode).send(err);
   };
 }
@@ -123,15 +123,14 @@ export function destroy(req, res) {
 export function sectorRegisters(req, res) {
   let baseQuery = Register.find()
     .populate('person')
-    .populate('entrySector')
-    .populate('departSector')
-    .or({ entrySector: req.params.id }, { departSector: req.params.id });
+    .populate('sector')
+    .where({ sector: req.params.id });
   
   if(req.query) {
     // top queryString (number)
     let topQuery = parseInt(req.query.top, 10);
     if(topQuery) { 
-      baseQuery.sort({ entryTime: -1, departTime: -1 }).limit(topQuery);
+      baseQuery.sort({ time: -1 }).limit(topQuery);
     }
     
     // TODO: from/to queryString (unixTime)
@@ -140,12 +139,12 @@ export function sectorRegisters(req, res) {
     
     if (fromQuery) { 
       /* eslint keyword-spacing:0 */
-      // where entryTime > fromQuery 
+      // where time > fromQuery 
     }
 
     if (toQuery) {
       /* eslint keyword-spacing:0 */
-      // where entryTime > fromQuery
+      // where time > fromQuery
     }
     
     // TODO: personType queryString (ObjectId)
@@ -161,22 +160,7 @@ export function sectorRegisters(req, res) {
 }
 
 export function sectorStatistics(req, res) {
-  let baseQuery = Register.find()
-    .populate('person')
-    .populate('entrySector')
-    .populate('departSector')
-    .or({ entrySector: req.params.id }, { departSector: req.params.id });
-    
-  return baseQuery.exec()
-    .then(function(registers) {
-      // TODO: fill object with statistics to be used in dashboard
-      return {
-        staffNumber: _.size(_.every(registers, { 'person.type': 'staff' })),
-        contractorNumber: _.size(_.every(registers, { 'person.type': 'contractor' })),
-        visitNumber: _.size(_.every(registers, { 'person.type': 'visit' })),
-        weeklyHistory: []
-      };
-    })
+  Sector.statistics(req.params.id)
     .then(respondWithResult(res))
     .catch(handleError(res));
 }

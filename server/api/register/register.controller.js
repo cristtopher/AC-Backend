@@ -9,7 +9,6 @@
  */
 
 'use strict';
-
 import jsonpatch from 'fast-json-patch';
 import Register from './register.model';
 

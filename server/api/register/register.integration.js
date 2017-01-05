@@ -94,7 +94,7 @@ describe('Register API:', function() {
         .set('authorization', `Bearer ${token}`)
         .send({
           person: '5855ce0c7f45b135cbb73acf',
-          entrySector: "586083923970532794a746b5"
+          sector: "586083923970532794a746b5"
         })
         .expect(201)
         .expect('Content-Type', /json/)
@@ -109,7 +109,7 @@ describe('Register API:', function() {
 
     it('should respond with the newly created register', function() {
       expect(newRegister.person).to.equal('5855ce0c7f45b135cbb73acf');
-      expect(newRegister.entrySector).to.equal('586083923970532794a746b5');
+      expect(newRegister.sector).to.equal('586083923970532794a746b5');
     });
   });
 
@@ -137,7 +137,7 @@ describe('Register API:', function() {
 
     it('should respond with the requested register', function() {
       expect(newRegister.person).to.equal('5855ce0c7f45b135cbb73acf');
-      expect(newRegister.entrySector).to.equal('586083923970532794a746b5');
+      expect(newRegister.sector).to.equal('586083923970532794a746b5');
     });
   });
 
@@ -150,7 +150,7 @@ describe('Register API:', function() {
         .set('authorization', `Bearer ${token}`)
         .send({
           person: '5855ce0c7f45b135cbb73acf',
-          entrySector: '586083923970532794a746b4'
+          sector: '586083923970532794a746b4'
         })
         .expect(200)
         .expect('Content-Type', /json/)
@@ -169,7 +169,7 @@ describe('Register API:', function() {
 
     it('should respond with the original register', function() {
       expect(newRegister.person).to.equal('5855ce0c7f45b135cbb73acf');
-      expect(newRegister.entrySector).to.equal('586083923970532794a746b5');
+      expect(newRegister.sector).to.equal('586083923970532794a746b5');
     });
 
     it('should respond with the updated register on a subsequent GET', function(done) {
@@ -188,7 +188,7 @@ describe('Register API:', function() {
           let register = res.body;
           
           expect(register.person).to.equal('5855ce0c7f45b135cbb73acf');
-          expect(register.entrySector).to.equal('586083923970532794a746b4');
+          expect(register.sector).to.equal('586083923970532794a746b4');
           
           done();
         });
@@ -203,7 +203,7 @@ describe('Register API:', function() {
         .patch(`/api/registers/${newRegister._id}`)
         .set('authorization', `Bearer ${token}`)
         .send([
-          { op: 'replace', path: '/entrySector', value: '586083923970532794a746b6' }
+          { op: 'replace', path: '/sector', value: '586083923970532794a746b6' }
         ])
         .expect(200)
         .expect('Content-Type', /json/)
@@ -221,7 +221,7 @@ describe('Register API:', function() {
     });
 
     it('should respond with the patched register', function() {
-      expect(patchedRegister.entrySector).to.equal('586083923970532794a746b6');
+      expect(patchedRegister.sector).to.equal('586083923970532794a746b6');
     });
   });
 
