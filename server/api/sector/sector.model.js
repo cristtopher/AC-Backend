@@ -16,7 +16,7 @@ var SectorSchema = new mongoose.Schema({
 SectorSchema.statics = {
   getIncompleteRegisters: function(sectorId) {
     return Register.find({ sector: sectorId })
-      .where('isResolved').equals(true)
+                   .where('isResolved').equals(true);
   },  
   getStatistics: function(sectorId) {
     let now = new Date();

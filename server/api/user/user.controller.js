@@ -14,6 +14,7 @@ function validationError(res, statusCode) {
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
+    console.error(err.stack);
     return res.status(statusCode).send(err);
   };
 }
@@ -133,10 +134,8 @@ export function me(req, res, next) {
 export function getSectors(req, res) {
   let user = req.user;
   
-  user.populate('sectors', function(err, userWithSectors){
-    if (err) {
-      return handleError(res)
-    }
+  user.populate('sectors', function(err, userWithSectors) {
+    if(err) return handleError(res); 
     
     res.status(200).json(userWithSectors.sectors);
   });

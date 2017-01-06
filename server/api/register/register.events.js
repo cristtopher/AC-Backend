@@ -25,14 +25,14 @@ for(var e in events) {
 
 function emitEvent(event) {
   return function(register) {
-    register.populate('person sector resolvedRegister', function(err, populatedRegister){
-      if (err) {
+    register.populate('person sector resolvedRegister', function(err, populatedRegister) {
+      if(err) {
         console.error(err.stack);
         return;
       }
       
-      RegisterEvents.emit(`${event}:${register._id}`, register);
-      RegisterEvents.emit(event, register);
+      RegisterEvents.emit(`${event}:${register._id}`, populatedRegister);
+      RegisterEvents.emit(event, populatedRegister);
     });
   };
 }

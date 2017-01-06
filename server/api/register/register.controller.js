@@ -70,7 +70,7 @@ export function index(req, res) {
   var baseQuery = Register.find().populate('person sector resolvedRegister');
                           
   if(user.role !== 'admin') {
-    baseQuery.where('sector').equals(user.sectors);
+    baseQuery.where('sector').in(user.sectors);
   }
   
   return baseQuery
