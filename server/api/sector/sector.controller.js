@@ -20,6 +20,7 @@ function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return function(entity) {
     if(entity) {
+      console.log(`responding with ${JSON.stringify(entity)}`)
       return res.status(statusCode).json(entity);
     }
     return null;
@@ -122,36 +123,30 @@ export function destroy(req, res) {
 
 export function sectorRegisters(req, res) {
   let baseQuery = Register.find()
-    .populate('person')
-    .populate('sector')
-    .populate('resolvedRegister')
-    .where({ sector: req.params.id });
+    .populate('person sector resolvedRegister')
+    .where({ sector: req.params.id })
   
   if(req.query) {
-    // top queryString (number)
-    let topQuery = parseInt(req.query.top, 10);
-    if(topQuery) { 
-      baseQuery.limit(topQuery);
+    if(req.query.top) { 
+      baseQuery.limit(parseInt(req.query.top, 10));
     }
     
-    // TODO: from/to queryString (unixTime)
-    let fromQuery = moment(req.query.from);
-    let toQuery = moment(req.query.to);
-    
-    if (fromQuery) { 
-      /* eslint keyword-spacing:0 */
-      // where time > fromQuery 
+    if (req.query.from) { 
+      baseQuery.where('time').gte(moment(parseInt(req.query.from, 10)))
     }
 
-    if (toQuery) {
-      /* eslint keyword-spacing:0 */
-      // where time > fromQuery
+    if (req.query.to) {
+      baseQuery.where('time').lte(moment(parseInt(req.query.to, 10)))
     }
     
-    // TODO: personType queryString (ObjectId)
+    //FIXME: this query is not working...
     if (req.query.personType) {
-      /* eslint keyword-spacing:0 */
-      // where person._id == req.query.personType
+      console.log(`filtering by personType: ${req.query.personType}`);
+      baseQuery.where('person.type').equals(req.query.personType)
+    }
+    
+    if (req.query.incomplete) {
+      baseQuery.where('isResolved').equals(false);
     }
   }
   

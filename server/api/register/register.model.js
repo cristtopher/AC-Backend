@@ -39,7 +39,7 @@ RegisterSchema.path('time')
 
 RegisterSchema.pre('save', function(next) {
   var register = this;
-
+  console.log('Going here...');
   if(register.type === 'entry') {
     return next();
   }
