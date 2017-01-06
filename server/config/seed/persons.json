@@ -16,4 +16,11 @@
   "name": "Person 3",
   "company": "585597684f6ad8244e26748f",
   "card":  3
+}, {
+  "_id": "5855d9ba7f45b135cbb73ad4",
+  "rut": "546-1",
+  "name": "Visitor 1",
+  "type": "visitor",
+  "company": "585597684f6ad8244e26748f",
+  "card":  4
 }]

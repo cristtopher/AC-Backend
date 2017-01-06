@@ -58,24 +58,23 @@ function handleEntityNotFound(res) {
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
+    console.error(err.stack);
     res.status(statusCode).send(err);
   };
 }
 
 // Gets a list of Registers
 export function index(req, res) {
-  //let user = req.user;
+  let user = req.user;
   
-  var baseQuery = Register.find();
-  
-  // TODO: Commented this query for testing purpose (uncomment asap)
-  // if(user.role !== 'admin') {
-  //   baseQuery.where('sector').equals(user.sector);
-  // }
+  var baseQuery = Register.find().populate('person sector resolvedRegister');
+                          
+  if(user.role !== 'admin') {
+    baseQuery.where('sector').equals(user.sectors);
+  }
   
   return baseQuery
-    .populate('person')
-    .populate('sector')
+    .where('type').equals('entry')
     .exec()
     .then(respondWithResult(res))
     .catch(handleError(res));

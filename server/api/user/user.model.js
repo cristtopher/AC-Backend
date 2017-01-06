@@ -10,7 +10,7 @@ var UserSchema = new Schema({
   name:     { type: String },
   rut:      { type: String, lowercase: true, required: true },
   company:  { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
-  sector:   { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sector' }] },
+  sectors:  { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sector' }] },
   role:     { type: String, enum: config.userRoles, default: 'user' },
   password: { type: String, required: true },
   salt:     { type: String }

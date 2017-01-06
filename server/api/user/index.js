@@ -15,6 +15,8 @@ router.get('/me', auth.isAuthenticated(), controller.me);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', controller.create);
+
+router.get('/:id/sectors', auth.isAuthenticated(), controller.getSectors);
 router.post('/upload', upload.single('usersUpload'), controller.importUsers);
 
 module.exports = router;

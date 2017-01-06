@@ -130,6 +130,19 @@ export function me(req, res, next) {
 }
 
 
+export function getSectors(req, res) {
+  let user = req.user;
+  
+  user.populate('sectors', function(err, userWithSectors){
+    if (err) {
+      return handleError(res)
+    }
+    
+    res.status(200).json(userWithSectors.sectors);
+  });
+}
+
+
 export function importUsers(req, res) {
   return res.status(200).end();
 }

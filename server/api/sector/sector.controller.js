@@ -124,13 +124,14 @@ export function sectorRegisters(req, res) {
   let baseQuery = Register.find()
     .populate('person')
     .populate('sector')
+    .populate('resolvedRegister')
     .where({ sector: req.params.id });
   
   if(req.query) {
     // top queryString (number)
     let topQuery = parseInt(req.query.top, 10);
     if(topQuery) { 
-      baseQuery.sort({ time: -1 }).limit(topQuery);
+      baseQuery.limit(topQuery);
     }
     
     // TODO: from/to queryString (unixTime)
@@ -160,7 +161,7 @@ export function sectorRegisters(req, res) {
 }
 
 export function sectorStatistics(req, res) {
-  Sector.statistics(req.params.id)
+  Sector.getStatistics(req.params.id)
     .then(respondWithResult(res))
     .catch(handleError(res));
 }

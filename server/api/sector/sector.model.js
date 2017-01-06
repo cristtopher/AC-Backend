@@ -14,9 +14,14 @@ var SectorSchema = new mongoose.Schema({
 });
 
 SectorSchema.statics = {
-  statistics: function(sectorId) {
+  getIncompleteRegisters: function(sectorId) {
+    return Register.find({ sector: sectorId })
+      .where('isResolved').equals(true)
+  },  
+  getStatistics: function(sectorId) {
     let now = new Date();
     
+    // FIXME: bug in barplot data
     return Register.find({ sector: sectorId })
       .where('time').gte(moment(now).subtract(8, 'days'))
       .populate('person')

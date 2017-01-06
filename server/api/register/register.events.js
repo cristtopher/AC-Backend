@@ -24,9 +24,16 @@ for(var e in events) {
 }
 
 function emitEvent(event) {
-  return function(doc) {
-    RegisterEvents.emit(`${event}:${doc._id}`, doc);
-    RegisterEvents.emit(event, doc);
+  return function(register) {
+    register.populate('person sector resolvedRegister', function(err, populatedRegister){
+      if (err) {
+        console.error(err.stack);
+        return;
+      }
+      
+      RegisterEvents.emit(`${event}:${register._id}`, register);
+      RegisterEvents.emit(event, register);
+    });
   };
 }
 
