@@ -12,6 +12,7 @@
 
 import jsonpatch from 'fast-json-patch';
 import Company from './company.model';
+import Person from '../person/person.model';
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -92,7 +93,6 @@ export function upsert(req, res) {
     delete req.body._id;
   }
   return Company.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
-
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
@@ -114,5 +114,17 @@ export function destroy(req, res) {
   return Company.findById(req.params.id).exec()
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
+    .catch(handleError(res));
+}
+
+export function companyPersons(req, res){
+  let baseQuery = Person.find({ company: req.params.id });
+  
+  if (req.query.rut) {
+    baseQuery.where('rut').equals(new RegExp(`^${req.query.rut}`, 'i'));
+  }
+  
+  return baseQuery.exec()
+    .then(respondWithResult(res))
     .catch(handleError(res));
 }

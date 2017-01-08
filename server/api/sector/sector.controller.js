@@ -10,9 +10,10 @@
 
 'use strict';
 
+import Promise from 'bluebird';
+import jsonpatch from 'fast-json-patch';
 import moment from 'moment';
 
-import jsonpatch from 'fast-json-patch';
 import Sector from './sector.model';
 import Register from '../register/register.model';
 
@@ -20,9 +21,9 @@ function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return function(entity) {
     if(entity) {
-      console.log(`responding with ${JSON.stringify(entity)}`)
       return res.status(statusCode).json(entity);
     }
+    
     return null;
   };
 }
@@ -120,32 +121,33 @@ export function destroy(req, res) {
     .catch(handleError(res));
 }
 
-
 export function sectorRegisters(req, res) {
   let baseQuery = Register.find()
-    .populate('person sector resolvedRegister')
-    .where({ sector: req.params.id })
+    .deepPopulate('person sector resolvedRegister.sector')
+    .where('sector').equals(req.params.id)
   
   if(req.query) {
+    if (req.query.type) {
+      baseQuery.where('type').equals(req.query.type);
+    }
+    
     if(req.query.top) { 
       baseQuery.limit(parseInt(req.query.top, 10));
     }
     
-    if (req.query.from) { 
-      baseQuery.where('time').gte(moment(parseInt(req.query.from, 10)))
+    if(req.query.from) { 
+      baseQuery.where('time').gte(moment(parseInt(req.query.from, 10)));
     }
 
-    if (req.query.to) {
-      baseQuery.where('time').lte(moment(parseInt(req.query.to, 10)))
+    if(req.query.to) {
+      baseQuery.where('time').lte(moment(parseInt(req.query.to, 10)));
     }
     
-    //FIXME: this query is not working...
-    if (req.query.personType) {
-      console.log(`filtering by personType: ${req.query.personType}`);
-      baseQuery.where('person.type').equals(req.query.personType)
+    if(req.query.personType) {
+      baseQuery.where('personType').equals(req.query.personType);
     }
     
-    if (req.query.incomplete) {
+    if(req.query.incomplete) {
       baseQuery.where('isResolved').equals(false);
     }
   }

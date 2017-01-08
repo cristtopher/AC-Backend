@@ -67,7 +67,7 @@ function handleError(res, statusCode) {
 export function index(req, res) {
   let user = req.user;
   
-  var baseQuery = Register.find().populate('person sector resolvedRegister');
+  var baseQuery = Register.find().deepPopulate('person sector resolvedRegister.sector');
                           
   if(user.role !== 'admin') {
     baseQuery.where('sector').in(user.sectors);
@@ -75,6 +75,7 @@ export function index(req, res) {
   
   return baseQuery
     .where('type').equals('entry')
+    .lean()
     .exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
@@ -110,7 +111,9 @@ export function patch(req, res) {
   if(req.body._id) {
     delete req.body._id;
   }
-  return Register.findById(req.params.id).exec()
+  return Register.findById(req.params.id)
+    .deepPopulate('person sector resolvedRegister.sector')
+    .exec()
     .then(handleEntityNotFound(res))
     .then(patchUpdates(req.body))
     .then(respondWithResult(res))

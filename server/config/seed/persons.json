@@ -14,13 +14,13 @@
   "_id": "5855d9ba7f45b135cbb73ad3",
   "rut": "789-1",
   "name": "Person 3",
-  "company": "585597684f6ad8244e26748f",
+  "company": "585597684f6ad8244e26748e",
   "card":  3
 }, {
   "_id": "5855d9ba7f45b135cbb73ad4",
   "rut": "546-1",
   "name": "Visitor 1",
   "type": "visitor",
-  "company": "585597684f6ad8244e26748f",
+  "company": "585597684f6ad8244e26748e",
   "card":  4
 }]

@@ -1,5 +1,6 @@
 'use strict';
 
+import Promise from 'bluebird';
 
 import mongoose from 'mongoose';
 import moment from 'moment';
@@ -14,45 +15,56 @@ var SectorSchema = new mongoose.Schema({
 });
 
 SectorSchema.statics = {
-  getIncompleteRegisters: function(sectorId) {
-    return Register.find({ sector: sectorId })
-                   .where('isResolved').equals(true);
-  },  
   getStatistics: function(sectorId) {
     let now = new Date();
-    
-    // FIXME: bug in barplot data
-    return Register.find({ sector: sectorId })
-      .where('time').gte(moment(now).subtract(8, 'days'))
-      .populate('person')
-      .then(function(registers) {
-        var _weeklyHistory = {
-          entry: [],
-          depart: []
-        };
-                
-        for(var i = 1; i <= 7; i++) {
-          let upperDate = i == 1 ? now : moment(now).startOf('day').subtract(i - 1, 'days');  
-          let lowerDate = i == 1 ? moment(now).startOf('day') : moment(now).startOf('day').subtract(i, 'days');
-          
-          let timeFilteredRegisters = _.filter(registers, r => r.time < upperDate && r.time > lowerDate);
-          
-          let entriesFound = _.filter(timeFilteredRegisters, r => r.type === 'entry');
-          let departsFound = _.filter(timeFilteredRegisters, r => r.type === 'depart');
-      
-          console.log(`entriesFound: ${entriesFound.length}, departsFound: ${departsFound.length}`);
-      
-          _weeklyHistory.entry.push({ datetime: moment(now).subtract(i - 1, 'days').unix() * 1000, count: _.size(entriesFound) });
-          _weeklyHistory.depart.push({ datetime: moment(now).subtract(i - 1, 'days').unix() * 1000, count: _.size(departsFound) });
-        }
 
-        return {
-          staffCount: _.filter(registers, r => r.person.type === 'staff').length,
-          contractorCount: _.filter(registers, r => r.person.type === 'contractor').length,
-          visitCount: _.filter(registers, r => r.person.type === 'visitor').length,
-          weeklyHistory: _weeklyHistory
-        };
-      });
+    var _getIncompleteRegistersPromise = function(){
+      return Register.find({ sector: sectorId })
+                     .where('type').equals('entry')
+                     .where('isResolved').equals(false)
+                     .exec()
+    }
+    
+    var _getWeeklyRegisterDataPromise = function(){
+      return Register.find({ sector: sectorId })
+                     .where('time').gte(moment(now).subtract(8, 'days'))
+                     .populate('person')
+                     .exec();
+    }
+
+    return Promise.all([
+      _getIncompleteRegistersPromise(),
+      _getWeeklyRegisterDataPromise(),
+    ])
+    .spread(function(incompleteRegisters, weeklyRegisters){
+      var _weeklyHistory = {
+        entry: [],
+        depart: []
+      };
+      
+      for(var i = 1; i <= 7; i++) {
+        let upperDate = i == 1 ? now : moment(now).startOf('day').subtract(i - 1, 'days');  
+        let lowerDate = i == 1 ? moment(now).startOf('day') : moment(now).startOf('day').subtract(i, 'days');
+        
+        let timeFilteredRegisters = _.filter(weeklyRegisters, r => r.time < upperDate && r.time > lowerDate);
+        
+        let entriesFound = _.filter(timeFilteredRegisters, r => r.type === 'entry');
+        let departsFound = _.filter(timeFilteredRegisters, r => r.type === 'depart');
+    
+        console.log(`entriesFound: ${entriesFound.length}, departsFound: ${departsFound.length}`);
+    
+        _weeklyHistory.entry.push({ datetime: moment(now).subtract(i - 1, 'days').unix() * 1000, count: _.size(entriesFound) });
+        _weeklyHistory.depart.push({ datetime: moment(now).subtract(i - 1, 'days').unix() * 1000, count: _.size(departsFound) });
+      }
+
+      return {
+        staffCount: _.filter(incompleteRegisters, r => r.personType === 'staff').length,
+        contractorCount: _.filter(incompleteRegisters, r => r.personType === 'contractor').length,
+        visitCount: _.filter(incompleteRegisters, r => r.personType === 'visitor').length,
+        weeklyHistory: _weeklyHistory
+      };
+      
+    });    
   }
 };
 
