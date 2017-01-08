@@ -42,19 +42,19 @@ SectorSchema.statics = {
         depart: []
       };
       
-      for(var i = 1; i <= 7; i++) {
-        let upperDate = i == 1 ? now : moment(now).startOf('day').subtract(i - 1, 'days');  
-        let lowerDate = i == 1 ? moment(now).startOf('day') : moment(now).startOf('day').subtract(i, 'days');
+      for(var i = 0; i <= 6; i++) {
+        let upperDate = i == 0 ? now : moment(now).startOf('day').subtract(i - 1, 'days');  
+        let lowerDate = i == 0 ? moment(now).startOf('day') : moment(now).startOf('day').subtract(i, 'days');
         
         let timeFilteredRegisters = _.filter(weeklyRegisters, r => r.time < upperDate && r.time > lowerDate);
         
         let entriesFound = _.filter(timeFilteredRegisters, r => r.type === 'entry');
         let departsFound = _.filter(timeFilteredRegisters, r => r.type === 'depart');
     
-        console.log(`entriesFound: ${entriesFound.length}, departsFound: ${departsFound.length}`);
+        console.log(`for ${lowerDate.toDate()} => entriesFound: ${entriesFound.length}, departsFound: ${departsFound.length}`);
     
-        _weeklyHistory.entry.push({ datetime: moment(now).subtract(i - 1, 'days').unix() * 1000, count: _.size(entriesFound) });
-        _weeklyHistory.depart.push({ datetime: moment(now).subtract(i - 1, 'days').unix() * 1000, count: _.size(departsFound) });
+        _weeklyHistory.entry.push({ datetime: lowerDate.unix() * 1000, count: _.size(entriesFound) });
+        _weeklyHistory.depart.push({ datetime: lowerDate.unix() * 1000, count: _.size(departsFound) });
       }
 
       return {
