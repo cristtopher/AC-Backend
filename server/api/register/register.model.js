@@ -10,7 +10,7 @@ import moment from 'moment';
 
 // suppress warnings as mongoose-deep-populate has promises without returns.
 Promise.config({
-    warnings: { wForgottenReturn: false }
+  warnings: { wForgottenReturn: false }
 });
 
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
@@ -50,10 +50,10 @@ RegisterSchema.pre('save', function(next) {
   var register = this;
 
   mongoose.model('Person').findById(register.person).exec()
-    .then(function(person){
+    .then(function(person) {
       register.personType = person.type; 
     })
-    .then(function(){
+    .then(function() {
       if(register.type === 'entry' || register.isResolved) return;
       
       // try to auto-match a depart with the last unresolved entry

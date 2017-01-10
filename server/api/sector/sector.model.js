@@ -18,25 +18,27 @@ SectorSchema.statics = {
   getStatistics: function(sectorId) {
     let now = new Date();
 
-    var _getIncompleteRegistersPromise = function(){
+    var _getIncompleteRegistersPromise = function() {
       return Register.find({ sector: sectorId })
-                     .where('type').equals('entry')
-                     .where('isResolved').equals(false)
-                     .exec()
-    }
+                     .where('type')
+                     .equals('entry')
+                     .where('isResolved')
+                     .equals(false)
+                     .exec();
+    };
     
-    var _getWeeklyRegisterDataPromise = function(){
+    var _getWeeklyRegisterDataPromise = function() {
       return Register.find({ sector: sectorId })
                      .where('time').gte(moment(now).subtract(8, 'days'))
                      .populate('person')
                      .exec();
-    }
+    };
 
     return Promise.all([
       _getIncompleteRegistersPromise(),
       _getWeeklyRegisterDataPromise(),
     ])
-    .spread(function(incompleteRegisters, weeklyRegisters){
+    .spread(function(incompleteRegisters, weeklyRegisters) {
       var _weeklyHistory = {
         entry: [],
         depart: []
@@ -62,8 +64,7 @@ SectorSchema.statics = {
         contractorCount: _.filter(incompleteRegisters, r => r.personType === 'contractor').length,
         visitCount: _.filter(incompleteRegisters, r => r.personType === 'visitor').length,
         weeklyHistory: _weeklyHistory
-      };
-      
+      };  
     });    
   }
 };

@@ -117,10 +117,10 @@ export function destroy(req, res) {
     .catch(handleError(res));
 }
 
-export function companyPersons(req, res){
+export function companyPersons(req, res) {
   let baseQuery = Person.find({ company: req.params.id });
   
-  if (req.query.rut) {
+  if(req.query.rut) {
     baseQuery.where('rut').equals(new RegExp(`^${req.query.rut}`, 'i'));
   }
   

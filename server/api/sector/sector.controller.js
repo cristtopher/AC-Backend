@@ -124,10 +124,11 @@ export function destroy(req, res) {
 export function sectorRegisters(req, res) {
   let baseQuery = Register.find()
     .deepPopulate('person sector resolvedRegister.sector')
-    .where('sector').equals(req.params.id)
-  
+    .where('sector')
+    .equals(req.params.id);
+
   if(req.query) {
-    if (req.query.type) {
+    if(req.query.type) {
       baseQuery.where('type').equals(req.query.type);
     }
     
