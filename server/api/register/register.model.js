@@ -63,15 +63,15 @@ RegisterSchema.pre('save', function(next) {
         .where('isResolved').equals(false)
         .where('type').equals('entry')
         .where('time').lte(register.time)
-        .then(function(counterRegister) {        
+        .then(function(counterRegister) {
+          // TODO: should this condition throw an error? 
           if(!counterRegister) return next();
             
-          counterRegister.resolvedRegister = register._id;
-          counterRegister.isResolved = true;
-  
           register.isResolved = true;
-  
-          return Promise.promisify(counterRegister.save, counterRegister)();
+    
+          return mongoose.model('Register')
+            .findOneAndUpdate({ _id: counterRegister._id }, { resolvedRegister: register._id, isResolved: true })
+            .exec();
         });
     })
     .then(next)
