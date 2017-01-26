@@ -64,13 +64,13 @@ function handleError(res, statusCode) {
   };
 }
 
-// Gets a list of Companies
+// Gets a list of Persons
 export function index(req, res) {
-  let baseQuery = Person.find();
+  let baseQuery = Person.find()
+	.populate('company');
 
   if(req.query){
     if(req.query.rut) {
-      console.log(req.query.rut);
       baseQuery.where('rut').equals(req.query.rut);
     }
   }
