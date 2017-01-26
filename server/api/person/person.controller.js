@@ -66,7 +66,16 @@ function handleError(res, statusCode) {
 
 // Gets a list of Companies
 export function index(req, res) {
-  return Person.find().exec()
+  let baseQuery = Person.find()
+
+  if(req.query){
+    if(req.query.rut) {
+      console.log(req.query.rut);
+      baseQuery.where('rut').equals(req.query.rut);
+    }
+  }
+  
+  return baseQuery.exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
