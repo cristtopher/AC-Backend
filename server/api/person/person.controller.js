@@ -64,9 +64,11 @@ function handleError(res, statusCode) {
   };
 }
 
-// Gets a list of Companies
+// Gets a list of Persons
 export function index(req, res) {
-  return Person.find().exec()
+  return Person.find()
+    .populate('company')
+    .exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
