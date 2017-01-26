@@ -71,7 +71,15 @@ function handleError(res, statusCode) {
 
 // Gets a list of Companies
 export function index(req, res) {
-  return Sector.find().exec()
+  let baseQuery = Sector.find();
+
+  if(req.query){
+    if(req.query.name) {
+      baseQuery.where('name').equals(new RegExp(`^${req.query.name}`, 'i'));
+    }
+  }
+
+  return baseQuery.exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
