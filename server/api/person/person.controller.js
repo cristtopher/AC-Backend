@@ -69,7 +69,7 @@ export function index(req, res) {
   let baseQuery = Person.find()
 	.populate('company');
 
-  if(req.query){
+  if(req.query) {
     if(req.query.rut) {
       baseQuery.where('rut').equals(req.query.rut);
     }
@@ -101,7 +101,6 @@ export function upsert(req, res) {
     delete req.body._id;
   }
   return Person.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
-
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
@@ -123,5 +122,25 @@ export function destroy(req, res) {
   return Person.findById(req.params.id).exec()
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
+    .catch(handleError(res));
+}
+
+
+// export person list as a excel file
+export function exportExcel(req, res) {
+  // TODO: implement this.  
+  return Person.dummyExcel()
+    .then(excel => {
+      res.setHeader('Content-Type', 'application/vnd.ms-excel');
+      res.setHeader('Content-Disposition', `attachment; filename=persons-export-${new Date('YYYY-mm-ddThh:mm:ss')}.xlsx`);
+      res.end(excel.toString('base64'));
+    })
+    .catch(handleError(res));
+}
+
+// import person list as a excel file (should overwrite all entries in DB)
+export function importExcel(req, res) {
+  return Person.importExcel(req.file.path)
+    .then(() => res.send(200))
     .catch(handleError(res));
 }

@@ -67,14 +67,15 @@ function handleError(res, statusCode) {
 export function index(req, res) {
   let user = req.user;
   
-  var baseQuery = Register.find().deepPopulate('person sector resolvedRegister.sector');
+  var baseQuery = Register.find()
+    .deepPopulate('person sector resolvedRegister.sector')
+    .where('type').equals('entry');
                           
   if(user.role !== 'admin') {
     baseQuery.where('sector').in(user.sectors);
   }
   
-  return baseQuery
-    .where('type').equals('entry')
+  return baseQuery    
     .lean()
     .exec()
     .then(respondWithResult(res))
