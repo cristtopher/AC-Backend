@@ -4,6 +4,8 @@ import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import xlsx from 'node-xlsx';
 
+import User from '../user/user.model';
+
 var readFileAsync = Promise.promisify(require('fs').readFile);
 
 
@@ -40,9 +42,49 @@ PersonSchema.statics = {
         let sheet = excel[0];
         
         sheet.data.forEach((row, i) => {
-          row.forEach((val, j) => {
-            console.log(`excel[${i + 1}][${String.fromCharCode(97 + j).toUpperCase()}] = ${val}`);
-          });
+          // 0 Rut
+          // 1 Name
+          // 5 Status
+          var Person = mongoose.model('Person', PersonSchema);
+
+          if(i > 0){
+            if(row[5] == 'Activo'){
+              Person.findOne({ rut : row[0] }, function(err, personR){
+                if(err){
+                  console.log(err);
+                  return
+                }
+
+                if(personR){
+                  console.log('Updating Row');
+                  personR.name = row[1];
+                  personR.card = row[6];
+                  personR.update();
+                }
+                else{
+                  console.log('Creating Row');
+                  var personR = Person();
+                  personR.rut = row[0];
+                  personR.name = row[1];
+                  personR.card = row[6];
+                  personR.save();
+                }
+              });
+            }
+            else if (row[5] == 'Inactivo'){
+              Person.findOne({ rut : row[0] }, function(err, personR){
+                if(err){
+                  console.log(err);
+                  return
+                }
+
+                console.log('Deleting Row');
+                if(personR)
+                  personR.remove();
+              });
+            }
+          }
+          //console.log(`excel[${i + 1}][${String.fromCharCode(97 + j).toUpperCase()}] = ${val}`);
         });
       });
   }
