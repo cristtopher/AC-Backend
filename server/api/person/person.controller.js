@@ -128,7 +128,7 @@ export function destroy(req, res) {
 
 // export person list as a excel file
 export function exportExcel(req, res) {
-  // TODO: implement this.  
+  // TODO: implement this.
   return Person.dummyExcel()
     .then(excel => {
       res.setHeader('Content-Type', 'application/vnd.ms-excel');

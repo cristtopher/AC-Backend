@@ -73,7 +73,7 @@ function handleError(res, statusCode) {
 export function index(req, res) {
   let baseQuery = Sector.find();
 
-  if(req.query){
+  if(req.query) {
     if(req.query.name) {
       baseQuery.where('name').equals(new RegExp(`^${req.query.name}`, 'i'));
     }

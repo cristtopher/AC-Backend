@@ -36,7 +36,7 @@ PersonSchema.statics = {
   importExcel: function(filePath) {
     return readFileAsync(filePath)
       .then(xlsx.parse)
-      .then(function(excel){
+      .then(function(excel) {
         let sheet = excel[0];
         
         sheet.data.forEach((row, i) => {
