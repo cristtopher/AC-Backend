@@ -132,8 +132,8 @@ export function exportExcel(req, res) {
   return Person.dummyExcel()
     .then(excel => {
       res.setHeader('Content-Type', 'application/vnd.ms-excel');
-      res.setHeader('Content-Disposition', `attachment; filename=persons-export-${new Date('YYYY-mm-ddThh:mm:ss')}.xlsx`);
-      res.end(excel.toString('base64'));
+      res.setHeader('Content-Disposition', `attachment; filename=persons-export.xlsx`);
+      res.end(excel);
     })
     .catch(handleError(res));
 }
