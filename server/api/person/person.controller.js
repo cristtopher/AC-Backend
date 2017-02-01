@@ -141,6 +141,6 @@ export function exportExcel(req, res) {
 // import person list as a excel file (should overwrite all entries in DB)
 export function importExcel(req, res) {
   return Person.importExcel(req.file.path)
-    .then(() => res.send(200))
+    .then(() => res.sendStatus(200))
     .catch(handleError(res));
 }
