@@ -143,6 +143,6 @@ export function importExcel(req, res) {
   console.log('under importExcel :D');
   
   return Person.importExcel(req.file.path)
-    .then(() => res.send(200))
+    .then(() => res.sendStatus(200))
     .catch(handleError(res));
 }
