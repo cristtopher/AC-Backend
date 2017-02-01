@@ -4,8 +4,6 @@ import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import xlsx from 'node-xlsx';
 
-import User from '../user/user.model';
-
 var readFileAsync = Promise.promisify(require('fs').readFile);
 
 
@@ -28,11 +26,22 @@ PersonSchema.index({ company: 1 });
 //-------------------------------------------------------
 
 PersonSchema.statics = {
-  dummyExcel: function() {
-    const data = [[1, 2, 3], [true, false, null, 'sheetjs'], ['foo', 'bar', new Date('2014-02-19T14:30Z'), '0.3'], ['baz', null, 'qux']];
-    var buffer = xlsx.build([{ name: 'mySheetName', data: data }]);
-    
-    return new Promise(resolve => resolve(buffer));
+  dummyExcel: function(userCompanyId) {
+    var data = [['RUT', 'NOMBRE', 'EMPRESA', 'PERFIL', 'CARD']];
+
+    return mongoose.model('Person').find({company: userCompanyId})
+      .populate('company')
+      .exec()
+      .then(function(persons) {
+        for(var i in persons) {
+          var row = [persons[i].rut, persons[i].name, persons[i].company.name, persons[i].type, persons[i].card];
+          data.push(row);
+        }
+      })
+      .then(function() {
+        var buffer = xlsx.build([{ name: 'mySheetName', data: data }]);
+        return new Promise(resolve => resolve(buffer));
+      });
   },
   
   importExcel: function(filePath, userCompanyId) {
@@ -42,51 +51,48 @@ PersonSchema.statics = {
         let sheet = excel[0];
         
         sheet.data.forEach((row, i) => {
-          // 0 Rut
-          // 1 Name
-          // 5 Status
           console.log(userCompanyId);
           var Person = mongoose.model('Person', PersonSchema);
 
-          if(i > 0){
-            if(row[5] == 'Activo'){
-              Person.findOne({ rut : row[0] }, function(err, personR){
-                if(err){
-                  console.log(err);
-                  return
-                }
+          if(i > 0) {
+            //if(row[5] == 'Activo') {
+            Person.findOne({rut: row[0]}, function(err, personR) {
+              if(err) {
+                console.log(err);
+                return;
+              }
 
-                if(personR){
-                  console.log('Updating Row');
-                  personR.name = row[1];
-                  personR.card = row[6];
-                  personR.update();
-                }
-                else{
-                  console.log('Creating Row');
-                  var personR = Person();
-                  personR.rut = row[0];
-                  personR.name = row[1];
-                  personR.card = row[6];
-                  personR.company = userCompanyId;
-                  personR.save();
-                }
-              });
-            }
-            else if (row[5] == 'Inactivo'){
-              Person.findOne({ rut : row[0] }, function(err, personR){
-                if(err){
-                  console.log(err);
-                  return
-                }
-
-                console.log('Deleting Row');
-                if(personR)
-                  personR.remove();
-              });
-            }
+              if(personR) {
+                console.log('Updating Row');
+                personR.name = row[1];
+                personR.company = userCompanyId;
+                personR.type = row[3].toLowerCase();
+                personR.card = row[4];
+                personR.update();
+              } else {
+                console.log('Creating Row');
+                var personCreate = Person();
+                personCreate.rut = row[0];
+                personCreate.name = row[1];
+                personCreate.company = userCompanyId;
+                personCreate.type = row[3].toLowerCase();
+                personCreate.card = row[4];
+                personCreate.save();
+              }
+            });
           }
-          //console.log(`excel[${i + 1}][${String.fromCharCode(97 + j).toUpperCase()}] = ${val}`);
+            //} else if(row[5] == 'Inactivo') {
+            //  Person.findOne({rut: row[0]}, function(err, personR) {
+            //    if(err) {
+            //      console.log(err);
+            //      return;
+            //    }
+
+            //    console.log('Deleting Row');
+            //    if(personR) {
+            //      personR.remove();
+            //    }
+            //  });
         });
       });
   }

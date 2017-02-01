@@ -128,11 +128,10 @@ export function destroy(req, res) {
 
 // export person list as a excel file
 export function exportExcel(req, res) {
-  // TODO: implement this.
-  return Person.dummyExcel()
+  return Person.dummyExcel(req.user.company)
     .then(excel => {
       res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-      res.setHeader('Content-Disposition', `attachment; filename=persons-export.xlsx`);
+      res.setHeader('Content-Disposition', 'attachment; filename=persons-export.xlsx');
       res.end(excel);
     })
     .catch(handleError(res));
