@@ -131,7 +131,7 @@ export function exportExcel(req, res) {
   // TODO: implement this.
   return Person.dummyExcel()
     .then(excel => {
-      res.setHeader('Content-Type', 'application/vnd.ms-excel');
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
       res.setHeader('Content-Disposition', `attachment; filename=persons-export.xlsx`);
       res.end(excel);
     })
@@ -140,6 +140,8 @@ export function exportExcel(req, res) {
 
 // import person list as a excel file (should overwrite all entries in DB)
 export function importExcel(req, res) {
+  console.log('under importExcel :D');
+  
   return Person.importExcel(req.file.path)
     .then(() => res.send(200))
     .catch(handleError(res));

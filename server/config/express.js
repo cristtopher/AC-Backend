@@ -6,6 +6,7 @@
 
 import express from 'express';
 import favicon from 'serve-favicon'; /* eslint no-unused-vars:0 */
+import cors from 'cors';
 import morgan from 'morgan';
 import shrinkRay from 'shrink-ray';
 import bodyParser from 'body-parser';
@@ -19,6 +20,7 @@ import passport from 'passport';
 import session from 'express-session';
 import connectMongo from 'connect-mongo';
 import mongoose from 'mongoose';
+
 var MongoStore = connectMongo(session);
 
 export default function(app) {
@@ -39,12 +41,10 @@ export default function(app) {
   app.use(passport.initialize());
 
   // Enable CORS
-  app.use(function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,PATCH,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Auth-Token');
-    next();
-  });
+  app.use(cors({
+    origin: true,
+    credentials: true
+  }));
 
   // Persist sessions with MongoStore / sequelizeStore
   // We need to enable sessions for passport-twitter because it's an
