@@ -35,7 +35,7 @@ PersonSchema.statics = {
     return new Promise(resolve => resolve(buffer));
   },
   
-  importExcel: function(filePath) {
+  importExcel: function(filePath, userCompanyId) {
     return readFileAsync(filePath)
       .then(xlsx.parse)
       .then(function(excel) {
@@ -45,6 +45,7 @@ PersonSchema.statics = {
           // 0 Rut
           // 1 Name
           // 5 Status
+          console.log(userCompanyId);
           var Person = mongoose.model('Person', PersonSchema);
 
           if(i > 0){
@@ -67,6 +68,7 @@ PersonSchema.statics = {
                   personR.rut = row[0];
                   personR.name = row[1];
                   personR.card = row[6];
+                  personR.company = userCompanyId;
                   personR.save();
                 }
               });

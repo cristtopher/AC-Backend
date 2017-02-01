@@ -24,7 +24,7 @@ router.get('/:id', auth.isAuthenticated(), controller.show);
 //---------------------------------
 
 router.post('/', auth.isAuthenticated(), controller.create);
-router.post('/import', upload.single('file'), controller.importExcel);
+router.post('/import', auth.isAuthenticated(), upload.single('file'), controller.importExcel);
 
 //---------------------------------
 //              PUT
