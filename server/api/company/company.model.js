@@ -19,7 +19,7 @@ CompanySchema.statics = {
     let now = new Date();
 
     var _getIncompleteRegistersPromise = function() {
-      return Register.find({ company: companyId })
+      return Register.find({})
                      .where('type')
                      .equals('entry')
                      .where('isResolved')
@@ -28,7 +28,7 @@ CompanySchema.statics = {
     };
     
     var _getWeeklyRegisterDataPromise = function() {
-      return Register.find({ company: companyId })
+      return Register.find({})
                      .where('time').gte(moment(now).subtract(8, 'days'))
                      .populate('person')
                      .exec();
