@@ -128,3 +128,9 @@ export function companyPersons(req, res) {
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
+
+export function companyStatistics(req, res) {
+  Company.getStatistics(req.params.id)
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
