@@ -15,7 +15,7 @@ var CompanySchema = new mongoose.Schema({
 import Register from '../register/register.model';
 
 CompanySchema.statics = {
-  getStatistics: function(companyId) {
+  getStatistics: function() {
     let now = new Date();
 
     var _getIncompleteRegistersPromise = function() {
