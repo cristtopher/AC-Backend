@@ -20,6 +20,7 @@ SectorSchema.statics = {
 
     var _getIncompleteRegistersPromise = function() {
       return Register.find({ sector: sectorId })
+                     .sort({date:-1})
                      .where('type')
                      .equals('entry')
                      .where('isResolved')
@@ -29,6 +30,7 @@ SectorSchema.statics = {
     
     var _getWeeklyRegisterDataPromise = function() {
       return Register.find({ sector: sectorId })
+                     .sort({date:-1})
                      .where('time').gte(moment(now).subtract(8, 'days'))
                      .populate('person')
                      .exec();
