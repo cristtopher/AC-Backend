@@ -100,7 +100,8 @@ export function upsert(req, res) {
   if(req.body._id) {
     delete req.body._id;
   }
-  return Person.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
+
+  return Person.findOneAndUpdate({_id: req.params.id}, req.body, { upsert: true, setDefaultsOnInsert: true, runValidators: true, new: true }).exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
@@ -128,7 +129,7 @@ export function destroy(req, res) {
 
 // export person list as a excel file
 export function exportExcel(req, res) {
-  return Person.dummyExcel(req.user.company)
+  return Person.exportExcel(req.user.company)
     .then(excel => {
       res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
       res.setHeader('Content-Disposition', 'attachment; filename=persons-export.xlsx');

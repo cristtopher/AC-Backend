@@ -3,9 +3,12 @@
 import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import xlsx from 'node-xlsx';
+import { EventEmitter } from 'events';
 
 var readFileAsync = Promise.promisify(require('fs').readFile);
+var PersonEvents = new EventEmitter();
 
+PersonEvents.setMaxListeners(0);
 
 var PersonSchema = new mongoose.Schema({
   rut:     { type: String },
@@ -20,13 +23,41 @@ PersonSchema.index({ rut: 1 }, { unique: true });
 PersonSchema.index({ card: 1 }, { unique: true });
 PersonSchema.index({ company: 1 });
 
+//-------------------------------------------------------
+//                    Pre/Post Hooks
+//-------------------------------------------------------
+
+function emitEvent(event) {  
+  return function(doc) {
+    PersonEvents.emit(`${event}:${doc._id}`, doc);
+    PersonEvents.emit(event, doc);
+  };
+}
+
+PersonSchema.post('save', function(doc) {
+  emitEvent('save')(doc);
+});
+
+PersonSchema.post('remove', function(doc) {
+  emitEvent('remove')(doc);
+});
+
+PersonSchema.post('update', function(doc) {
+  emitEvent('update')(doc);
+});
+
+PersonSchema.post('findOneAndUpdate', function(doc) {
+  emitEvent('update')(doc);
+});
 
 //-------------------------------------------------------
 //                     Statics
 //-------------------------------------------------------
 
 PersonSchema.statics = {
-  dummyExcel: function(userCompanyId) {
+  getEventEmitter: function() { return PersonEvents; },
+  
+  exportExcel: function(userCompanyId) {
     var data = [['RUT', 'NOMBRE', 'EMPRESA', 'PERFIL', 'CARD', 'ESTADO']];
 
     return mongoose.model('Person').find({company: userCompanyId})
@@ -92,54 +123,7 @@ PersonSchema.statics = {
           }
         });
       });
-  },
-
-  importExcelTest: function(filePath, userCompanyId) {
-    return readFileAsync(filePath)
-      .then(xlsx.parse)
-      .then(function(excel) {
-        let sheet = excel[0];
-        
-        sheet.data.forEach((row, i) => {
-          var Person = mongoose.model('Person', PersonSchema);
-          
-          var active = true;
-          if(row[5].toLowerCase() == 'inactivo') {
-            active = false;
-          }
-
-          if(i > 0) {
-            Person.findOne({rut: row[0]}, function(err, personR) {
-              if(err) {
-                console.log(err);
-                return;
-              }
-
-              if(personR) {
-                console.log('Updating Row');
-                personR.name = row[1];
-                personR.company = userCompanyId;
-                personR.type = row[3].toLowerCase();
-                personR.card = row[4];
-                personR.active = active;
-                personR.update();
-              } else {
-                console.log('Creating Row');
-                var personCreate = Person();
-                personCreate.rut = row[0];
-                personCreate.name = row[1];
-                personCreate.company = userCompanyId;
-                personCreate.type = row[3].toLowerCase();
-                personCreate.card = row[4];
-                personCreate.active = active;
-                personCreate.save();
-              }
-            });
-          }
-        });
-      });
   }
-
 };
 
 export default mongoose.model('Person', PersonSchema);
