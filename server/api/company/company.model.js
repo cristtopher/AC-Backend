@@ -6,39 +6,46 @@ import mongoose from 'mongoose';
 import moment from 'moment';
 import * as _ from 'lodash';
 
+import Register from '../register/register.model';
+import Sector from '../sector/sector.model';
+
 var CompanySchema = new mongoose.Schema({
   name:        { type: String },
   logo:        { type: String },
   description: { type: String }
 });
 
-import Register from '../register/register.model';
-
 CompanySchema.statics = {
-  getStatistics: function() {
+  getStatistics: function(companyId) {
     let now = new Date();
 
-    var _getIncompleteRegistersPromise = function() {
+    var _getCompanySectorsPromise = function() {
+      return Sector.find({ company: companyId }).exec();
+    }
+    
+    var _getIncompleteRegistersPromise = function(sectors) {
       return Register.find({})
-                     .where('type')
-                     .equals('entry')
-                     .where('isResolved')
-                     .equals(false)
+                     .where('sector').in(sectors)
+                     .where('type').equals('entry')
+                     .where('isResolved').equals(false)
                      .exec();
     };
     
-    var _getWeeklyRegisterDataPromise = function() {
+    var _getWeeklyRegisterDataPromise = function(sectors) {
       return Register.find({})
+                     .where('sector').in(sectors)
                      .where('time').gte(moment(now).subtract(8, 'days'))
                      .populate('person')
                      .exec();
     };
 
-    return Promise.all([
-      _getIncompleteRegistersPromise(),
-      _getWeeklyRegisterDataPromise(),
-    ])
-    .spread(function(incompleteRegisters, weeklyRegisters) {
+    return _getCompanySectorsPromise().then(function(sectors){
+      return Promise.all([
+        _getIncompleteRegistersPromise(sectors),
+        _getWeeklyRegisterDataPromise(sectors),
+      ]);
+    })
+    .spread(function(incompleteRegisters, weeklyRegisters) {      
       var _weeklyHistory = {
         entry: [],
         depart: []
@@ -66,6 +73,16 @@ CompanySchema.statics = {
         weeklyHistory: _weeklyHistory
       };  
     });    
+  },
+  
+  getRegisters: function(companyId) {
+    return Sector.find({ company: companyId }).exec()
+    .then(function(sectors) { 
+      return Register.find()
+        .populate('person sector resolvedRegister')
+        .where('sector').in(sectors)
+        .exec()
+    });
   }
 };
 

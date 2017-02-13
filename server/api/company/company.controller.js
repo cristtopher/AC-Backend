@@ -130,7 +130,13 @@ export function companyPersons(req, res) {
 }
 
 export function companyStatistics(req, res) {
-  Company.getStatistics()
+  Company.getStatistics(req.params.id)
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
+export function companyRegisters(req, res) {
+  Company.getRegisters(req.params.id)
     .then(respondWithResult(res))
     .catch(handleError(res));
 }

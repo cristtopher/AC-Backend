@@ -23,4 +23,10 @@
   "type": "visitor",
   "company": "585597684f6ad8244e26748e",
   "card":  4
+}, {
+  "_id": "58a11dfd3970537236abe72a",
+  "rut": "555-5",
+  "name": "Person 1 (Company 2)",
+  "company": "585597684f6ad8244e26748f",
+  "card":  5
 }]

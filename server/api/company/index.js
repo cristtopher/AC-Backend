@@ -16,5 +16,7 @@ router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 
 router.get('/:id/persons', auth.isAuthenticated(), controller.companyPersons);
 router.get('/:id/statistics', auth.hasRole('supervisor'), controller.companyStatistics);
+router.get('/:id/registers', auth.hasRole('supervisor'), controller.companyRegisters);
+
 
 module.exports = router;
