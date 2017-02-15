@@ -140,3 +140,4 @@ export function companyRegisters(req, res) {
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
+

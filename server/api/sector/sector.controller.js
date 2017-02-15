@@ -132,7 +132,8 @@ export function destroy(req, res) {
 export function sectorRegisters(req, res) {
   let baseQuery = Register.find()
     .deepPopulate('person sector resolvedRegister.sector')
-    .where('sector').equals(req.params.id)
+    .where('sector')
+    .equals(req.params.id)
     // FIXME: Temporary workaround to mantain sorted registers (change it after implementing paging)
     .sort({'_id': -1 });
 

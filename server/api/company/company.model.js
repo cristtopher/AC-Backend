@@ -21,25 +21,29 @@ CompanySchema.statics = {
 
     var _getCompanySectorsPromise = function() {
       return Sector.find({ company: companyId }).exec();
-    }
+    };
     
     var _getIncompleteRegistersPromise = function(sectors) {
       return Register.find({})
                      .where('sector').in(sectors)
-                     .where('type').equals('entry')
-                     .where('isResolved').equals(false)
+                     .where('type')
+                     .equals('entry')
+                     .where('isResolved')
+                     .equals(false)
                      .exec();
     };
     
     var _getWeeklyRegisterDataPromise = function(sectors) {
       return Register.find({})
                      .where('sector').in(sectors)
-                     .where('time').gte(moment(now).subtract(8, 'days'))
+                     .where('time')
+                     .gte(moment(now)
+                     .subtract(8, 'days'))
                      .populate('person')
                      .exec();
     };
 
-    return _getCompanySectorsPromise().then(function(sectors){
+    return _getCompanySectorsPromise().then(function(sectors) {
       return Promise.all([
         _getIncompleteRegistersPromise(sectors),
         _getWeeklyRegisterDataPromise(sectors),
@@ -80,8 +84,9 @@ CompanySchema.statics = {
     .then(function(sectors) { 
       return Register.find()
         .populate('person sector resolvedRegister')
-        .where('sector').in(sectors)
-        .exec()
+        .where('sector')
+        .in(sectors)
+        .exec();
     });
   }
 };

@@ -55,7 +55,9 @@ PersonSchema.post('findOneAndUpdate', function(doc) {
 //-------------------------------------------------------
 
 PersonSchema.statics = {
-  getEventEmitter: function() { return PersonEvents; },
+  getEventEmitter: function() { 
+    return PersonEvents; 
+  },
   
   exportExcel: function(userCompanyId) {
     var data = [['RUT', 'NOMBRE', 'EMPRESA', 'PERFIL', 'CARD', 'ESTADO']];
