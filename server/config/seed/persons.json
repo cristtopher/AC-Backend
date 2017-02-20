@@ -29,4 +29,10 @@
   "name": "Person 1 (Company 2)",
   "company": "585597684f6ad8244e26748f",
   "card":  5
+},{
+  "_id": "58aaac7c4fa8dc8e747a6fee",
+  "rut": "145112931-1",
+  "name": "Tzu-Chiang Shen",
+  "company": "585597684f6ad8244e26748e",
+  "card":  14511293
 }]
