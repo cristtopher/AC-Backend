@@ -93,6 +93,35 @@ export function show(req, res) {
 
 // Creates a new Register in the DB
 export function create(req, res) {
+  
+  var test = req.body.person;
+  if(test.length == 0)  {
+    console.log("corrupted POST:/api/registers, couldn't find req.body.person, drop the request ..."); 
+    console.log("req.body.person: " + req.body.person);
+    return;
+  }
+
+  test = req.body.sector;
+  if(test.length == 0)  {
+    console.log("corrupted POST: /api/registers, couldn't find req.body.sector, drop the request ..."); 
+    console.log("req.body.sector: " + req.body.sector);
+    return;
+  }
+
+  test = req.body.type;
+  if(test.length == 0)  {
+    console.log("corrupted POST: /api/registers, couldn't find req.body.type, drop the request ..."); 
+    console.log("req.body.type: " + req.body.type);
+    return;
+  }
+
+  test = req.body.time;
+  if(test.length == 0)  {
+    console.log("corrupted POST: /api/registers, couldn't find req.body.time, drop the request ..."); 
+    console.log("req.body.time: " + req.body.time);
+    return;
+  }
+
   return Register.create(req.body)
     .then(respondWithResult(res, 201))
     .catch(handleError(res));
