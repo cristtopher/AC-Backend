@@ -89,39 +89,44 @@ PersonSchema.statics = {
         let sheet = excel[0];
         
         sheet.data.forEach((row, i) => {
-          console.log(userCompanyId);
-          var Person = mongoose.model('Person', PersonSchema);
-          var status = {};
-          status.activo = true;
-          status.inactivo = false;
+          if(row[1] && row[3] && row[4] && row[5]){
+            console.log(row);
+            var Person = mongoose.model('Person', PersonSchema);
+            var status = {};
+            status.activo = true;
+            status.inactivo = false;
 
-          if(i > 0) {
-            Person.findOne({rut: row[0]}, function(err, personR) {
-              if(err) {
-                console.log(err);
-                return;
-              }
+            if(i > 0) {
+              Person.findOne({rut: row[0]}, function(err, personR) {
+                if(err) {
+                  console.log(err);
+                  return;
+                }
 
-              if(personR) {
-                console.log('Updating Row');
-                personR.name = row[1];
-                personR.company = userCompanyId;
-                personR.type = row[3].toLowerCase();
-                personR.card = row[4];
-                personR.active = status[row[5].toLowerCase()];
-                personR.update();
-              } else {
-                console.log('Creating Row');
-                var personCreate = Person();
-                personCreate.rut = row[0];
-                personCreate.name = row[1];
-                personCreate.company = userCompanyId;
-                personCreate.type = row[3].toLowerCase();
-                personCreate.card = row[4];
-                personCreate.active = status[row[5].toLowerCase()];
-                personCreate.save();
-              }
-            });
+                if(personR) {
+                  console.log('Updating Row');
+                  personR.name = row[1];
+                  personR.company = userCompanyId;
+                  personR.type = row[3].toLowerCase();
+                  personR.card = row[4];
+                  personR.active = status[row[5].toLowerCase()];
+                  personR.update();
+                } else {
+                  console.log('Creating Row');
+                  var personCreate = Person();
+                  personCreate.rut = row[0];
+                  personCreate.name = row[1];
+                  personCreate.company = userCompanyId;
+                  personCreate.type = row[3].toLowerCase();
+                  personCreate.card = row[4];
+                  personCreate.active = status[row[5].toLowerCase()];
+                  personCreate.save();
+                }
+              });
+            }
+          }
+          else{
+            console.log("Row empty or not complete");
           }
         });
       });
