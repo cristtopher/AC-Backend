@@ -67,7 +67,9 @@ function handleError(res, statusCode) {
 // Gets a list of Persons
 export function index(req, res) {
   let baseQuery = Person.find()
-	.populate('company');
+	                 .populate('company')
+                   .where('company')
+                   .equals(req.user.company);
 
   if(req.query) {
     if(req.query.rut) {
