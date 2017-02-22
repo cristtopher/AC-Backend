@@ -90,7 +90,7 @@ export function show(req, res) {
 
 // Creates a new Person in the DB
 export function create(req, res) {
-  return Person.create(req.body)
+  return Person.create(Object.assign(req.body, {company : req.user.company}))
     .then(respondWithResult(res, 201))
     .catch(handleError(res));
 }
