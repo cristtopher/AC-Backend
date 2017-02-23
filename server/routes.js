@@ -14,6 +14,10 @@ export default function(app) {
   app.use('/api/sectors', require('./api/sector'));
   app.use('/api/persons', require('./api/person'));
   app.use('/api/registers', require('./api/register'));
+  app.use('/api/pdas', require('./api/pda'));
+  app.use('/api/test', function(req, res) {
+    res.send('testing route');
+  });
   
   app.use('/auth', require('./auth').default);
 
