@@ -103,6 +103,9 @@ export function upsert(req, res) {
     delete req.body._id;
   }
 
+  delete req.body.__v;
+  console.log("removing __v");
+
   return Person.findOneAndUpdate({_id: req.params.id}, req.body, { upsert: true, setDefaultsOnInsert: true, runValidators: true, new: true }).exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
