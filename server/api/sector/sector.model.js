@@ -20,7 +20,7 @@ SectorSchema.statics = {
 
     var _getIncompleteRegistersPromise = function() {
       return Register.find({ sector: sectorId })
-                     .sort({ date: -1 })
+                     //.sort({ date: -1 })
                      .where('type')
                      .equals('entry')
                      .where('isResolved')
@@ -62,10 +62,19 @@ SectorSchema.statics = {
         _weeklyHistory.depart.push({ datetime: lowerDate.unix() * 1000, count: _.size(departsFound) });
       }
 
+      var key_list = [];
+      var data_redux = [];
+      for(var e in incompleteRegisters){
+        if(!_.includes(key_list, incompleteRegisters[e].person.toString())){
+          key_list.push(incompleteRegisters[e].person.toString());
+          data_redux.push(incompleteRegisters[e]);
+        }
+      }
+
       return {
-        staffCount: _.filter(incompleteRegisters, r => r.personType === 'staff').length,
-        contractorCount: _.filter(incompleteRegisters, r => r.personType === 'contractor').length,
-        visitCount: _.filter(incompleteRegisters, r => r.personType === 'visitor').length,
+        staffCount: _.filter(data_redux, r => r.personType === 'staff').length,
+        contractorCount: _.filter(data_redux, r => r.personType === 'contractor').length,
+        visitCount: _.filter(data_redux, r => r.personType === 'visitor').length,
         weeklyHistory: _weeklyHistory
       };  
     });    
