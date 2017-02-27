@@ -101,12 +101,12 @@ export function create(req, res) {
     return;
   }
 
-  test = req.body.sector;
-  if(test.length == 0)  {
+  var sector = req.body.sector;
+  if(sector.length == 0)  {
     console.log("corrupted POST: /api/registers, couldn't find req.body.sector, drop the request ..."); 
     console.log("req.body.sector: " + req.body.sector);
     return;
-  }
+  } 
 
   test = req.body.type;
   if(test.length == 0)  {
@@ -121,10 +121,15 @@ export function create(req, res) {
     console.log("req.body.time: " + req.body.time);
     return;
   }
-
+  
   return Register.create(req.body)
     .then(respondWithResult(res, 201))
+    .then(function() {
+      console.log("emitting register:save event");
+      req.app.locals.socketio.emit('register:save', sector);
+    })
     .catch(handleError(res));
+
 }
 
 // Upserts the given Register in the DB at the specified ID
@@ -132,6 +137,7 @@ export function upsert(req, res) {
   if(req.body._id) {
     delete req.body._id;
   }
+   
   return Register.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
