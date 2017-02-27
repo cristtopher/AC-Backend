@@ -1,0 +1,15 @@
+[{
+  "_id" : "58af3cdfb010eb2bac53004a", 
+  "name" : "test pda",
+  "description" : "test pda",
+  "serial" : "33b7ddaf",
+  "company" : "585597684f6ad8244e26748e",
+  "sector" : "586083923970532794a746b5"
+}, {
+  "_id" : "58af3d8fe9a0153046224cc2",
+  "name" : "test pda 2",
+  "description" : "test pda 2",
+  "serial" : "12345678",
+  "company" : "585597684f6ad8244e26748e",
+  "sector" : "5860838c3970532794a746b3"
+}]
