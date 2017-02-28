@@ -86,7 +86,6 @@ export function index(req, res) {
 
 // Gets a single Pda from the DB
 export function show(req, res) {
-
   let baseQuery = Pda.find()
     .where('serial')
     .equals(req.params.id);

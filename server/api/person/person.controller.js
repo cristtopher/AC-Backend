@@ -67,7 +67,7 @@ function handleError(res, statusCode) {
 // Gets a list of Persons
 export function index(req, res) {
   let baseQuery = Person.find()
-	                 .populate('company')
+                   .populate('company')
                    .where('company')
                    .equals(req.user.company);
 
@@ -92,7 +92,7 @@ export function show(req, res) {
 
 // Creates a new Person in the DB
 export function create(req, res) {
-  return Person.create(Object.assign(req.body, {company : req.user.company}))
+  return Person.create(Object.assign(req.body, {company: req.user.company}))
     .then(respondWithResult(res, 201))
     .catch(handleError(res));
 }
@@ -104,7 +104,7 @@ export function upsert(req, res) {
   }
 
   delete req.body.__v;
-  console.log("removing __v");
+  //console.log('removing __v');
 
   return Person.findOneAndUpdate({_id: req.params.id}, req.body, { upsert: true, setDefaultsOnInsert: true, runValidators: true, new: true }).exec()
     .then(respondWithResult(res))

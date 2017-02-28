@@ -18,7 +18,7 @@ export default function(app) {
   app.use('/api/test', function(req, res) {
     console.log('env=' + req.app.get('env'));
     //console.log(req.app.locals);
-    req.app.locals.socketio.emit('register-changed', {'sector':'sector1'});
+    req.app.locals.socketio.emit('register-changed', {sector: 'sector1'});
     res.send('testing route');
   });
   

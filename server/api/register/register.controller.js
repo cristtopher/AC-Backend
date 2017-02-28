@@ -13,7 +13,6 @@ import jsonpatch from 'fast-json-patch';
 import Register from './register.model';
 
 
-
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return function(entity) {
@@ -95,39 +94,37 @@ export function show(req, res) {
 
 // Creates a new Register in the DB
 export function create(req, res) {
-  
   var test = req.body.person;
-  if(test.length == 0)  {
-    console.log("corrupted POST:/api/registers, couldn't find req.body.person, drop the request ..."); 
-    console.log("req.body.person: " + req.body.person);
+  if(test.length == 0) {
+    console.log('corrupted POST:/api/registers, could not find req.body.person, drop the request ...r'); 
+    console.log('req.body.person: ' + req.body.person);
     return;
   }
 
   var sector = req.body.sector;
-  if(sector.length == 0)  {
-    console.log("corrupted POST: /api/registers, couldn't find req.body.sector, drop the request ..."); 
-    console.log("req.body.sector: " + req.body.sector);
+  if(sector.length == 0) {
+    console.log('corrupted POST: /api/registers, could not find req.body.sector, drop the request ...'); 
+    console.log('req.body.sector: ' + req.body.sector);
     return;
   } 
 
   test = req.body.type;
-  if(test.length == 0)  {
-    console.log("corrupted POST: /api/registers, couldn't find req.body.type, drop the request ..."); 
-    console.log("req.body.type: " + req.body.type);
+  if(test.length == 0) {  
+    console.log('corrupted POST: /api/registers, could not find req.body.type, drop the request ...'); 
+    console.log('req.body.type: ' + req.body.type);
     return;
   }
 
   test = req.body.time;
-  if(test.length == 0)  {
-    console.log("corrupted POST: /api/registers, couldn't find req.body.time, drop the request ..."); 
-    console.log("req.body.time: " + req.body.time);
+  if(test.length == 0) {
+    console.log('corrupted POST: /api/registers, could not find req.body.time, drop the request ...'); 
+    console.log('req.body.time: ' + req.body.time);
     return;
   }
 
   return Register.create(req.body)
     .then(respondWithResult(res, 201))
     .catch(handleError(res));
-
 }
 
 // Upserts the given Register in the DB at the specified ID
