@@ -4,7 +4,7 @@
 
 'use strict';
 
-import RegisterEvents from './register.events';
+var RegisterEvents = require('./register.events').default;
 
 // Model events to emit
 var events = ['save', 'remove'];
@@ -23,6 +23,7 @@ export function register(socket) {
 
 function createListener(event, socket) {
   return function(doc) {
+    console.log("Sending socketio event :" + event);
     socket.emit(event, doc);
   };
 }
@@ -32,3 +33,4 @@ function removeListener(event, listener) {
     RegisterEvents.removeListener(event, listener);
   };
 }
+

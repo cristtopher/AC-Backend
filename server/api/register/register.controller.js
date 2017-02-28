@@ -12,6 +12,8 @@
 import jsonpatch from 'fast-json-patch';
 import Register from './register.model';
 
+
+
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return function(entity) {
@@ -121,13 +123,9 @@ export function create(req, res) {
     console.log("req.body.time: " + req.body.time);
     return;
   }
-  
+
   return Register.create(req.body)
     .then(respondWithResult(res, 201))
-    .then(function() {
-      console.log("emitting register:save event");
-      req.app.locals.socketio.emit('register:save', sector);
-    })
     .catch(handleError(res));
 
 }

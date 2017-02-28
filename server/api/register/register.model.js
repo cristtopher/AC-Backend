@@ -8,6 +8,10 @@ import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import moment from 'moment';
 
+var eventEmitter = require('./register.events').default;
+console.log(eventEmitter);
+
+
 // suppress warnings as mongoose-deep-populate has promises without returns.
 Promise.config({
   warnings: { wForgottenReturn: false }
@@ -79,6 +83,9 @@ RegisterSchema.pre('save', function(next) {
 });
 
 
+RegisterSchema.post('save', function(doc) {
+  eventEmitter.emit('save', doc);
+});
 //-------------------------------------------------------
 //                     Statics
 //-------------------------------------------------------
