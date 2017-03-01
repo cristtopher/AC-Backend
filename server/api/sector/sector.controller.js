@@ -168,6 +168,17 @@ export function sectorRegisters(req, res) {
     .catch(handleError(res));
 }
 
+// export person list as a excel file
+export function exportRegistersExcel(req, res) {
+  return Sector.exportRegistersExcel(req.params.id)
+    .then(excel => {
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      res.setHeader('Content-Disposition', 'attachment; filename=registers-export.xlsx');
+      res.end(excel);
+    })
+    .catch(handleError(res));
+}
+
 export function sectorStatistics(req, res) {
   Sector.getStatistics(req.params.id)
     .then(respondWithResult(res))
