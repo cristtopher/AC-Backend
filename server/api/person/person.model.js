@@ -89,7 +89,7 @@ PersonSchema.statics = {
         let sheet = excel[0];
         
         sheet.data.forEach((row, i) => {
-          if(row[1] && row[3] && row[4] && row[5]){
+          if(row[1] && row[3] && row[4] && row[5]) {
             console.log(row);
             var Person = mongoose.model('Person', PersonSchema);
             var status = {};
@@ -104,13 +104,26 @@ PersonSchema.statics = {
                 }
 
                 if(personR) {
-                  console.log('Updating Row');
-                  personR.name = row[1];
-                  personR.company = userCompanyId;
-                  personR.type = row[3].toLowerCase();
-                  personR.card = row[4];
-                  personR.active = status[row[5].toLowerCase()];
-                  personR.update();
+                  var id = personR._id;
+                  console.log('Updateting Row, _id:' + id);
+                  //console.log('Updating Row');
+                  //personR.name = row[1];
+                  //personR.company = userCompanyId;
+                  //personR.type = row[3].toLowerCase();
+                  //personR.card = row[4];
+                  ////personR.active = status[row[5].toLowerCase()];
+                  //personR.active = false;
+                  //personR.update()
+  
+                  var body = { active: status[row[5].toLowerCase()], 
+                    name: row[1], 
+                    company: userCompanyId,
+                    type: row[3].toLowerCase(),
+                    card: row[4]
+                  };
+                  
+                  //console.log("body=" + status[row[5].toLowerCase()]);
+                  Person.findOneAndUpdate({_id: id}, body, { upsert: true, setDefaultsOnInsert: true, runValidators: true, new: true }).exec();
                 } else {
                   console.log('Creating Row');
                   var personCreate = Person();
@@ -124,9 +137,8 @@ PersonSchema.statics = {
                 }
               });
             }
-          }
-          else{
-            console.log("Row empty or not complete");
+          } else {
+            console.log('Row empty or not complete');
           }
         });
       });

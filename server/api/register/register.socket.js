@@ -23,7 +23,7 @@ export function register(socket) {
 
 function createListener(event, socket) {
   return function(doc) {
-    console.log("Sending socketio event :" + event);
+    console.log('Sending socketio event :' + event);
     socket.emit(event, doc);
   };
 }

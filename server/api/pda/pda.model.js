@@ -1,12 +1,6 @@
 'use strict';
 
-import Promise from 'bluebird';
-
 import mongoose from 'mongoose';
-import moment from 'moment';
-import * as _ from 'lodash';
-
-import Register from '../register/register.model';
 
 var PdaSchema = new mongoose.Schema({
   name:        { type: String },

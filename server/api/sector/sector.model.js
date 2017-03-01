@@ -65,8 +65,8 @@ SectorSchema.statics = {
 
       var key_list = [];
       var data_redux = [];
-      for(var e in incompleteRegisters){
-        if(!_.includes(key_list, incompleteRegisters[e].person.toString())){
+      for(var e in incompleteRegisters) {
+        if(!_.includes(key_list, incompleteRegisters[e].person.toString())) { 
           key_list.push(incompleteRegisters[e].person.toString());
           data_redux.push(incompleteRegisters[e]);
         }
