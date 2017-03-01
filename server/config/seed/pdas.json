@@ -12,4 +12,11 @@
   "serial" : "12345678",
   "company" : "585597684f6ad8244e26748e",
   "sector" : "5860838c3970532794a746b3"
+}, {
+  "_id" : "58b0426a9fb1699f11f91f2e",
+  "name" : "Cristtopher's PDA",
+  "description" : "testing PDA",
+  "serial" : "33b61193",
+  "company" : "585597684f6ad8244e26748e",
+  "sector" : "5860838c3970532794a746b3"
 }]
