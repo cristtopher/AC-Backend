@@ -94,7 +94,12 @@ SectorSchema.statics = {
                     .then(function(registers) {
                       for(var i in registers) {
                         console.log(registers);
-                        var rowA = [registers[i].type, registers[i].person.rut, registers[i].person.name, registers[i].personType, registers[i].time];
+			var rowA;
+			if(registers[i].person == null) {
+                          rowA = [registers[i].type, "NA", "NA", "NA", registers[i].time];
+			} else {	
+                          rowA = [registers[i].type, registers[i].person.rut, registers[i].person.name, registers[i].personType, registers[i].time];
+                        }
                         data.push(rowA);
                       }
                     })
