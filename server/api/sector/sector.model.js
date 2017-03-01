@@ -93,11 +93,13 @@ SectorSchema.statics = {
                     .exec()
                     .then(function(registers) {
                       for(var i in registers) {
-                        console.log(registers);
-			var rowA;
-			if(registers[i].person == null) {
-                          rowA = [registers[i].type, "NA", "NA", "NA", registers[i].time];
-			} else {	
+                      //console.log(registers);
+                        var rowA;
+                        if(registers[i].person === null) {
+                          console.log('Person can not be resolved, it is null');
+                          console.log(registers[i]);
+                          rowA = [registers[i].type, 'NA', 'NA', 'NA', registers[i].time];
+                        } else {	
                           rowA = [registers[i].type, registers[i].person.rut, registers[i].person.name, registers[i].personType, registers[i].time];
                         }
                         data.push(rowA);
