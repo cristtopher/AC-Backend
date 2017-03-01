@@ -16,6 +16,8 @@ router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 
 router.get('/:id/registers', auth.isAuthenticated(), controller.sectorRegisters);
 router.get('/:id/statistics', auth.isAuthenticated(), controller.sectorStatistics);
+router.get('/:id/export', auth.hasRole('supervisor'), controller.exportRegistersExcel);
+
 
 
 module.exports = router;

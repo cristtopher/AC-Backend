@@ -5,6 +5,7 @@ import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import moment from 'moment';
 import * as _ from 'lodash';
+import xlsx from 'node-xlsx';
 
 import Register from '../register/register.model';
 
@@ -78,6 +79,29 @@ SectorSchema.statics = {
         weeklyHistory: _weeklyHistory
       };  
     });    
+  },
+
+  exportRegistersExcel: function(sectorId) {
+    var data = [['TIPO REGISTRO', 'RUT', 'NOMBRE', 'CATEGORIA PERSONA', 'HORA REGISTRO']];
+    let now = new Date();
+
+    return Register.find({ sector: sectorId })
+                    .sort({ date: -1 })
+                    .where('time')
+                    .gte(moment(now).subtract(8, 'days'))
+                    .populate('person')
+                    .exec()
+                    .then(function(registers) {
+                      for(var i in registers) {
+                        console.log(registers);
+                        var rowA = [registers[i].type, registers[i].person.rut, registers[i].person.name, registers[i].personType, registers[i].time];
+                        data.push(rowA);
+                      }
+                    })
+                    .then(function() {
+                      var buffer = xlsx.build([{ name: 'mySheetName', data: data }]);
+                      return new Promise(resolve => resolve(buffer));
+                    });
   }
 };
 
