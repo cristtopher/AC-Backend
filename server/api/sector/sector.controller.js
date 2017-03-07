@@ -134,40 +134,56 @@ export function sectorRegisters(req, res) {
   
   let pageIndex = (!req.query.page || req.query.page < 1) ? 1 : req.query.page;
   
-  let baseQuery = Register.find()
-    .deepPopulate('person sector resolvedRegister.sector')
-    .where('sector').equals(req.params.id)
-    .skip((pageIndex - 1) * REGISTERS_PER_PAGE)
-    .limit(REGISTERS_PER_PAGE)
-    .sort({_id: -1 });
-
+  let commonQuery = Register.find()
+        .where('sector').equals(req.params.id)
+  
   if(req.query) {    
     if(req.query.type) {
-      baseQuery.where('type').equals(req.query.type);
+      commonQuery.where('type').equals(req.query.type);
     }
     
     if(req.query.top) { 
-      baseQuery.limit(parseInt(req.query.top, 10));
+      commonQuery.limit(parseInt(req.query.top, 10));
     }
     
     if(req.query.from) { 
-      baseQuery.where('time').gte(moment(parseInt(req.query.from, 10)));
+      commonQuery.where('time').gte(moment(parseInt(req.query.from, 10)));
     }
 
     if(req.query.to) {
-      baseQuery.where('time').lte(moment(parseInt(req.query.to, 10)));
+      commonQuery.where('time').lte(moment(parseInt(req.query.to, 10)));
     }
     
     if(req.query.personType) {
-      baseQuery.where('personType').equals(req.query.personType);
+      commonQuery.where('personType').equals(req.query.personType);
     }
     
     if(req.query.incomplete) {
-      baseQuery.where('isResolved').equals(false);
+      commonQuery.where('isResolved').equals(false);
     }
   }
   
-  return baseQuery.exec()
+  let queriesPromises = [
+      commonQuery
+        .deepPopulate('person sector resolvedRegister.sector')
+        .skip((pageIndex - 1) * REGISTERS_PER_PAGE)
+        .limit(REGISTERS_PER_PAGE)
+        .sort({_id: -1 })
+        .exec(),
+      commonQuery
+        .count()
+        .exec()
+  ];
+  
+  return Promise.all(queriesPromises)
+    .spread((docs, count) => {
+      res.setHeader("X-Pagination-Count", count)
+      res.setHeader("X-Pagination-Limit", REGISTERS_PER_PAGE)
+      res.setHeader("X-Pagination-Pages", Math.ceil(count / REGISTERS_PER_PAGE) || 1)
+      res.setHeader("X-Pagination-Page", pageIndex)
+
+      return docs;
+    })
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
