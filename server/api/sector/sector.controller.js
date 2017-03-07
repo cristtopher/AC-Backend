@@ -134,43 +134,45 @@ export function sectorRegisters(req, res) {
   
   let pageIndex = (!req.query.page || req.query.page < 1) ? 1 : req.query.page;
   
-  let commonQuery = Register.find()
-        .where('sector').equals(req.params.id)
+  var baseQueryFactory = function() {
+    let baseQuery = Register.find()
+                            .where('sector').equals(req.params.id);
   
-  if(req.query) {    
     if(req.query.type) {
-      commonQuery.where('type').equals(req.query.type);
+      baseQuery.where('type').equals(req.query.type);
     }
-    
+  
     if(req.query.top) { 
-      commonQuery.limit(parseInt(req.query.top, 10));
+      baseQuery.limit(parseInt(req.query.top, 10));
     }
-    
+  
     if(req.query.from) { 
-      commonQuery.where('time').gte(moment(parseInt(req.query.from, 10)));
+      baseQuery.where('time').gte(moment(parseInt(req.query.from, 10)));
     }
 
     if(req.query.to) {
-      commonQuery.where('time').lte(moment(parseInt(req.query.to, 10)));
+      baseQuery.where('time').lte(moment(parseInt(req.query.to, 10)));
     }
-    
+  
     if(req.query.personType) {
-      commonQuery.where('personType').equals(req.query.personType);
+      baseQuery.where('personType').equals(req.query.personType);
+    }
+  
+    if(req.query.incomplete) {
+      baseQuery.where('isResolved').equals(false);
     }
     
-    if(req.query.incomplete) {
-      commonQuery.where('isResolved').equals(false);
-    }
+    return baseQuery;
   }
   
   let queriesPromises = [
-      commonQuery
+      baseQueryFactory()
         .deepPopulate('person sector resolvedRegister.sector')
         .skip((pageIndex - 1) * REGISTERS_PER_PAGE)
         .limit(REGISTERS_PER_PAGE)
         .sort({_id: -1 })
         .exec(),
-      commonQuery
+      baseQueryFactory()
         .count()
         .exec()
   ];

@@ -43,7 +43,8 @@ export default function(app) {
   // Enable CORS
   app.use(cors({
     origin: true,
-    credentials: true
+    credentials: true,
+    exposedHeaders: 'X-Pagination-Count,X-Pagination-Pages,X-Pagination-Page,X-Pagination-Limit'
   }));
 
   // Persist sessions with MongoStore / sequelizeStore
