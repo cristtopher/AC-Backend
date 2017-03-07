@@ -95,6 +95,8 @@ export function show(req, res) {
 // Creates a new Register in the DB
 export function create(req, res) {
   var test = req.body.person;
+  
+  // FIXME: Refactor this part
   if(test.length == 0) {
     console.log('corrupted POST:/api/registers, could not find req.body.person, drop the request ...r'); 
     console.log('req.body.person: ' + req.body.person);
