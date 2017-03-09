@@ -27,7 +27,7 @@ var RegisterSchema = new mongoose.Schema({
   type:             { type: String, enum: ['entry', 'depart'] },
   isResolved:       { type: Boolean, default: false },
   resolvedRegister: { type: mongoose.Schema.Types.ObjectId, ref: 'Register' },
-  comments:         { type: String }
+  comments:         { type: String, default: '' }
 });
 
 RegisterSchema.index({ person: 1 });
