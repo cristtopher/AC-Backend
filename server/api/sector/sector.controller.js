@@ -17,6 +17,8 @@ import moment from 'moment';
 import Sector from './sector.model';
 import Register from '../register/register.model';
 
+import * as _ from 'lodash';
+
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return function(entity) {
@@ -129,11 +131,7 @@ export function destroy(req, res) {
     .catch(handleError(res));
 }
 
-export function sectorRegisters(req, res) {
-  const REGISTERS_PER_PAGE = 10;
-  
-  let pageIndex = (!req.query.page || req.query.page < 1) ? 1 : req.query.page;
-  
+export function sectorRegisters(req, res) {  
   var baseQueryFactory = function() {
     let baseQuery = Register.find()
                             .where('sector').equals(req.params.id);
@@ -165,6 +163,21 @@ export function sectorRegisters(req, res) {
     return baseQuery;
   }
   
+  // Non page-based JSON result
+  if (!req.query.paging) {
+    return baseQueryFactory()
+        .deepPopulate('person sector resolvedRegister.sector')
+        .sort({_id: -1 })
+        .exec()
+        .then(respondWithResult(res))
+        .catch(handleError(res));    
+  }
+  
+  // page-based JSON result
+  const REGISTERS_PER_PAGE = 10;
+  
+  let pageIndex = (!req.query.page || req.query.page < 1) ? 1 : req.query.page;
+  
   let queriesPromises = [
       baseQueryFactory()
         .deepPopulate('person sector resolvedRegister.sector')
@@ -192,13 +205,30 @@ export function sectorRegisters(req, res) {
 
 // export person list as a excel file
 export function exportRegistersExcel(req, res) {
-  return Sector.exportRegistersExcel(req.params.id)
-    .then(excel => {
-      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-      res.setHeader('Content-Disposition', 'attachment; filename=registers-export.xlsx');
-      res.end(excel);
-    })
-    .catch(handleError(res));
+  let user = req.user;
+  let sectorId = req.params.id;
+  
+  //TODO (security constraint): validate that sector belongs to a company
+  
+  (function() {
+    if (user.role === 'admin') { return Promise.resolve(); }
+  
+    return Sector.findById(sectorId).exec().then(function(sector) {
+      if (!_.includes(user.companies.map(c => c.toString()), sector.company.toString())) {
+        return res.status(401).json({ message: `not enough permission to export registers of sector: ${req.params.id}`});
+      }
+    });
+  })()
+  .then(function() {
+    return Sector.exportRegistersExcel(sectorId);    
+  })
+  .then(excel => {
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=registers-export.xlsx');
+    
+    return res.end(excel);
+  })
+  .catch(handleError(res));
 }
 
 export function sectorStatistics(req, res) {

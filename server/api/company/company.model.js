@@ -3,11 +3,15 @@
 import Promise from 'bluebird';
 
 import mongoose from 'mongoose';
+import xlsx from 'node-xlsx';
 import moment from 'moment';
 import * as _ from 'lodash';
 
 import Register from '../register/register.model';
 import Sector from '../sector/sector.model';
+import Person from '../person/person.model';
+
+var readFileAsync = Promise.promisify(require('fs').readFile);
 
 var CompanySchema = new mongoose.Schema({
   name:        { type: String },
@@ -97,6 +101,82 @@ CompanySchema.statics = {
         .in(sectors)
         .exec();
     });
+  },
+  
+  exportExcel: function(userCompanyId) {
+    var data = [['RUT', 'NOMBRE', 'EMPRESA', 'PERFIL', 'CARD', 'ESTADO']];
+
+    return mongoose.model('Person').find({company: userCompanyId})
+      .populate('company')
+      .exec()
+      .then(function(persons) {
+        for(var i in persons) {
+          if(persons[i].active) {
+            var rowA = [persons[i].rut, persons[i].name, persons[i].company.name, persons[i].type, persons[i].card, 'Activo'];
+            data.push(rowA);
+          } else {
+            var rowI = [persons[i].rut, persons[i].name, persons[i].company.name, persons[i].type, persons[i].card, 'Inactivo'];
+            data.push(rowI);
+          }
+        }
+      })
+      .then(function() {
+        var buffer = xlsx.build([{ name: 'mySheetName', data: data }]);
+        return new Promise(resolve => resolve(buffer));
+      });
+  },
+  
+  importExcel: function(filePath, userCompanyId) {
+    return readFileAsync(filePath)
+      .then(xlsx.parse)
+      .then(function(excel) {
+        let sheet = excel[0];
+        
+        sheet.data.forEach((row, i) => {
+          if(row[1] && row[3] && row[4] && row[5]) {
+            var status = {
+              activo: true,
+              inactivo: false
+            };
+
+            if(i > 0) {
+              Person.findOne({rut: row[0]}, function(err, personR) {
+                if(err) {
+                  console.log(err);
+                  return;
+                }
+
+                if(personR) {
+                  var id = personR._id;
+  
+                  var body = { active: status[row[5].toLowerCase()], 
+                    name: row[1], 
+                    company: userCompanyId,
+                    type: row[3].toLowerCase(),
+                    card: row[4]
+                  };
+                  
+                  // TODO: @mgarces: should this query run in background?
+                  Person.findOneAndUpdate({_id: id}, body, { upsert: true, setDefaultsOnInsert: true, runValidators: true, new: true }).exec();
+                } else {
+                  var personCreate = new Person();
+                  
+                  personCreate.rut     = row[0];
+                  personCreate.name    = row[1];
+                  personCreate.company = userCompanyId;
+                  personCreate.type    = row[3].toLowerCase();
+                  personCreate.card    = row[4];
+                  personCreate.active  = status[row[5].toLowerCase()];
+
+                  personCreate.save();
+                }
+              });
+            }
+          } else {
+            console.log('Row empty or not complete');
+          }
+        });
+      });
   }
 };
 

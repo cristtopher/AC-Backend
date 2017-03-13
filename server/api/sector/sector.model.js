@@ -56,9 +56,7 @@ SectorSchema.statics = {
         
         let entriesFound = _.filter(timeFilteredRegisters, r => r.type === 'entry');
         let departsFound = _.filter(timeFilteredRegisters, r => r.type === 'depart');
-    
-        console.log(`for ${lowerDate.toDate()} => entriesFound: ${entriesFound.length}, departsFound: ${departsFound.length}`);
-    
+        
         _weeklyHistory.entry.push({ datetime: lowerDate.unix() * 1000, count: _.size(entriesFound) });
         _weeklyHistory.depart.push({ datetime: lowerDate.unix() * 1000, count: _.size(departsFound) });
       }
@@ -93,8 +91,8 @@ SectorSchema.statics = {
                     .exec()
                     .then(function(registers) {
                       for(var i in registers) {
-                      //console.log(registers);
-                        var rowA;
+                        let rowA;
+                        
                         if(registers[i].person === null) {
                           console.log('Person can not be resolved, it is null');
                           console.log(registers[i]);
@@ -102,6 +100,7 @@ SectorSchema.statics = {
                         } else {	
                           rowA = [registers[i].type, registers[i].person.rut, registers[i].person.name, registers[i].personType, registers[i].time];
                         }
+                        
                         data.push(rowA);
                       }
                     })

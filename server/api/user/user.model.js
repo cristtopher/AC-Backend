@@ -4,16 +4,21 @@ import crypto from 'crypto';
 mongoose.Promise = require('bluebird');
 import mongoose, {Schema} from 'mongoose';
 
+import _ from 'lodash';
+
 import config from '../../config/environment';
 
 var UserSchema = new Schema({
-  name:     { type: String },
-  rut:      { type: String, lowercase: true, required: true },
-  company:  { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
+  name:      { type: String },
+  rut:       { type: String, lowercase: true, required: true },
+  companies: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Company' }] },
+  role:      { type: String, enum: config.userRoles, default: 'user' },
+  password:  { type: String, required: true },
+  salt:      { type: String },
+  
+  //deprecated
+  company:  { type: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' } },
   sectors:  { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sector' }] },
-  role:     { type: String, enum: config.userRoles, default: 'user' },
-  password: { type: String, required: true },
-  salt:     { type: String }
 });
 
 UserSchema.index({ rut: 1 }, { unique: true });
@@ -122,7 +127,7 @@ UserSchema
 
 
 //-------------------------------------------------------
-//                      Methods
+//                      Methods/Statics
 //-------------------------------------------------------
 
 UserSchema.methods = {
@@ -218,6 +223,22 @@ UserSchema.methods = {
         return callback(null, key.toString('base64'));
       }
     });
+  },
+  
+  getCompanies() {
+    return mongoose.model('Company').find()
+      .where('_id').in(this.companies)
+    .exec();
+  },
+  
+  getCompanySectors(companyId) {
+    if (!_.includes(this.companies.map(c => c.toString()), companyId)) {
+      return Promise.resolve([]);
+    }
+    
+    return mongoose.model('Sector').find()
+      .where('company').in([ companyId ])
+      .exec();
   }
 };
 

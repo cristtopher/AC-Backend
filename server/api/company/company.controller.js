@@ -14,6 +14,8 @@ import jsonpatch from 'fast-json-patch';
 import Company from './company.model';
 import Person from '../person/person.model';
 
+import * as _ from 'lodash';
+
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return function(entity) {
@@ -141,3 +143,32 @@ export function companyRegisters(req, res) {
     .catch(handleError(res));
 }
 
+// export person list as a excel file
+export function exportExcel(req, res) {
+  let user = req.user;
+  
+  if (user.role !== 'admin' && !_.includes(user.companies.map(c => c.toString()), req.params.id)) {
+    return res.status(401).json({ message: `not enough permission to import in company ${req.params.id}` });
+  }
+  
+  return Company.exportExcel(req.params.id)
+    .then(excel => {
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      res.setHeader('Content-Disposition', 'attachment; filename=persons-export.xlsx');
+      return res.end(excel);
+    })
+    .catch(handleError(res));
+}
+
+// import person list as a excel file (should overwrite all entries in DB)
+export function importExcel(req, res) {
+  let user = req.user;
+  
+  if (user.role !== 'admin' && !_.includes(user.companies.map(c => c.toString()), req.params.id)) {
+    return res.status(401).json({ message: `not enough permission to import in company ${req.params.id}` });
+  }
+  
+  return Company.importExcel(req.file.path, req.params.id)
+    .then(() => res.sendStatus(200))
+    .catch(handleError(res));
+}

@@ -9,8 +9,6 @@ import mongoose from 'mongoose';
 import moment from 'moment';
 
 var eventEmitter = require('./register.events').default;
-console.log(eventEmitter);
-
 
 // suppress warnings as mongoose-deep-populate has promises without returns.
 Promise.config({

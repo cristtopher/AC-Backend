@@ -141,6 +141,21 @@ export function getSectors(req, res) {
   });
 }
 
+export function getCompanies(req, res) {
+  let user = req.user;
+    
+  user.getCompanies()
+    .then(companies => res.status(200).json(companies))
+    .catch(handleError(res));
+}
+
+export function getUserCompanySectors(req, res) {
+  let user = req.user;
+    
+  user.getCompanySectors(req.params.companyId)
+    .then(sectors => res.status(200).json(sectors))
+    .catch(handleError(res));  
+}
 
 export function importUsers(req, res) {
   return res.status(200).end();

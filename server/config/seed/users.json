@@ -3,30 +3,40 @@
   "rut": "user",
   "name": "Normal User",
   "password": "user",
-  "company": "585597684f6ad8244e26748e",
-  "sectors": ["5860838c3970532794a746b3", "586083923970532794a746b4", "586083923970532794a746b5"]
+  "companies": ["585597684f6ad8244e26748e"]
 }, {  
   "_id": "585597684f6ad8244e26748e",
   "rut": "user2",
   "name": "Normal User 2",
   "password": "user",
-  "company": "585597684f6ad8244e26748f",
-  "sectors": ["586083923970532794a746b6", "586083923970532794a746b7"]
+  "companies": ["585597684f6ad8244e26748f"]
 }, {
   "_id": "585597684f6ad8244e26748c",
   "role": "supervisor",
   "rut": "supervisor",
   "name": "Supervisor User",
   "password": "supervisor",
-  "company": "585597684f6ad8244e26748e",
-  "sectors": ["5860838c3970532794a746b3", "586083923970532794a746b4", "586083923970532794a746b5"]
+  "companies": ["585597684f6ad8244e26748e"]
 }, {
   "_id": "585597684f6ad8244e26748d",
   "role": "admin",
   "rut": "admin",
   "name": "Admin",
-  "company": "585597684f6ad8244e26748e",
+  "companies": ["585597684f6ad8244e26748e"],
   "password": "admin"
+}, {  
+  "_id": "585597684f6ad8244e26748f",
+  "rut": "user3",
+  "name": "Normal User 3 (multicompany)",
+  "password": "user",
+  "companies": ["585597684f6ad8244e26748e", "585597684f6ad8244e26748f"]
+}, {
+  "_id": "58c62969397053b49ba2960b",
+  "role": "supervisor",
+  "rut": "supervisor2",
+  "name": "Supervisor User (multicompany)",
+  "password": "supervisor",
+  "companies": ["585597684f6ad8244e26748e", "585597684f6ad8244e26748f"]
 }]
 
 

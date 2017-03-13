@@ -2,21 +2,16 @@
 
 import { Router } from 'express';
 
-import multer from 'multer';
-
 import * as controller from './person.controller';
 import * as auth       from '../../auth/auth.service';
 
 var router = new Router();
-
-var upload = multer({ dest: '/tmp/' });
 
 //---------------------------------
 //              GET
 //---------------------------------
 
 router.get('/', auth.isAuthenticated(), controller.index);
-router.get('/export', auth.hasRole('supervisor'), controller.exportExcel);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 
 //---------------------------------
@@ -24,7 +19,6 @@ router.get('/:id', auth.isAuthenticated(), controller.show);
 //---------------------------------
 
 router.post('/', auth.isAuthenticated(), controller.create);
-router.post('/import', auth.isAuthenticated(), upload.single('file'), controller.importExcel);
 
 //---------------------------------
 //              PUT

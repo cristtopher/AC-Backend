@@ -15,6 +15,7 @@ import Register from './register.model';
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
+  
   return function(entity) {
     if(entity) {
       return res.status(statusCode).json(entity);
@@ -25,12 +26,13 @@ function respondWithResult(res, statusCode) {
 
 function patchUpdates(patches) {
   return function(entity) {
+    console.log(`going to patch entity = ${JSON.stringify(entity)} with patches = ${JSON.stringify(patches)}`);
     try {
       jsonpatch.apply(entity, patches, /*validate*/ true);
     } catch(err) {
       return Promise.reject(err);
     }
-
+        
     return entity.save();
   };
 }
@@ -145,6 +147,7 @@ export function patch(req, res) {
   if(req.body._id) {
     delete req.body._id;
   }
+
   return Register.findById(req.params.id)
     .deepPopulate('person sector resolvedRegister.sector')
     .exec()
