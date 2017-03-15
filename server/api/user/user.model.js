@@ -18,7 +18,7 @@ var UserSchema = new Schema({
   
   //deprecated
   company:  { type: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' } },
-  sectors:  { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sector' }] },
+  sectors:  { type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sector' }] }
 });
 
 UserSchema.index({ rut: 1 }, { unique: true });

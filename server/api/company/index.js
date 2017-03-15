@@ -26,6 +26,7 @@ router.get('/:id/persons', auth.isAuthenticated(), controller.companyPersons);
 //---------------------------------
 
 router.post('/', auth.isAuthenticated(), controller.create);
+router.post('/:id/persons', auth.hasRole('supervisor'), controller.createPerson);
 router.post('/:id/persons/import', auth.isAuthenticated(), upload.single('file'), controller.importExcel);
 
 //---------------------------------

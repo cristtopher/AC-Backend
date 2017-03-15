@@ -177,6 +177,10 @@ CompanySchema.statics = {
           }
         });
       });
+  },
+  
+  createPerson: function(companyId, personData) {
+    return Person.create(Object.assign(personData, { company: companyId }));
   }
 };
 
