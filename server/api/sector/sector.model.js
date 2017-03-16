@@ -78,16 +78,18 @@ SectorSchema.statics = {
       };  
     });    
   },
-
+//.populate('person')
   exportRegistersExcel: function(sectorId) {
-    var data = [['TIPO REGISTRO', 'RUT', 'NOMBRE', 'CATEGORIA PERSONA', 'HORA REGISTRO']];
+    //var data = [['TIPO REGISTRO', 'RUT', 'NOMBRE', 'CATEGORIA PERSONA', 'HORA REGISTRO']];
+    var data = [['RUT', 'NOMBRE', 'PERFIL', 'ENTRADA', 'COMENTARIO', 'SALIDA', 'SECTOR', 'COMENTARIO']];
     let now = new Date();
-
-    return Register.find({ sector: sectorId })
-                    .sort({ date: -1 })
-                    .where('time')
-                    .gte(moment(now).subtract(8, 'days'))
-                    .populate('person')
+        
+    return Register.find()
+                    .where('sector').equals(sectorId)
+                    .where('type').equals('entry')
+                    .deepPopulate('person sector resolvedRegister.sector')
+                    .sort({_id: -1 })
+                    .lean()
                     .exec()
                     .then(function(registers) {
                       for(var i in registers) {
@@ -95,10 +97,16 @@ SectorSchema.statics = {
                         
                         if(registers[i].person === null) {
                           console.log('Person can not be resolved, it is null');
-                          console.log(registers[i]);
                           rowA = [registers[i].type, 'NA', 'NA', 'NA', registers[i].time];
-                        } else {	
-                          rowA = [registers[i].type, registers[i].person.rut, registers[i].person.name, registers[i].personType, registers[i].time];
+                        } else {
+                          if(_.has(registers[i], 'resolvedRegister')){
+                            rowA = [registers[i].person.rut, registers[i].person.name, registers[i].personType, moment(registers[i].time).format(), 
+                                    registers[i].comments, moment(registers[i].resolvedRegister.time).format(), registers[i].resolvedRegister.sector.name,
+                                    registers[i].resolvedRegister.comments];
+                          } else {
+                            rowA = [registers[i].person.rut, registers[i].person.name, registers[i].personType, moment(registers[i].time).format(), 
+                                    registers[i].comments, '', '', ''];
+                          }
                         }
                         
                         data.push(rowA);
