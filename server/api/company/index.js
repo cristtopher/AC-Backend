@@ -48,5 +48,4 @@ router.patch('/:id', auth.isAuthenticated(), controller.patch);
 router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 
 
-
 module.exports = router;

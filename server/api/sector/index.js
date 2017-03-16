@@ -19,5 +19,4 @@ router.get('/:id/statistics', auth.isAuthenticated(), controller.sectorStatistic
 router.get('/:id/export', auth.hasRole('supervisor'), controller.exportRegistersExcel);
 
 
-
 module.exports = router;

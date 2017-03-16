@@ -147,7 +147,7 @@ export function companyRegisters(req, res) {
 export function exportExcel(req, res) {
   let user = req.user;
   
-  if (user.role !== 'admin' && !_.includes(user.companies.map(c => c.toString()), req.params.id)) {
+  if(user.role !== 'admin' && !_.includes(user.companies.map(c => c.toString()), req.params.id)) {
     return res.status(401).json({ message: `not enough permission to import in company ${req.params.id}` });
   }
   
@@ -164,7 +164,7 @@ export function exportExcel(req, res) {
 export function importExcel(req, res) {
   let user = req.user;
   
-  if (user.role !== 'admin' && !_.includes(user.companies.map(c => c.toString()), req.params.id)) {
+  if(user.role !== 'admin' && !_.includes(user.companies.map(c => c.toString()), req.params.id)) {
     return res.status(401).json({ message: `not enough permission to import in company ${req.params.id}` });
   }
   
@@ -176,12 +176,11 @@ export function importExcel(req, res) {
 export function createPerson(req, res) {
   let user = req.user;
   
-  if (user.role !== 'admin' && !_.includes(user.companies.map(c => c.toString()), req.params.id)) {
+  if(user.role !== 'admin' && !_.includes(user.companies.map(c => c.toString()), req.params.id)) {
     return res.status(401).json({ message: `not enough permission to create a new person in ${req.params.id}`});
   }
 
   return Company.createPerson(req.params.id, req.body)
     .then(respondWithResult(res, 201))
     .catch(handleError(res));
-  
 }

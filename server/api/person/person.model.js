@@ -1,6 +1,5 @@
 'use strict';
 
-import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import { EventEmitter } from 'events';
 

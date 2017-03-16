@@ -61,19 +61,19 @@ SectorSchema.statics = {
         _weeklyHistory.depart.push({ datetime: lowerDate.unix() * 1000, count: _.size(departsFound) });
       }
 
-      var key_list = [];
-      var data_redux = [];
+      var keyList = [];
+      var dataRedux = [];
       for(var e in incompleteRegisters) {
-        if(!_.includes(key_list, incompleteRegisters[e].person.toString())) { 
-          key_list.push(incompleteRegisters[e].person.toString());
-          data_redux.push(incompleteRegisters[e]);
+        if(!_.includes(keyList, incompleteRegisters[e].person.toString())) { 
+          keyList.push(incompleteRegisters[e].person.toString());
+          dataRedux.push(incompleteRegisters[e]);
         }
       }
 
       return {
-        staffCount: _.filter(data_redux, r => r.personType === 'staff').length,
-        contractorCount: _.filter(data_redux, r => r.personType === 'contractor').length,
-        visitCount: _.filter(data_redux, r => r.personType === 'visitor').length,
+        staffCount: _.filter(dataRedux, r => r.personType === 'staff').length,
+        contractorCount: _.filter(dataRedux, r => r.personType === 'contractor').length,
+        visitCount: _.filter(dataRedux, r => r.personType === 'visitor').length,
         weeklyHistory: _weeklyHistory
       };  
     });    
@@ -82,40 +82,52 @@ SectorSchema.statics = {
   exportRegistersExcel: function(sectorId) {
     //var data = [['TIPO REGISTRO', 'RUT', 'NOMBRE', 'CATEGORIA PERSONA', 'HORA REGISTRO']];
     var data = [['RUT', 'NOMBRE', 'PERFIL', 'ENTRADA', 'COMENTARIO', 'SALIDA', 'SECTOR', 'COMENTARIO']];
-    let now = new Date();
         
     return Register.find()
-                    .where('sector').equals(sectorId)
-                    .where('type').equals('entry')
-                    .deepPopulate('person sector resolvedRegister.sector')
-                    .sort({_id: -1 })
-                    .lean()
-                    .exec()
-                    .then(function(registers) {
-                      for(var i in registers) {
-                        let rowA;
-                        
-                        if(registers[i].person === null) {
-                          console.log('Person can not be resolved, it is null');
-                          rowA = [registers[i].type, 'NA', 'NA', 'NA', registers[i].time];
-                        } else {
-                          if(_.has(registers[i], 'resolvedRegister')){
-                            rowA = [registers[i].person.rut, registers[i].person.name, registers[i].personType, moment(registers[i].time).format(), 
-                                    registers[i].comments, moment(registers[i].resolvedRegister.time).format(), registers[i].resolvedRegister.sector.name,
-                                    registers[i].resolvedRegister.comments];
-                          } else {
-                            rowA = [registers[i].person.rut, registers[i].person.name, registers[i].personType, moment(registers[i].time).format(), 
-                                    registers[i].comments, '', '', ''];
-                          }
-                        }
-                        
-                        data.push(rowA);
-                      }
-                    })
-                    .then(function() {
-                      var buffer = xlsx.build([{ name: 'mySheetName', data: data }]);
-                      return new Promise(resolve => resolve(buffer));
-                    });
+      .where('sector').equals(sectorId)
+      .where('type').equals('entry')
+      .deepPopulate('person sector resolvedRegister.sector')
+      .sort({_id: -1 })
+      .lean()
+      .exec()
+      .then(function(registers) {
+        for(var i in registers) {
+          let rowA;
+        
+          if(registers[i].person === null) {
+            console.log('Person can not be resolved, it is null');
+            rowA = [registers[i].type, 'NA', 'NA', 'NA', registers[i].time];
+          } else if(_.has(registers[i], 'resolvedRegister')) {
+            rowA = [
+              registers[i].person.rut, 
+              registers[i].person.name, 
+              registers[i].personType, 
+              moment(registers[i].time).format(), 
+              registers[i].comments, 
+              moment(registers[i].resolvedRegister.time).format(), 
+              registers[i].resolvedRegister.sector.name,
+              registers[i].resolvedRegister.comments
+            ];
+          } else {
+            rowA = [
+              registers[i].person.rut, 
+              registers[i].person.name, 
+              registers[i].personType, 
+              moment(registers[i].time).format(), 
+              registers[i].comments, 
+              '', 
+              '', 
+              ''
+            ];
+          }
+        
+          data.push(rowA);
+        }
+      })
+      .then(function() {
+        var buffer = xlsx.build([{ name: 'mySheetName', data: data }]);
+        return new Promise(resolve => resolve(buffer));
+      });
   }
 };
 

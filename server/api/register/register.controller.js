@@ -96,36 +96,20 @@ export function show(req, res) {
 
 // Creates a new Register in the DB
 export function create(req, res) {
-  var test = req.body.person;
+  let mandatoryParams = [
+    'person',
+    'sector',
+    'type',
+    'time'
+  ];
   
-  // FIXME: Refactor this part
-  if(test.length == 0) {
-    console.log('corrupted POST:/api/registers, could not find req.body.person, drop the request ...r'); 
-    console.log('req.body.person: ' + req.body.person);
-    return;
-  }
-
-  var sector = req.body.sector;
-  if(sector.length == 0) {
-    console.log('corrupted POST: /api/registers, could not find req.body.sector, drop the request ...'); 
-    console.log('req.body.sector: ' + req.body.sector);
-    return;
-  } 
-
-  test = req.body.type;
-  if(test.length == 0) {  
-    console.log('corrupted POST: /api/registers, could not find req.body.type, drop the request ...'); 
-    console.log('req.body.type: ' + req.body.type);
-    return;
-  }
-
-  test = req.body.time;
-  if(test.length == 0) {
-    console.log('corrupted POST: /api/registers, could not find req.body.time, drop the request ...'); 
-    console.log('req.body.time: ' + req.body.time);
-    return;
-  }
-
+  mandatoryParams.forEach(function(param) {
+    if(!param) {
+      console.log(`could not create register due missing property: ${param} in body.`);
+      return res.send(400).json({ message: `missing parameter: ${param}` });
+    }
+  });
+  
   return Register.create(req.body)
     .then(respondWithResult(res, 201))
     .catch(handleError(res));

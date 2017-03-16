@@ -161,10 +161,10 @@ export function sectorRegisters(req, res) {
     }
     
     return baseQuery;
-  }
+  };
   
   // Non page-based JSON result
-  if (!req.query.paging) {
+  if(!req.query.paging) {
     return baseQueryFactory()
         .deepPopulate('person sector resolvedRegister.sector')
         .sort({_id: -1 })
@@ -176,26 +176,26 @@ export function sectorRegisters(req, res) {
   // page-based JSON result
   const REGISTERS_PER_PAGE = 10;
   
-  let pageIndex = (!req.query.page || req.query.page < 1) ? 1 : req.query.page;
+  let pageIndex = !req.query.page || req.query.page < 1 ? 1 : req.query.page;
   
   let queriesPromises = [
-      baseQueryFactory()
-        .deepPopulate('person sector resolvedRegister.sector')
-        .skip((pageIndex - 1) * REGISTERS_PER_PAGE)
-        .limit(REGISTERS_PER_PAGE)
-        .sort({_id: -1 })
-        .exec(),
-      baseQueryFactory()
-        .count()
-        .exec()
+    baseQueryFactory()
+      .deepPopulate('person sector resolvedRegister.sector')
+      .skip((pageIndex - 1) * REGISTERS_PER_PAGE)
+      .limit(REGISTERS_PER_PAGE)
+      .sort({_id: -1 })
+      .exec(),
+    baseQueryFactory()
+      .count()
+      .exec()
   ];
   
   return Promise.all(queriesPromises)
     .spread((docs, count) => {
-      res.setHeader("X-Pagination-Count", count)
-      res.setHeader("X-Pagination-Limit", REGISTERS_PER_PAGE)
-      res.setHeader("X-Pagination-Pages", Math.ceil(count / REGISTERS_PER_PAGE) || 1)
-      res.setHeader("X-Pagination-Page", pageIndex)
+      res.setHeader('X-Pagination-Count', count);
+      res.setHeader('X-Pagination-Limit', REGISTERS_PER_PAGE);
+      res.setHeader('X-Pagination-Pages', Math.ceil(count / REGISTERS_PER_PAGE) || 1);
+      res.setHeader('X-Pagination-Page', pageIndex);
 
       return docs;
     })
@@ -208,14 +208,16 @@ export function exportRegistersExcel(req, res) {
   let user = req.user;
   let sectorId = req.params.id;
   
-  //TODO (security constraint): validate that sector belongs to a company
-  
+  //TODO (security constraint): validate that sector belongs to a company (if not throw 401)
+
   (function() {
-    if (user.role === 'admin') { return Promise.resolve(); }
+    if(user.role === 'admin') { 
+      return Promise.resolve(); 
+    }
   
     return Sector.findById(sectorId).exec().then(function(sector) {
-      if (!_.includes(user.companies.map(c => c.toString()), sector.company.toString())) {
-        return res.status(401).json({ message: `not enough permission to export registers of sector: ${req.params.id}`});
+      if(!_.includes(user.companies.map(c => c.toString()), sector.company.toString())) {
+        return res.status(401).json({ message: `not enough permission to export registers of sector: ${req.params.id}` });
       }
     });
   })()

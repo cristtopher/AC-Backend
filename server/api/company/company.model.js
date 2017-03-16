@@ -74,19 +74,19 @@ CompanySchema.statics = {
         _weeklyHistory.depart.push({ datetime: lowerDate.unix() * 1000, count: _.size(departsFound) });
       }
 
-      var key_list = [];
-      var data_redux = [];
+      var keyList = [];
+      var dataRedux = [];
       for(var e in incompleteRegisters) {
-        if(!_.includes(key_list, incompleteRegisters[e].person.toString())) {
-          key_list.push(incompleteRegisters[e].person.toString());
-          data_redux.push(incompleteRegisters[e]);
+        if(!_.includes(keyList, incompleteRegisters[e].person.toString())) {
+          keyList.push(incompleteRegisters[e].person.toString());
+          dataRedux.push(incompleteRegisters[e]);
         }
       }
 
       return {
-        staffCount: _.filter(data_redux, r => r.personType === 'staff').length,
-        contractorCount: _.filter(data_redux, r => r.personType === 'contractor').length,
-        visitCount: _.filter(data_redux, r => r.personType === 'visitor').length,
+        staffCount: _.filter(dataRedux, r => r.personType === 'staff').length,
+        contractorCount: _.filter(dataRedux, r => r.personType === 'contractor').length,
+        visitCount: _.filter(dataRedux, r => r.personType === 'visitor').length,
         weeklyHistory: _weeklyHistory
       };  
     });    

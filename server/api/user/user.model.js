@@ -232,12 +232,12 @@ UserSchema.methods = {
   },
   
   getCompanySectors(companyId) {
-    if (!_.includes(this.companies.map(c => c.toString()), companyId)) {
+    if(!_.includes(this.companies.map(c => c.toString()), companyId)) {
       return Promise.resolve([]);
     }
     
     return mongoose.model('Sector').find()
-      .where('company').in([ companyId ])
+      .where('company').in([companyId])
       .exec();
   }
 };
