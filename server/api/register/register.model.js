@@ -8,6 +8,8 @@ import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import moment from 'moment';
 
+import Person from '../person/person.model';
+
 var eventEmitter = require('./register.events').default;
 
 // suppress warnings as mongoose-deep-populate has promises without returns.
@@ -23,6 +25,8 @@ var RegisterSchema = new mongoose.Schema({
   sector:           { type: mongoose.Schema.Types.ObjectId, ref: 'Sector' },
   time:             { type: Date, default: Date.now },
   type:             { type: String, enum: ['entry', 'depart'] },
+  isUnauthorized:   { type: Boolean, default: false },
+  unauthorizedRut:  { type: String }, 
   isResolved:       { type: Boolean, default: false },
   resolvedRegister: { type: mongoose.Schema.Types.ObjectId, ref: 'Register' },
   comments:         { type: String, default: '' }
@@ -50,6 +54,8 @@ RegisterSchema.path('time')
 
 RegisterSchema.pre('save', function(next) {
   var register = this;
+
+  if (!register.person) { return next(); }
 
   mongoose.model('Person').findById(register.person).exec()
     .then(function(person) {

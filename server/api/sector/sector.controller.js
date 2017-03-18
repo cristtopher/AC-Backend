@@ -136,6 +136,14 @@ export function sectorRegisters(req, res) {
     let baseQuery = Register.find()
                             .where('sector').equals(req.params.id);
   
+  
+    if(req.query.unauthorized) {
+      baseQuery.where('isUnauthorized').equals(true);
+    } else {
+      baseQuery.where('isUnauthorized').equals(false);
+    }
+    
+  
     if(req.query.type) {
       baseQuery.where('type').equals(req.query.type);
     }
@@ -236,5 +244,39 @@ export function exportRegistersExcel(req, res) {
 export function sectorStatistics(req, res) {
   Sector.getStatistics(req.params.id)
     .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
+export function createRegister(req, res) {
+  console.log(`going to create register using the following: ${JSON.stringify(req.body)}`);
+  let sectorId = req.params.id;
+  
+  let mandatoryParams = [
+    'type',
+    'time'
+  ];
+
+  if (!req.body.person) {
+    mandatoryParams.push('rut');
+  }
+
+  let missingMandatoryParam = null;
+  mandatoryParams.forEach(function(param) {
+    if(!_.has(req.body, param)) {
+      console.log(`could not create register due missing property: ${param} in body.`);
+      missingMandatoryParam = param;
+      return false;
+    } 
+  });
+
+  if (missingMandatoryParam) {
+    return res.status(400).json({ message: `missing parameter: ${missingMandatoryParam}` });
+  }
+
+  return Sector.findById(sectorId).exec()
+    .then(function(sector) {
+      return sector.createRegister(req.body)
+    })
+    .then(respondWithResult(res, 201))
     .catch(handleError(res));
 }

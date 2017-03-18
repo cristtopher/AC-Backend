@@ -12,6 +12,7 @@
 import jsonpatch from 'fast-json-patch';
 import Register from './register.model';
 
+import * as _ from 'lodash';
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -94,25 +95,10 @@ export function show(req, res) {
     .catch(handleError(res));
 }
 
-// Creates a new Register in the DB
 export function create(req, res) {
-  let mandatoryParams = [
-    'person',
-    'sector',
-    'type',
-    'time'
-  ];
-  
-  mandatoryParams.forEach(function(param) {
-    if(!param) {
-      console.log(`could not create register due missing property: ${param} in body.`);
-      return res.send(400).json({ message: `missing parameter: ${param}` });
-    }
-  });
-  
-  return Register.create(req.body)
-    .then(respondWithResult(res, 201))
-    .catch(handleError(res));
+  return Register.create(req.body).exec()
+    .then(respondWithResult(res))
+    .catch(handleError(res));  
 }
 
 // Upserts the given Register in the DB at the specified ID
@@ -121,7 +107,7 @@ export function upsert(req, res) {
     delete req.body._id;
   }
    
-  return Register.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true}).exec()
+  return Register.findOneAndUpdate({ _id: req.params.id}, req.body, {upsert: true, setDefaultsOnInsert: true, runValidators: true }).exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }

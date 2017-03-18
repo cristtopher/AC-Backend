@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 import xlsx from 'node-xlsx';
 
 import Register from '../register/register.model';
+import Person   from '../person/person.model';
 
 var SectorSchema = new mongoose.Schema({
   name:        { type: String },
@@ -15,25 +16,27 @@ var SectorSchema = new mongoose.Schema({
   company:     { type: mongoose.Schema.Types.ObjectId, ref: 'Company' }
 });
 
+//-------------------------------------------------------
+//                     Statics
+//-------------------------------------------------------
+
 SectorSchema.statics = {
   getStatistics: function(sectorId) {
     let now = new Date();
 
     var _getIncompleteRegistersPromise = function() {
-      return Register.find({ sector: sectorId })
-                     //.sort({ date: -1 })
-                     .where('type')
-                     .equals('entry')
-                     .where('isResolved')
-                     .equals(false)
+      return Register.find({ sector: sectorId })      
+                     .where('isUnauthorized').equals(false)
+                     .where('type').equals('entry')
+                     .where('isResolved').equals(false)
                      .exec();
     };
     
     var _getWeeklyRegisterDataPromise = function() {
       return Register.find({ sector: sectorId })
                      .sort({ date: -1 })
-                     .where('time')
-                     .gte(moment(now).subtract(8, 'days'))
+                     .where('isUnauthorized').equals(false)
+                     .where('time').gte(moment(now).subtract(8, 'days'))
                      .populate('person')
                      .exec();
     };
@@ -78,9 +81,8 @@ SectorSchema.statics = {
       };  
     });    
   },
-//.populate('person')
+
   exportRegistersExcel: function(sectorId) {
-    //var data = [['TIPO REGISTRO', 'RUT', 'NOMBRE', 'CATEGORIA PERSONA', 'HORA REGISTRO']];
     var data = [['RUT', 'NOMBRE', 'PERFIL', 'ENTRADA', 'COMENTARIO', 'SALIDA', 'SECTOR', 'COMENTARIO']];
         
     return Register.find()
@@ -130,6 +132,43 @@ SectorSchema.statics = {
       });
   }
 };
+
+//-------------------------------------------------------
+//                     Methods
+//-------------------------------------------------------
+
+SectorSchema.methods = {
+  createRegister: function(registerData) {
+    registerData.sector = this._id;
+    
+    console.log(`creating register with data = ${JSON.stringify(registerData)}`);
+    // create register with incoming data if personId is set
+    if (registerData.person) {
+      return Register.create(registerData);
+    }
+  
+    // If not, find if person rut exists
+    return Person.findOne()
+      .where("rut").equals(registerData.rut)
+      .exec()
+      .then(function(person) {
+        console.log(`found person: ${JSON.stringify(person)}`);
+        
+        if (!person) {
+          console.log(`person with rut = ${registerData.rut} does not exist in DB. creating register as unauth`);
+          registerData.unauthorizedRut = registerData.rut;
+          registerData.isUnauthorized  = true;
+          
+          return Register.create(registerData);
+        } else {
+          console.log(`person with rut = ${registerData.rut} exists in DB. creating register`);
+          registerData.person = person;
+          return Register.create(registerData);
+        }
+      });
+  }
+};
+
 
 SectorSchema.index({ company: 1 });
 
