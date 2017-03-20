@@ -26,11 +26,13 @@ router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', auth.isAuthenticated(), controller.create);
 router.post('/:id/registers', auth.isAuthenticated(), controller.createRegister);
 
+
 //---------------------------------
 //              PUT
 //---------------------------------
 
 router.put('/:id', auth.isAuthenticated(), controller.upsert);
+
 
 //---------------------------------
 //              PATCH
@@ -38,13 +40,12 @@ router.put('/:id', auth.isAuthenticated(), controller.upsert);
 
 router.patch('/:id', auth.isAuthenticated(), controller.patch);
 
+
 //---------------------------------
 //              DELETE
 //---------------------------------
 
 router.delete('/:id', auth.isAuthenticated(), controller.destroy);
-
-
 
 
 module.exports = router;

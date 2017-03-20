@@ -12,7 +12,6 @@
 import jsonpatch from 'fast-json-patch';
 import Register from './register.model';
 
-import * as _ from 'lodash';
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;

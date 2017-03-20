@@ -256,7 +256,7 @@ export function createRegister(req, res) {
     'time'
   ];
 
-  if (!req.body.person) {
+  if(!req.body.person) {
     mandatoryParams.push('rut');
   }
 
@@ -269,13 +269,13 @@ export function createRegister(req, res) {
     } 
   });
 
-  if (missingMandatoryParam) {
+  if(missingMandatoryParam) {
     return res.status(400).json({ message: `missing parameter: ${missingMandatoryParam}` });
   }
 
   return Sector.findById(sectorId).exec()
     .then(function(sector) {
-      return sector.createRegister(req.body)
+      return sector.createRegister(req.body);
     })
     .then(respondWithResult(res, 201))
     .catch(handleError(res));

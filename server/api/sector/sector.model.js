@@ -143,18 +143,18 @@ SectorSchema.methods = {
     
     console.log(`creating register with data = ${JSON.stringify(registerData)}`);
     // create register with incoming data if personId is set
-    if (registerData.person) {
+    if(registerData.person) {
       return Register.create(registerData);
     }
   
     // If not, find if person rut exists
     return Person.findOne()
-      .where("rut").equals(registerData.rut)
+      .where('rut').equals(registerData.rut)
       .exec()
       .then(function(person) {
         console.log(`found person: ${JSON.stringify(person)}`);
         
-        if (!person) {
+        if(!person) {
           console.log(`person with rut = ${registerData.rut} does not exist in DB. creating register as unauth`);
           registerData.unauthorizedRut = registerData.rut;
           registerData.isUnauthorized  = true;
