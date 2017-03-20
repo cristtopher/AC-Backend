@@ -47,4 +47,12 @@
   "time": "2017-01-22T04:02:12.921Z",
   "type": "entry",
   "comments": "Register 2 sector 2 entry, company 2"
+}, {
+  "_id": "58cf2f33397053ba70673527",
+  "isUnauthorized": true,
+  "unauthorizedRut": "99999999-9",
+  "sector": "586083923970532794a746b5",
+  "time": "2017-01-22T04:02:12.921Z",
+  "type": "entry",
+  "comments": "Unauth register 1, sector 3 company 1"
 }]
