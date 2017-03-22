@@ -110,10 +110,12 @@ SectorSchema.statics = {
               registers[i].person.name, 
               //registers[i].personType, 
               type_dict[registers[i].personType], 
-              moment(registers[i].time).format('YYYY-MM-DD HH:mm'), 
+              //moment(registers[i].time).format('YYYY-MM-DD HH:mm'), 
+              moment(registers[i].time).format('DD/MM/YYYY HH:mm:ss'), 
               registers[i].sector.name,
               registers[i].comments, 
-              moment(registers[i].resolvedRegister.time).format('YYYY-MM-DD HH:mm'), 
+              //moment(registers[i].resolvedRegister.time).format('YYYY-MM-DD HH:mm'), 
+              moment(registers[i].resolvedRegister.time).format('DD/MM/YY HH:mm:ss'), 
               registers[i].resolvedRegister.sector.name,
               registers[i].resolvedRegister.comments
             ];
