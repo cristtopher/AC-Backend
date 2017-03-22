@@ -135,8 +135,8 @@ export function destroy(req, res) {
 export function pdaRegisters(req, res) {
   let baseQuery = Register.find()
     .deepPopulate('person pda resolvedRegister.pda')
-    .where('pda')
-    .equals(req.params.id)
+    .where('pda').equals(req.params.id)
+    .where('isUnauthorized').equals(false)
     // FIXME: Temporary workaround to mantain sorted registers (change it after implementing paging)
     .sort({_id: -1 });
 

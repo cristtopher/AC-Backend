@@ -30,6 +30,7 @@ CompanySchema.statics = {
     var _getIncompleteRegistersPromise = function(sectors) {
       return Register.find({})
                      .where('sector').in(sectors)
+                     .where('isUnauthorized').equals(false)
                      .where('type')
                      .equals('entry')
                      .where('isResolved')
@@ -40,6 +41,7 @@ CompanySchema.statics = {
     var _getWeeklyRegisterDataPromise = function(sectors) {
       return Register.find({})
                      .where('sector').in(sectors)
+                     .where('isUnauthorized').equals(false)
                      .where('time')
                      .gte(moment(now)
                      .subtract(8, 'days'))
@@ -97,8 +99,8 @@ CompanySchema.statics = {
     .then(function(sectors) { 
       return Register.find()
         .populate('person sector resolvedRegister')
-        .where('sector')
-        .in(sectors)
+        .where('isUnauthorized').equals(false)
+        .where('sector').in(sectors)
         .exec();
     });
   },

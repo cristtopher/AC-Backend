@@ -87,6 +87,7 @@ SectorSchema.statics = {
         
     return Register.find()
       .where('sector').equals(sectorId)
+      .where('isUnauthorized').equals(false)
       .where('type').equals('entry')
       .deepPopulate('person sector resolvedRegister.sector')
       .sort({_id: -1 })
@@ -180,6 +181,7 @@ SectorSchema.methods = {
           console.log(`person with rut = ${registerData.rut} does not exist in DB. creating register as unauth`);
           registerData.unauthorizedRut = registerData.rut;
           registerData.isUnauthorized  = true;
+          registerData.person          = null;
           
           return Register.create(registerData);
         } else {

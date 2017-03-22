@@ -72,8 +72,7 @@ export function index(req, res) {
   
   var baseQuery = Register.find()
     .deepPopulate('person sector resolvedRegister.sector')
-    .where('type')
-    .equals('entry');
+    .where('type').equals('entry');
                           
   if(user.role !== 'admin') {
     baseQuery.where('sector').in(user.sectors);
