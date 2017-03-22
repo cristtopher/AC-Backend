@@ -83,7 +83,7 @@ SectorSchema.statics = {
   },
 
   exportRegistersExcel: function(sectorId) {
-    var data = [['RUT', 'NOMBRE', 'PERFIL', 'ENTRADA', 'COMENTARIO', 'SALIDA', 'SECTOR', 'COMENTARIO']];
+    var data = [['RUT', 'NOMBRE', 'PERFIL', 'ENTRADA', 'SECTOR ENTRADA', 'COMENTARIO', 'SALIDA', 'SECTOR SALIDA', 'COMENTARIO']];
         
     return Register.find()
       .where('sector').equals(sectorId)
@@ -95,6 +95,10 @@ SectorSchema.statics = {
       .then(function(registers) {
         for(var i in registers) {
           let rowA;
+          var type_dict = {};
+          type_dict.staff = "Empleado";
+          type_dict.contractor = "Contratista";
+          type_dict.visitor = "Visita";
         
           if(registers[i].person === null) {
             console.log('Person can not be resolved, it is null');
@@ -103,24 +107,42 @@ SectorSchema.statics = {
             rowA = [
               registers[i].person.rut, 
               registers[i].person.name, 
-              registers[i].personType, 
-              moment(registers[i].time).format(), 
+              //registers[i].personType, 
+              type_dict[registers[i].personType], 
+              moment(registers[i].time).format('YYYY-MM-DD HH:mm'), 
+              registers[i].sector.name,
               registers[i].comments, 
-              moment(registers[i].resolvedRegister.time).format(), 
+              moment(registers[i].resolvedRegister.time).format('YYYY-MM-DD HH:mm'), 
               registers[i].resolvedRegister.sector.name,
               registers[i].resolvedRegister.comments
             ];
           } else {
-            rowA = [
-              registers[i].person.rut, 
-              registers[i].person.name, 
-              registers[i].personType, 
-              moment(registers[i].time).format(), 
-              registers[i].comments, 
-              '', 
-              '', 
-              ''
-            ];
+            if(_.has(registers[i], 'unauthorizedRut')){
+              rowA = [
+                registers[i].unauthorizedRut, 
+                "NA", 
+                "NA", 
+                moment(registers[i].time).format('YYYY-MM-DD HH:mm'), 
+                registers[i].sector.name,
+                registers[i].comments, 
+                '', 
+                '', 
+                ''
+              ];
+            } else {
+              rowA = [
+                registers[i].person.rut, 
+                registers[i].person.name, 
+                //registers[i].personType, 
+                type_dict[registers[i].personType],
+                moment(registers[i].time).format('YYYY-MM-DD HH:mm'), 
+                registers[i].sector.name,
+                registers[i].comments, 
+                '', 
+                '', 
+                ''
+              ];
+            }
           }
         
           data.push(rowA);
