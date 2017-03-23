@@ -96,10 +96,11 @@ SectorSchema.statics = {
       .then(function(registers) {
         for(var i in registers) {
           let rowA;
-          var type_dict = {};
-          type_dict.staff = "Empleado";
-          type_dict.contractor = "Contratista";
-          type_dict.visitor = "Visita";
+          var typeDict = {};
+          
+          typeDict.staff      = 'Empleado';
+          typeDict.contractor = 'Contratista';
+          typeDict.visitor    = 'Visita';
         
           if(registers[i].person === null) {
             console.log('Person can not be resolved, it is null');
@@ -108,23 +109,20 @@ SectorSchema.statics = {
             rowA = [
               registers[i].person.rut, 
               registers[i].person.name, 
-              //registers[i].personType, 
-              type_dict[registers[i].personType], 
-              //moment(registers[i].time).format('YYYY-MM-DD HH:mm'), 
+              typeDict[registers[i].personType], 
               moment(registers[i].time).tz('America/Santiago').format('DD/MM/YYYY HH:mm:ss'), 
               registers[i].sector.name,
               registers[i].comments, 
-              //moment(registers[i].resolvedRegister.time).format('YYYY-MM-DD HH:mm'), 
               moment(registers[i].resolvedRegister.time).tz('America/Santiago').format('DD/MM/YY HH:mm:ss'), 
               registers[i].resolvedRegister.sector.name,
               registers[i].resolvedRegister.comments
             ];
           } else {
-            if(_.has(registers[i], 'unauthorizedRut')){
+            if(_.has(registers[i], 'unauthorizedRut')) {
               rowA = [
                 registers[i].unauthorizedRut, 
-                "NA", 
-                "NA", 
+                'NA', 
+                'NA', 
                 moment(registers[i].time).tz('America/Santiago').format('DD/MM/YYYY HH:mm:ss'), 
                 registers[i].sector.name,
                 registers[i].comments, 
@@ -136,8 +134,7 @@ SectorSchema.statics = {
               rowA = [
                 registers[i].person.rut, 
                 registers[i].person.name, 
-                //registers[i].personType, 
-                type_dict[registers[i].personType],
+                typeDict[registers[i].personType],
                 moment(registers[i].time).tz('America/Santiago').format('DD/MM/YYYY HH:mm:ss'), 
                 registers[i].sector.name,
                 registers[i].comments, 
