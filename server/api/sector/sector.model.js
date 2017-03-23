@@ -3,7 +3,7 @@
 import Promise from 'bluebird';
 
 import mongoose from 'mongoose';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import * as _ from 'lodash';
 import xlsx from 'node-xlsx';
 
@@ -111,11 +111,11 @@ SectorSchema.statics = {
               //registers[i].personType, 
               type_dict[registers[i].personType], 
               //moment(registers[i].time).format('YYYY-MM-DD HH:mm'), 
-              moment(registers[i].time).format('DD/MM/YYYY HH:mm:ss'), 
+              moment(registers[i].time).tz('America/Santiago').format('DD/MM/YYYY HH:mm:ss'), 
               registers[i].sector.name,
               registers[i].comments, 
               //moment(registers[i].resolvedRegister.time).format('YYYY-MM-DD HH:mm'), 
-              moment(registers[i].resolvedRegister.time).format('DD/MM/YY HH:mm:ss'), 
+              moment(registers[i].resolvedRegister.time).tz('America/Santiago').format('DD/MM/YY HH:mm:ss'), 
               registers[i].resolvedRegister.sector.name,
               registers[i].resolvedRegister.comments
             ];
@@ -125,7 +125,7 @@ SectorSchema.statics = {
                 registers[i].unauthorizedRut, 
                 "NA", 
                 "NA", 
-                moment(registers[i].time).format('YYYY-MM-DD HH:mm'), 
+                moment(registers[i].time).tz('America/Santiago').format('DD/MM/YYYY HH:mm:ss'), 
                 registers[i].sector.name,
                 registers[i].comments, 
                 '', 
@@ -138,7 +138,7 @@ SectorSchema.statics = {
                 registers[i].person.name, 
                 //registers[i].personType, 
                 type_dict[registers[i].personType],
-                moment(registers[i].time).format('YYYY-MM-DD HH:mm'), 
+                moment(registers[i].time).tz('America/Santiago').format('DD/MM/YYYY HH:mm:ss'), 
                 registers[i].sector.name,
                 registers[i].comments, 
                 '', 
