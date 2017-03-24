@@ -40,6 +40,7 @@
 - [Git](https://git-scm.com/)
 - [nvm](https://github.com/creationix/nvm) (highly recomended)
 - [Node.js and npm](nodejs.org) node lts/boron (`nvm install lts/boron`)
+- [node-gyp](https://github.com/nodejs/node-gyp#installation)
 - [Gulp](http://gulpjs.com/) (`npm install --global gulp`)
 - [MongoDB](https://www.mongodb.org/) - Keep a running daemon with `mongod`
 
@@ -60,4 +61,3 @@
 - Static code analysis: `gulp lint`
 - Run tests: `gulp test`
 - test coverage: `gulp cov`
-
