@@ -15,7 +15,7 @@ var router = new Router();
 router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/:id/registers', auth.isAuthenticated(), controller.sectorRegisters);
 router.get('/:id/statistics', auth.isAuthenticated(), controller.sectorStatistics);
-router.get('/:id/export', auth.hasRole('supervisor'), controller.exportRegistersExcel);
+router.get('/:id/export', auth.isAuthenticated(), controller.exportRegistersExcel);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 
 
