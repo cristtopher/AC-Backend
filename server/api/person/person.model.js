@@ -17,7 +17,6 @@ var PersonSchema = new mongoose.Schema({
 });
 
 PersonSchema.index({ rut: 1 }, { unique: true });
-PersonSchema.index({ card: 1 }, { unique: true });
 PersonSchema.index({ company: 1 });
 
 //-------------------------------------------------------
