@@ -114,10 +114,10 @@ CompanySchema.statics = {
       .then(function(persons) {
         for(var i in persons) {
           if(persons[i].active) {
-            var rowA = [persons[i].rut, persons[i].name, persons[i].company.name, persons[i].type, persons[i].card, 'Activo'];
+            var rowA = [persons[i].rut, persons[i].name, persons[i].companyInfo, persons[i].type, persons[i].card, 'Activo'];
             data.push(rowA);
           } else {
-            var rowI = [persons[i].rut, persons[i].name, persons[i].company.name, persons[i].type, persons[i].card, 'Inactivo'];
+            var rowI = [persons[i].rut, persons[i].name, persons[i].companyInfo, persons[i].type, persons[i].card, 'Inactivo'];
             data.push(rowI);
           }
         }
@@ -154,6 +154,7 @@ CompanySchema.statics = {
                   var body = { active: status[row[5].toLowerCase()], 
                     name: row[1], 
                     company: userCompanyId,
+                    companyInfo: row[2],
                     type: row[3].toLowerCase(),
                     card: row[4]
                   };
@@ -163,12 +164,13 @@ CompanySchema.statics = {
                 } else {
                   var personCreate = new Person();
                   
-                  personCreate.rut     = row[0];
-                  personCreate.name    = row[1];
-                  personCreate.company = userCompanyId;
-                  personCreate.type    = row[3].toLowerCase();
-                  personCreate.card    = row[4];
-                  personCreate.active  = status[row[5].toLowerCase()];
+                  personCreate.rut         = row[0];
+                  personCreate.name        = row[1];
+                  personCreate.company     = userCompanyId;
+                  personCreate.companyInfo = row[2];
+                  personCreate.type        = row[3].toLowerCase();
+                  personCreate.card        = row[4];
+                  personCreate.active      = status[row[5].toLowerCase()];
 
                   personCreate.save();
                 }
