@@ -130,6 +130,18 @@ export function companyPersons(req, res) {
       baseQuery.where('rut').equals(new RegExp(`^${req.query.rut}`, 'i'));
     }
     
+    if (req.query.name) {
+      baseQuery.where('name').equals(new RegExp(`^${req.query.name}`, 'i'));
+    }
+    
+    if (req.query.personType) {
+      baseQuery.where('type').equals(req.query.personType);
+    }
+    
+    if (req.query.status) {
+      baseQuery.where('active').equals(req.query.status)
+    }
+    
     return baseQuery;
   };
 
