@@ -3,6 +3,8 @@
 import mongoose from 'mongoose';
 import { EventEmitter } from 'events';
 
+import Company from '../company/company.model';
+
 var PersonEvents = new EventEmitter();
 
 PersonEvents.setMaxListeners(0);
@@ -29,6 +31,23 @@ function emitEvent(event) {
     PersonEvents.emit(event, doc);
   };
 }
+
+PersonSchema.pre('save', function(next) {
+  var person = this;
+
+  if (person.companyInfo || !person.company) { next(); }
+  
+  // associate company.name to companyInfo if companyInfo is not defined
+  Company.findById(this.company).exec()
+  .then(function(company){
+    person.companyInfo = company.name;
+    next();
+  })
+  .catch(function(err){
+    next(err);
+  });
+  
+});
 
 PersonSchema.post('save', function(doc) {
   emitEvent('save')(doc);
