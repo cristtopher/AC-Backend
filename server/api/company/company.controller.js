@@ -10,7 +10,9 @@
 
 'use strict';
 
+import Promise from 'bluebird';
 import jsonpatch from 'fast-json-patch';
+
 import Company from './company.model';
 import Person from '../person/person.model';
 
@@ -120,15 +122,47 @@ export function destroy(req, res) {
 }
 
 export function companyPersons(req, res) {
-  let baseQuery = Person.find({ company: req.params.id }).populate('company');
   
-  if(req.query.rut) {
-    baseQuery.where('rut').equals(new RegExp(`^${req.query.rut}`, 'i'));
-  }
+  let baseQueryFactory = function() {
+    let baseQuery = Person.find({ company: req.params.id }).populate('company');
+    
+    if(req.query.rut) {
+      baseQuery.where('rut').equals(new RegExp(`^${req.query.rut}`, 'i'));
+    }
+    
+    return baseQuery;
+  };
+
   
-  return baseQuery.exec()
+  if (!req.query.paging) {
+    return baseQueryFactory().exec()
+      .then(respondWithResult(res))
+      .catch(handleError(res));    
+  } else {
+    var REGISTERS_PER_PAGE = 10;
+    var pageIndex = !req.query.page || req.query.page < 1 ? 1 : req.query.page;
+
+    
+    return Promise.all([
+      baseQueryFactory()
+        .sort({ _id: 1 })
+        .skip((pageIndex - 1) * REGISTERS_PER_PAGE)
+        .limit(REGISTERS_PER_PAGE),
+      baseQueryFactory()
+        .count()
+        .exec()
+    ])
+    .spread((docs, count) => {
+      res.setHeader('X-Pagination-Count', count);
+      res.setHeader('X-Pagination-Limit', REGISTERS_PER_PAGE);
+      res.setHeader('X-Pagination-Pages', Math.ceil(count / REGISTERS_PER_PAGE) || 1);
+      res.setHeader('X-Pagination-Page', pageIndex);
+
+      return docs;
+    })
     .then(respondWithResult(res))
     .catch(handleError(res));
+  }
 }
 
 export function companyStatistics(req, res) {
