@@ -87,8 +87,9 @@ RegisterSchema.pre('save', function(next) {
 });
 
 
-RegisterSchema.post('save', function(doc) {
+RegisterSchema.post('save', function(doc) {  
   eventEmitter.emit('save', doc);
+  eventEmitter.emit(`save:${doc._id}`, doc);
 });
 //-------------------------------------------------------
 //                     Statics
