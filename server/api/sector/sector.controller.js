@@ -16,6 +16,7 @@ import moment from 'moment';
 
 import Sector from './sector.model';
 import Register from '../register/register.model';
+import Person from '../person/person.model';
 
 import * as _ from 'lodash';
 
@@ -143,7 +144,6 @@ export function sectorRegisters(req, res) {
       baseQuery.where('isUnauthorized').equals(false);
     }
     
-  
     if(req.query.type) {
       baseQuery.where('type').equals(req.query.type);
     }
@@ -167,7 +167,7 @@ export function sectorRegisters(req, res) {
     if(req.query.incomplete) {
       baseQuery.where('isResolved').equals(false);
     }
-    
+        
     return baseQuery;
   };
   
@@ -245,6 +245,76 @@ export function sectorStatistics(req, res) {
   Sector.getStatistics(req.params.id)
     .then(respondWithResult(res))
     .catch(handleError(res));
+}
+
+
+export function sectorStatisticsDetails(req, res) {  
+  const REGISTERS_PER_PAGE = 10;
+  let pageIndex = !req.query.page || req.query.page < 1 ? 1 : req.query.page;
+  
+  let matchingCriteria = { 
+    'isResolved' : false,
+    'type': 'entry',
+    'person': { '$exists': true }
+  }
+    
+  let sortingCriteria = {
+    'time': -1
+  }
+  
+  let groupCriteria = {
+    '_id': '$person',
+    'registers': { '$push': '$$ROOT' }
+  }
+
+  // aggregating register rows in order to get an 
+  // sorted array of registers ordered by register.time
+  // grouped by each person
+  let baseAggregationQuery = Register.aggregate()
+    .match(matchingCriteria)
+    .sort(sortingCriteria)
+    .group(groupCriteria);
+  let countQuery = Register.aggregate()
+      .match(matchingCriteria)
+      .sort(sortingCriteria)
+      .group(groupCriteria);
+  
+  Promise.all([
+    baseAggregationQuery
+      .skip(REGISTERS_PER_PAGE * (pageIndex - 1))
+      .limit(REGISTERS_PER_PAGE)
+      .exec(),
+    countQuery.exec()
+  ])
+  .spread(function(registersPerPerson, totalRegistersPerPerson){
+
+    // Getting only the last register for each person (rp.registers[0] as is is sorted desc)
+    // and also deepPopulating inner fields (register.person and register.sector)
+    return Promise.all([
+      Register.deepPopulate(registersPerPerson.map(rp => rp.registers[0]), 'person sector'),
+      Register.deepPopulate(totalRegistersPerPerson.map(rp => rp.registers[0]), 'person sector')
+    ])
+    .spread(function(unresolvedRegistersPerPersons, totalUnresolvedRegistersPerPersons){
+      
+     // adding optional query if it is desired to filter by personType 
+      if (req.query.personType) {
+        totalUnresolvedRegistersPerPersons = totalUnresolvedRegistersPerPersons.filter(r => r.person.type == req.query.personType);
+        unresolvedRegistersPerPersons      = unresolvedRegistersPerPersons.filter(r => r.person.type == req.query.personType);
+      }
+
+      res.setHeader('X-Pagination-Count', totalUnresolvedRegistersPerPersons.length);
+      res.setHeader('X-Pagination-Limit', REGISTERS_PER_PAGE);
+      res.setHeader('X-Pagination-Pages', Math.ceil(totalUnresolvedRegistersPerPersons.length / REGISTERS_PER_PAGE) || 1);
+      res.setHeader('X-Pagination-Page', pageIndex);
+
+      // this variable contains an array of registers. Each register of this array means
+      // the people that are "inside" (last unresolved register for each person)
+      return unresolvedRegistersPerPersons;
+    });
+
+  })
+  .then(respondWithResult(res))
+  .catch(handleError(res));
 }
 
 export function createRegister(req, res) {
