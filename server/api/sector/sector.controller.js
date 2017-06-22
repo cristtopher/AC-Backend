@@ -9,7 +9,7 @@
  */
 
 'use strict';
-
+import mongoose from 'mongoose';
 import Promise from 'bluebird';
 import jsonpatch from 'fast-json-patch';
 import moment from 'moment';
@@ -252,9 +252,12 @@ export function sectorStatisticsDetails(req, res) {
   const REGISTERS_PER_PAGE = 10;
   let pageIndex = !req.query.page || req.query.page < 1 ? 1 : req.query.page;
   
+  console.log(`req.params: ${req.params.id}`);
+  
   let matchingCriteria = { 
     'isResolved' : false,
     'type': 'entry',
+    'sector': mongoose.Types.ObjectId(req.params.id),
     'person': { '$exists': true }
   }
     
@@ -287,7 +290,6 @@ export function sectorStatisticsDetails(req, res) {
     countQuery.exec()
   ])
   .spread(function(registersPerPerson, totalRegistersPerPerson){
-
     // Getting only the last register for each person (rp.registers[0] as is is sorted desc)
     // and also deepPopulating inner fields (register.person and register.sector)
     return Promise.all([
