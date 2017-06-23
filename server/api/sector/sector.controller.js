@@ -258,7 +258,7 @@ export function sectorStatisticsDetails(req, res) {
     'isResolved' : false,
     'type': 'entry',
     'sector': mongoose.Types.ObjectId(req.params.id),
-    'person': { '$exists': true }
+    'person': { '$exists': true, '$ne': null }
   }
     
   let sortingCriteria = {
