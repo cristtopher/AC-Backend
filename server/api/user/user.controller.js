@@ -1,5 +1,7 @@
 'use strict';
 
+import Promise from 'bluebird';
+
 import User from './user.model';
 import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
@@ -24,12 +26,51 @@ function handleError(res, statusCode) {
  * restriction: 'admin'
  */
 export function index(req, res) {
-  return User.find({}, '-salt -password').exec()
-    .then(users => {
-      res.status(200).json(users);
-      return null;
+  
+  let baseQueryFactory = function() {
+    let baseQuery = User.find({}, '-salt -password');
+  
+    if (req.query.populate) {
+      baseQuery.populate('companies')
+    }
+    
+    return baseQuery;
+  };
+  
+  
+  (function(){
+    if (!req.query.paging) {
+      return baseQueryFactory().exec();
+    }
+    
+    // page-based JSON result
+    var USERS_PER_PAGE = 10;
+    var pageIndex = !req.query.page || req.query.page < 1 ? 1 : req.query.page;
+    
+    return Promise.all([
+      baseQueryFactory()
+        .sort({ _id: 1 })
+        .skip((pageIndex - 1) * USERS_PER_PAGE)
+        .limit(USERS_PER_PAGE)
+        .exec(),
+      baseQueryFactory()
+        .count()
+        .exec()
+    ])
+    .spread((docs, count) => {
+      res.setHeader('X-Pagination-Count', count);
+      res.setHeader('X-Pagination-Limit', USERS_PER_PAGE);
+      res.setHeader('X-Pagination-Pages', Math.ceil(count / USERS_PER_PAGE) || 1);
+      res.setHeader('X-Pagination-Page', pageIndex);
+
+      return docs;
     })
-    .catch(handleError(res));
+  })()
+  .then(users => {
+    res.status(200).json(users);
+    return null;
+  })
+  .catch(handleError(res));
 }
 
 /**
