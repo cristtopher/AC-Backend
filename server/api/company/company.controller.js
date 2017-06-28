@@ -124,7 +124,11 @@ export function destroy(req, res) {
 export function companyPersons(req, res) {
   
   let baseQueryFactory = function() {
-    let baseQuery = Person.find({ company: req.params.id }).populate('company');
+    let baseQuery = Person.find({ company: req.params.id })
+                      .populate({
+                        path: 'company', 
+                        select: '-logo'
+                      });
     
     if(req.query.rut) {
       baseQuery.where('rut').equals(new RegExp(`^${req.query.rut}`, 'i'));
