@@ -66,11 +66,15 @@ function handleError(res, statusCode) {
 
 // Gets a list of Persons
 export function index(req, res) {
+  //let baseQuery = Person.find()
+  //                 .populate({
+  //                   path: 'company',
+  //                   select: '-logo'
+  //                 })
+  //                 .where('company')
+  //                 .in(req.user.companies);
+
   let baseQuery = Person.find()
-                   .populate({
-                     path: 'company',
-                     select: '-logo'
-                   })
                    .where('company')
                    .in(req.user.companies);
 
