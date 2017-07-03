@@ -164,6 +164,7 @@ SectorSchema.methods = {
     registerData.sector = this._id;
     
     console.log(`creating register with data = ${JSON.stringify(registerData)}`);
+
     // create register with incoming data if personId is set
     if(registerData.person) {
       return Register.create(registerData);
@@ -172,6 +173,7 @@ SectorSchema.methods = {
     // If not, find if person rut exists
     return Person.findOne()
       .where('rut').equals(registerData.rut)
+      .where('company').equals(this.company)
       .exec()
       .then(function(person) {
         console.log(`found person: ${JSON.stringify(person)}`);
