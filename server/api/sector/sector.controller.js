@@ -16,7 +16,7 @@ import moment from 'moment';
 
 import Sector from './sector.model';
 import Register from '../register/register.model';
-import Person from '../person/person.model';
+//import Person from '../person/person.model';
 
 import * as _ from 'lodash';
 
@@ -26,7 +26,7 @@ function respondWithResult(res, statusCode) {
     if(entity) {
       return res.status(statusCode).json(entity);
     }
-    
+
     return null;
   };
 }
@@ -132,45 +132,45 @@ export function destroy(req, res) {
     .catch(handleError(res));
 }
 
-export function sectorRegisters(req, res) {  
+export function sectorRegisters(req, res) {
   var baseQueryFactory = function() {
     let baseQuery = Register.find()
                             .where('sector').equals(req.params.id);
-  
-  
+
+
     if(req.query.unauthorized) {
       baseQuery.where('isUnauthorized').equals(true);
     } else {
       baseQuery.where('isUnauthorized').equals(false);
     }
-    
+
     if(req.query.type) {
       baseQuery.where('type').equals(req.query.type);
     }
-  
-    if(req.query.top) { 
+
+    if(req.query.top) {
       baseQuery.limit(parseInt(req.query.top, 10));
     }
-  
-    if(req.query.from) { 
+
+    if(req.query.from) {
       baseQuery.where('time').gte(moment(parseInt(req.query.from, 10)));
     }
 
     if(req.query.to) {
       baseQuery.where('time').lte(moment(parseInt(req.query.to, 10)));
     }
-  
+
     if(req.query.personType) {
       baseQuery.where('personType').equals(req.query.personType);
     }
-  
+
     if(req.query.incomplete) {
       baseQuery.where('isResolved').equals(false);
     }
-        
+
     return baseQuery;
   };
-  
+
   // Non page-based JSON result
   if(!req.query.paging) {
     return baseQueryFactory()
@@ -178,14 +178,14 @@ export function sectorRegisters(req, res) {
         .sort({_id: -1 })
         .exec()
         .then(respondWithResult(res))
-        .catch(handleError(res));    
+        .catch(handleError(res));
   }
-  
+
   // page-based JSON result
   const REGISTERS_PER_PAGE = 10;
-  
+
   let pageIndex = !req.query.page || req.query.page < 1 ? 1 : req.query.page;
-  
+
   let queriesPromises = [
     baseQueryFactory()
       .deepPopulate('person sector resolvedRegister.sector')
@@ -197,7 +197,7 @@ export function sectorRegisters(req, res) {
       .count()
       .exec()
   ];
-  
+
   return Promise.all(queriesPromises)
     .spread((docs, count) => {
       res.setHeader('X-Pagination-Count', count);
@@ -215,14 +215,14 @@ export function sectorRegisters(req, res) {
 export function exportRegistersExcel(req, res) {
   let user = req.user;
   let sectorId = req.params.id;
-  
+
   //TODO (security constraint): validate that sector belongs to a company (if not throw 401)
 
   (function() {
-    if(user.role === 'admin') { 
-      return Promise.resolve(); 
+    if(user.role === 'admin') {
+      return Promise.resolve();
     }
-  
+
     return Sector.findById(sectorId).exec().then(function(sector) {
       if(!_.includes(user.companies.map(c => c.toString()), sector.company.toString())) {
         return res.status(401).json({ message: `not enough permission to export registers of sector: ${req.params.id}` });
@@ -230,12 +230,12 @@ export function exportRegistersExcel(req, res) {
     });
   })()
   .then(function() {
-    return Sector.exportRegistersExcel(sectorId);    
+    return Sector.exportRegistersExcel(sectorId);
   })
   .then(excel => {
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     res.setHeader('Content-Disposition', 'attachment; filename=registers-export.xlsx');
-    
+
     return res.end(excel);
   })
   .catch(handleError(res));
@@ -248,29 +248,29 @@ export function sectorStatistics(req, res) {
 }
 
 
-export function sectorStatisticsDetails(req, res) {  
+export function sectorStatisticsDetails(req, res) {
   const REGISTERS_PER_PAGE = 10;
   let pageIndex = !req.query.page || req.query.page < 1 ? 1 : req.query.page;
-  
-  console.log(`req.params: ${req.params.id}`);
-  
-  let matchingCriteria = { 
-    'isResolved' : false,
-    'type': 'entry',
-    'sector': mongoose.Types.ObjectId(req.params.id),
-    'person': { '$exists': true, '$ne': null }
-  }
-    
-  let sortingCriteria = {
-    'time': -1
-  }
-  
-  let groupCriteria = {
-    '_id': '$person',
-    'registers': { '$push': '$$ROOT' }
-  }
 
-  // aggregating register rows in order to get an 
+  console.log(`req.params: ${req.params.id}`);
+
+  let matchingCriteria = {
+    isResolved: false,
+    type: 'entry',
+    sector: mongoose.Types.ObjectId(req.params.id),
+    person: { $exists: true, $ne: null }
+  };
+
+  let sortingCriteria = {
+    time: -1
+  };
+
+  let groupCriteria = {
+    _id: '$person',
+    registers: { $push: '$$ROOT' }
+  };
+
+  // aggregating register rows in order to get an
   // sorted array of registers ordered by register.time
   // grouped by each person
   let baseAggregationQuery = Register.aggregate()
@@ -281,7 +281,7 @@ export function sectorStatisticsDetails(req, res) {
       .match(matchingCriteria)
       .sort(sortingCriteria)
       .group(groupCriteria);
-  
+
   Promise.all([
     baseAggregationQuery
       .skip(REGISTERS_PER_PAGE * (pageIndex - 1))
@@ -289,17 +289,16 @@ export function sectorStatisticsDetails(req, res) {
       .exec(),
     countQuery.exec()
   ])
-  .spread(function(registersPerPerson, totalRegistersPerPerson){
+  .spread(function(registersPerPerson, totalRegistersPerPerson) {
     // Getting only the last register for each person (rp.registers[0] as is is sorted desc)
     // and also deepPopulating inner fields (register.person and register.sector)
     return Promise.all([
       Register.deepPopulate(registersPerPerson.map(rp => rp.registers[0]), 'person sector'),
       Register.deepPopulate(totalRegistersPerPerson.map(rp => rp.registers[0]), 'person sector')
     ])
-    .spread(function(unresolvedRegistersPerPersons, totalUnresolvedRegistersPerPersons){
-      
-     // adding optional query if it is desired to filter by personType 
-      if (req.query.personType) {
+    .spread(function(unresolvedRegistersPerPersons, totalUnresolvedRegistersPerPersons) {
+     // adding optional query if it is desired to filter by personType
+      if(req.query.personType) {
         totalUnresolvedRegistersPerPersons = totalUnresolvedRegistersPerPersons.filter(r => r.person.type == req.query.personType);
         unresolvedRegistersPerPersons      = unresolvedRegistersPerPersons.filter(r => r.person.type == req.query.personType);
       }
@@ -313,7 +312,6 @@ export function sectorStatisticsDetails(req, res) {
       // the people that are "inside" (last unresolved register for each person)
       return unresolvedRegistersPerPersons;
     });
-
   })
   .then(respondWithResult(res))
   .catch(handleError(res));
@@ -322,7 +320,7 @@ export function sectorStatisticsDetails(req, res) {
 export function createRegister(req, res) {
   console.log(`going to create register using the following: ${JSON.stringify(req.body)}`);
   let sectorId = req.params.id;
-  
+
   let mandatoryParams = [
     'type',
     'time'
@@ -338,7 +336,7 @@ export function createRegister(req, res) {
       console.log(`could not create register due missing property: ${param} in body.`);
       missingMandatoryParam = param;
       return false;
-    } 
+    }
   });
 
   if(missingMandatoryParam) {

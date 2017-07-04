@@ -25,7 +25,7 @@ PersonSchema.index({ company: 1 });
 //                    Pre/Post Hooks
 //-------------------------------------------------------
 
-function emitEvent(event) {  
+function emitEvent(event) {
   return function(doc) {
     PersonEvents.emit(`${event}:${doc._id}`, doc);
     PersonEvents.emit(event, doc);
@@ -35,18 +35,19 @@ function emitEvent(event) {
 PersonSchema.pre('save', function(next) {
   var person = this;
 
-  if (person.companyInfo || !person.company) { next(); }
-  
+  if(person.companyInfo || !person.company) {
+    next();
+  }
+
   // associate company.name to companyInfo if companyInfo is not defined
   Company.findById(this.company).exec()
-  .then(function(company){
+  .then(function(company) {
     person.companyInfo = company.name;
     next();
   })
-  .catch(function(err){
+  .catch(function(err) {
     next(err);
   });
-  
 });
 
 PersonSchema.post('save', function(doc) {
@@ -70,8 +71,8 @@ PersonSchema.post('findOneAndUpdate', function(doc) {
 //-------------------------------------------------------
 
 PersonSchema.statics = {
-  getEventEmitter: function() { 
-    return PersonEvents; 
+  getEventEmitter: function() {
+    return PersonEvents;
   }
 };
 
