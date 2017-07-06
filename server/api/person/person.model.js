@@ -14,7 +14,7 @@ var PersonSchema = new mongoose.Schema({
   name:    { type: String },
   company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
   companyInfo: { type: String },
-  type:    { type: String, enum: ['staff', 'contractor', 'visitor'], default: 'staff' },
+  type:    { type: String, enum: ['staff', 'contractor', 'visitor', 'supplier'], default: 'staff' },
   card:    { type: Number },
   active:  { type: Boolean, default: true }
 });
