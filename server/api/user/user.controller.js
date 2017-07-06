@@ -26,27 +26,25 @@ function handleError(res, statusCode) {
  * restriction: 'admin'
  */
 export function index(req, res) {
-  
   let baseQueryFactory = function() {
     let baseQuery = User.find({}, '-salt -password');
-  
-    if (req.query.populate) {
-      baseQuery.populate('companies')
+
+    if(req.query.populate) {
+      baseQuery.populate('companies');
     }
-    
+
     return baseQuery;
   };
-  
-  
-  (function(){
-    if (!req.query.paging) {
+
+  (function() {
+    if(!req.query.paging) {
       return baseQueryFactory().exec();
     }
-    
+
     // page-based JSON result
     var USERS_PER_PAGE = 10;
     var pageIndex = !req.query.page || req.query.page < 1 ? 1 : req.query.page;
-    
+
     return Promise.all([
       baseQueryFactory()
         .sort({ _id: 1 })
@@ -64,7 +62,7 @@ export function index(req, res) {
       res.setHeader('X-Pagination-Page', pageIndex);
 
       return docs;
-    })
+    });
   })()
   .then(users => {
     res.status(200).json(users);
@@ -83,7 +81,7 @@ export function create(req, res) {
   newUser.save()
     .then(function(user) {
       var token = jwt.sign({ _id: user._id }, config.secrets.session, {});
-      
+
       res.json({ token });
       return null;
     })
@@ -102,7 +100,7 @@ export function show(req, res, next) {
     .then(user => {
       if(!user) {
         res.status(404).end();
-        
+
         return null;
       }
       res.json(user.profile);
@@ -118,7 +116,7 @@ export function destroy(req, res) {
   return User.findByIdAndRemove(req.params.id).exec()
     .then(function() {
       res.status(204).end();
-      
+
       return null;
     })
     .catch(handleError(res));
@@ -139,13 +137,13 @@ export function changePassword(req, res) {
         return user.save()
           .then(() => {
             res.status(204).end();
-            
+
             return null;
           })
           .catch(validationError(res));
       } else {
         res.status(403).end();
-        
+
         return null;
       }
     });
@@ -165,7 +163,7 @@ export function me(req, res, next) {
         return res.status(401).end();
       }
       res.json(user);
-      
+
       return null;
     })
     .catch(err => next(err));
@@ -174,17 +172,17 @@ export function me(req, res, next) {
 
 export function getSectors(req, res) {
   let user = req.user;
-  
+
   user.populate('sectors', function(err, userWithSectors) {
-    if(err) return handleError(res); 
-    
+    if(err) return handleError(res);
+
     res.status(200).json(userWithSectors.sectors);
   });
 }
 
 export function getCompanies(req, res) {
   let user = req.user;
-    
+
   user.getCompanies()
     .then(companies => res.status(200).json(companies))
     .catch(handleError(res));
@@ -192,10 +190,10 @@ export function getCompanies(req, res) {
 
 export function getUserCompanySectors(req, res) {
   let user = req.user;
-    
+
   user.getCompanySectors(req.params.companyId)
     .then(sectors => res.status(200).json(sectors))
-    .catch(handleError(res));  
+    .catch(handleError(res));
 }
 
 export function importUsers(req, res) {

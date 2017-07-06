@@ -64,7 +64,7 @@ function handleEntityNotFound(res) {
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
-    console.error(err.stack);  
+    console.error(err.stack);
     res.status(statusCode).send(err);
   };
 }
@@ -122,43 +122,42 @@ export function destroy(req, res) {
 }
 
 export function companyPersons(req, res) {
-  
   let baseQueryFactory = function() {
     let baseQuery = Person.find({ company: req.params.id })
                       .populate({
-                        path: 'company', 
+                        path: 'company',
                         select: '-logo'
                       });
-    
+
     if(req.query.rut) {
       baseQuery.where('rut').equals(new RegExp(`^${req.query.rut}`, 'i'));
     }
-    
-    if (req.query.name) {
+
+    if(req.query.name) {
       baseQuery.where('name').equals(new RegExp(`^${req.query.name}`, 'i'));
     }
-    
-    if (req.query.personType) {
+
+    if(req.query.personType) {
       baseQuery.where('type').equals(req.query.personType);
     }
-    
-    if (req.query.status) {
-      baseQuery.where('active').equals(req.query.status)
+
+    if(req.query.status) {
+      baseQuery.where('active').equals(req.query.status);
     }
-    
+
     return baseQuery;
   };
 
-  
-  if (!req.query.paging) {
+
+  if(!req.query.paging) {
     return baseQueryFactory().exec()
       .then(respondWithResult(res))
-      .catch(handleError(res));    
+      .catch(handleError(res));
   } else {
     var REGISTERS_PER_PAGE = 10;
     var pageIndex = !req.query.page || req.query.page < 1 ? 1 : req.query.page;
 
-    
+
     return Promise.all([
       baseQueryFactory()
         .sort({ _id: 1 })
@@ -196,11 +195,11 @@ export function companyRegisters(req, res) {
 // export person list as a excel file
 export function exportExcel(req, res) {
   let user = req.user;
-  
+
   if(user.role !== 'admin' && !_.includes(user.companies.map(c => c.toString()), req.params.id)) {
     return res.status(401).json({ message: `not enough permission to import in company ${req.params.id}` });
   }
-  
+
   return Company.exportExcel(req.params.id)
     .then(excel => {
       res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -213,11 +212,11 @@ export function exportExcel(req, res) {
 // import person list as a excel file (should overwrite all entries in DB)
 export function importExcel(req, res) {
   let user = req.user;
-  
+
   if(user.role !== 'admin' && !_.includes(user.companies.map(c => c.toString()), req.params.id)) {
     return res.status(401).json({ message: `not enough permission to import in company ${req.params.id}` });
   }
-  
+
   return Company.importExcel(req.file.path, req.params.id)
     .then(() => res.sendStatus(200))
     .catch(handleError(res));
@@ -225,7 +224,7 @@ export function importExcel(req, res) {
 
 export function createPerson(req, res) {
   let user = req.user;
-  
+
   if(user.role !== 'admin' && !_.includes(user.companies.map(c => c.toString()), req.params.id)) {
     return res.status(401).json({ message: `not enough permission to create a new person in ${req.params.id}`});
   }
