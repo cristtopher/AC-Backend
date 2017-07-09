@@ -21,6 +21,17 @@ function handleError(res, statusCode) {
   };
 }
 
+function respondWithResult(res, statusCode) {
+  statusCode = statusCode || 200;
+  return function(entity) {
+    if(entity) {
+      return res.status(statusCode).json(entity);
+    }
+
+    return null;
+  };
+}
+
 /**
  * Get list of users
  * restriction: 'admin'
@@ -73,18 +84,15 @@ export function index(req, res) {
 
 /**
  * Creates a new user
+ * restriction: 'admin'
  */
 export function create(req, res) {
   var newUser = new User(req.body);
-  newUser.provider = 'local';
-  newUser.role = 'user';
+  
+  newUser.password = newUser.password || `axxezo_${newUser.rut}`;
+  
   newUser.save()
-    .then(function(user) {
-      var token = jwt.sign({ _id: user._id }, config.secrets.session, {});
-
-      res.json({ token });
-      return null;
-    })
+    .then(respondWithResult(res))
     .catch(validationError(res));
 }
 
