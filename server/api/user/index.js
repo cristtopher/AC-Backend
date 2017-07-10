@@ -12,7 +12,8 @@ router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 router.get('/me', auth.isAuthenticated(), controller.me);
 router.put('/:id/password', auth.isAuthenticated(), controller.changePassword);
 router.get('/:id', auth.isAuthenticated(), controller.show);
-router.post('/', controller.create);
+router.post('/', auth.hasRole('admin'), controller.create);
+router.patch('/:id', auth.hasRole('admin'), controller.patch);
 
 router.get('/me/companies', auth.isAuthenticated(), controller.getCompanies);
 router.get('/me/companies/:companyId/sectors', auth.isAuthenticated(), controller.getUserCompanySectors);

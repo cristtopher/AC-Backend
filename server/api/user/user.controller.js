@@ -1,10 +1,12 @@
 'use strict';
 
 import Promise from 'bluebird';
+import jwt from 'jsonwebtoken';
+import jsonpatch from 'fast-json-patch';
 
 import User from './user.model';
+
 import config from '../../config/environment';
-import jwt from 'jsonwebtoken';
 
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
@@ -29,6 +31,28 @@ function respondWithResult(res, statusCode) {
     }
 
     return null;
+  };
+}
+
+function patchUpdates(patches) {
+  return function(entity) {
+    try {
+      jsonpatch.apply(entity, patches, /*validate*/ true);
+    } catch(err) {
+      return Promise.reject(err);
+    }
+
+    return entity.save();
+  };
+}
+
+function handleEntityNotFound(res) {
+  return function(entity) {
+    if(!entity) {
+      res.status(404).end();
+      return null;
+    }
+    return entity;
   };
 }
 
@@ -94,6 +118,23 @@ export function create(req, res) {
   newUser.save()
     .then(respondWithResult(res))
     .catch(validationError(res));
+}
+
+/**
+ * Patches an existing user
+ * restriction: 'admin'
+ */
+
+export function patch(req, res) {
+  if(req.body._id) {
+    delete req.body._id;
+  }
+  
+  return User.findById(req.params.id).exec()
+    .then(handleEntityNotFound(res))
+    .then(patchUpdates(req.body))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
 }
 
 /**
