@@ -74,6 +74,7 @@ SectorSchema.statics = {
       }
 
       return {
+        supplierCount: _.filter(dataRedux, r => r.personType === 'supplier').length,
         staffCount: _.filter(dataRedux, r => r.personType === 'staff').length,
         contractorCount: _.filter(dataRedux, r => r.personType === 'contractor').length,
         visitCount: _.filter(dataRedux, r => r.personType === 'visitor').length,
@@ -101,6 +102,7 @@ SectorSchema.statics = {
           typeDict.staff      = 'Empleado';
           typeDict.contractor = 'Contratista';
           typeDict.visitor    = 'Visita';
+          typeDict.supplier   = 'Supplier';
         
           if(registers[i].person === null) {
             console.log('Person can not be resolved, it is null');

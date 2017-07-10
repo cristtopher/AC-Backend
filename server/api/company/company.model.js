@@ -86,6 +86,7 @@ CompanySchema.statics = {
       }
 
       return {
+        supplierCount: _.filter(dataRedux, r => r.personType === 'supplier').length,
         staffCount: _.filter(dataRedux, r => r.personType === 'staff').length,
         contractorCount: _.filter(dataRedux, r => r.personType === 'contractor').length,
         visitCount: _.filter(dataRedux, r => r.personType === 'visitor').length,
