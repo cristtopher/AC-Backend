@@ -19,7 +19,7 @@ var PersonSchema = new mongoose.Schema({
   active:  { type: Boolean, default: true }
 });
 
-PersonSchema.index({ company: 1 });
+PersonSchema.index({ company: 1, company : 1, card : 1 }, {unique: true});
 
 //-------------------------------------------------------
 //                    Pre/Post Hooks
