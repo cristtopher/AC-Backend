@@ -185,12 +185,29 @@ SectorSchema.methods = {
           registerData.unauthorizedRut = registerData.rut;
           registerData.isUnauthorized  = true;
           registerData.person          = null;
-          
+
           return Register.create(registerData);
         } else {
           console.log(`person with rut = ${registerData.rut} exists in DB. creating register`);
           registerData.person = person;
-          return Register.create(registerData);
+
+          return Register.find()
+            .where('type').equals(registerData.type)
+            .where('time').equals(moment(registerData.time).toISOString())
+            .where('person').equals(person._id)
+            .where('sector').equals(registerData.sector)
+            .exec()
+            .then(function(registers) {
+              if(Object.keys(registers).length == 0){
+                console.log('Creating new register');
+                
+                return Register.create(registerData);
+              } else {
+                console.log('Register not created. Same type, time, person, sector already created');
+
+                return registers;                
+              }
+            })
         }
       });
   }
