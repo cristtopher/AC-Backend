@@ -13,6 +13,8 @@ var router = new Router();
 
 router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/:id', auth.isAuthenticated(), controller.show);
+router.get('/:id/hasRegister', controller.hasRegister);
+
 
 //---------------------------------
 //              POST

@@ -12,6 +12,8 @@
 
 import jsonpatch from 'fast-json-patch';
 import Person from './person.model';
+import Register from '../register/register.model';
+
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -126,6 +128,23 @@ export function patch(req, res) {
   return Person.findById(req.params.id).exec()
     .then(handleEntityNotFound(res))
     .then(patchUpdates(req.body))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
+export function hasRegister(req, res) {
+  console.log('enter hasRegister');
+  return Register.find()
+    .where('person').equals(req.params.id)
+    .exec()
+    .then(function(registers) {
+      if(Object.keys(registers).length > 0){
+        return {'registers' : 1};
+      } else {
+        return {'registers' : 0};
+      }
+    })
+    .then(handleEntityNotFound(res))
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
