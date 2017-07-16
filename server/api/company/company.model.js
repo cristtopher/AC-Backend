@@ -95,20 +95,20 @@ CompanySchema.statics = {
     });    
   },
   
-  getRegisters: function(companyId, query) {
-    let baseQuery = Sector.find({ company: companyId })
-    
-    if (query.top) {
-      baseQuery.limit(parseInt(query.top, 10));
-    }
-    
-    return baseQuery.exec()
+  getRegisters: function(companyId, query) {    
+    return Sector.find({ company: companyId }).exec()
       .then(function(sectors) { 
-        return Register.find()
+        let baseRegisterQuery = Register.find();
+        
+        if (query.top) {
+          baseRegisterQuery.limit(parseInt(query.top, 10));
+        }        
+        
+        return baseRegisterQuery.find()
           .populate('person sector resolvedRegister')
           .where('isUnauthorized').equals(false)
           .where('sector').in(sectors)
-          .sort({_id: -1 })
+          .sort({ _id: -1 })
           .exec();
       });
   },
