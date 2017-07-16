@@ -187,7 +187,7 @@ export function companyStatistics(req, res) {
 }
 
 export function companyRegisters(req, res) {
-  Company.getRegisters(req.params.id)
+  Company.getRegisters(req.params.id, req.query)
     .then(respondWithResult(res))
     .catch(handleError(res));
 }

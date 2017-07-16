@@ -95,15 +95,22 @@ CompanySchema.statics = {
     });    
   },
   
-  getRegisters: function(companyId) {
-    return Sector.find({ company: companyId }).exec()
-    .then(function(sectors) { 
-      return Register.find()
-        .populate('person sector resolvedRegister')
-        .where('isUnauthorized').equals(false)
-        .where('sector').in(sectors)
-        .exec();
-    });
+  getRegisters: function(companyId, query) {
+    let baseQuery = Sector.find({ company: companyId })
+    
+    if (query.top) {
+      baseQuery.limit(parseInt(query.top, 10));
+    }
+    
+    return baseQuery.exec()
+      .then(function(sectors) { 
+        return Register.find()
+          .populate('person sector resolvedRegister')
+          .where('isUnauthorized').equals(false)
+          .where('sector').in(sectors)
+          .sort({_id: -1 })
+          .exec();
+      });
   },
   
   exportExcel: function(userCompanyId) {
