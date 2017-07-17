@@ -51,6 +51,8 @@ PersonSchema.pre('save', function(next) {
 });
 
 PersonSchema.post('save', function(doc) {
+  mongoose.model('Register').updatePersonTypes(doc._id, doc.type);
+  
   emitEvent('save')(doc);
 });
 
@@ -59,10 +61,14 @@ PersonSchema.post('remove', function(doc) {
 });
 
 PersonSchema.post('update', function(doc) {
+  mongoose.model('Register').updatePersonTypes(doc._id, doc.type);
+  
   emitEvent('update')(doc);
 });
 
 PersonSchema.post('findOneAndUpdate', function(doc) {
+  mongoose.model('Register').updatePersonTypes(doc._id, doc.type);
+  
   emitEvent('update')(doc);
 });
 

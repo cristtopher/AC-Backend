@@ -96,6 +96,11 @@ RegisterSchema.post('save', function(doc) {
 //-------------------------------------------------------
 
 RegisterSchema.statics = {
+  updatePersonTypes: function(personId, newPersonType) {
+    let Register = this;
+    
+    return Register.update({ person: personId }, { '$set': { personType: newPersonType } }).exec()
+  }
 };
 
 //-------------------------------------------------------
