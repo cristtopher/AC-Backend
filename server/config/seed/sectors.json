@@ -1,26 +1,14 @@
-[{
-  "_id": "5860838c3970532794a746b3",
-  "name": "Sector 1",
-  "description": "Sector 1 company 1",
-  "company": "585597684f6ad8244e26748e"
-}, {
-  "_id": "586083923970532794a746b4",
-  "name": "Sector 2",
-  "description": "Sector 2 company 1",
-  "company": "585597684f6ad8244e26748e"
-}, {
-  "_id": "586083923970532794a746b5",
-  "name": "Sector 3",
-  "description": "Sector 3 company 1",
-  "company": "585597684f6ad8244e26748e"
-}, {
-  "_id": "586083923970532794a746b6",
-  "name": "Sector 4",
-  "description": "Sector 1 company 2",
-  "company": "585597684f6ad8244e26748f"
-}, {
-  "_id": "586083923970532794a746b7",
-  "name": "Sector 5",
-  "description": "Sector 1 company 2",
-  "company": "585597684f6ad8244e26748f"
-}]
+[
+  {"_id":"5860838c3970532794a746b3","name":"Sector 1","description":"Sector 1 company 1","company":"585597684f6ad8244e26748e","__v":0},
+  {"_id":"586083923970532794a746b4","name":"Sector 2","description":"Sector 2 company 1","company":"585597684f6ad8244e26748e","__v":0},
+  {"_id":"586083923970532794a746b5","name":"Sector 3","description":"Sector 3 company 1","company":"585597684f6ad8244e26748e","__v":0},
+  {"_id":"586083923970532794a746b6","name":"Sector 4","description":"Sector 1 company 2","company":"585597684f6ad8244e26748f","__v":0},
+  {"_id":"586083923970532794a746b7","name":"Sector 5","description":"Sector 1 company 2","company":"585597684f6ad8244e26748f","__v":0},
+  {"_id":"596d34d35115d65c2ebc6ad5","name":"Porteria","description":"Porteria","company":"585597684f6ad8244e26748e","__v":0},
+  {"_id":"596d34f65115d65c2ebc6ad6","name":"Muellaje","description":"Muellaje","company":"585597684f6ad8244e26748e","__v":0},
+  {"_id":"596d350a5115d65c2ebc6ad7","name":"Pontones","description":"Pontones","company":"585597684f6ad8244e26748e","__v":0},
+  {"_id":"596d351b5115d65c2ebc6ad8","name":"Edificio Admin","description":"Edificio Admin","company":"585597684f6ad8244e26748e","__v":0},
+  {"_id":"596d35505115d65c2ebc6ad9","name":"Porteria","description":"Porteria","company":"596d32ad5115d65c2ebc6ad3","__v":0},
+  {"_id":"596d35625115d65c2ebc6ada","name":"Administracion","description":"Administracion","company":"596d32ad5115d65c2ebc6ad3","__v":0},
+  {"_id":"596d35965115d65c2ebc6adb","name":"Porteria","description":"Porteria","company":"596d32e05115d65c2ebc6ad4","__v":0}
+]

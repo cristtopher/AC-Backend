@@ -1,22 +1,6 @@
-[{
-  "_id" : "58af3cdfb010eb2bac53004a", 
-  "name" : "test pda",
-  "description" : "test pda",
-  "serial" : "33b7ddaf",
-  "company" : "585597684f6ad8244e26748e",
-  "sector" : "586083923970532794a746b5"
-}, {
-  "_id" : "58af3d8fe9a0153046224cc2",
-  "name" : "test pda 2",
-  "description" : "test pda 2",
-  "serial" : "12345678",
-  "company" : "585597684f6ad8244e26748e",
-  "sector" : "5860838c3970532794a746b3"
-}, {
-  "_id" : "58b0426a9fb1699f11f91f2e",
-  "name" : "Cristtopher's PDA",
-  "description" : "testing PDA",
-  "serial" : "33b61193",
-  "company" : "585597684f6ad8244e26748e",
-  "sector" : "5860838c3970532794a746b3"
-}]
+[
+  {"_id":"58af3cdfb010eb2bac53004a","name":"test pda","description":"test pda","serial":"33b7ddaf","company":"585597684f6ad8244e26748e","sector":"586083923970532794a746b5","__v":0},
+  {"_id":"58af3d8fe9a0153046224cc2","name":"test pda 2","description":"test pda 2","serial":"12345678","company":"585597684f6ad8244e26748e","sector":"5860838c3970532794a746b3","__v":0},
+  {"_id":"58b0426a9fb1699f11f91f2e","name":"Cristtopher's PDA","description":"testing PDA","serial":"33b61193","company":"585597684f6ad8244e26748e","sector":"5860838c3970532794a746b3","__v":0},
+  {"_id":"5967d17c2b00d3f1a5e7e6bf","name":"pda testing","description":"JP pda testing","serial":"33b6123e","company":"585597684f6ad8244e26748e","sector":"5860838c3970532794a746b3"}
+]

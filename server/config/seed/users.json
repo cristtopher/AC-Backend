@@ -1,44 +1,8 @@
-[{
-  "_id": "585597684f6ad8244e26748b",
-  "rut": "user",
-  "name": "Normal User",
-  "password": "user",
-  "companies": ["585597684f6ad8244e26748e"]
-}, {  
-  "_id": "585597684f6ad8244e26748e",
-  "rut": "user2",
-  "name": "Normal User 2",
-  "password": "user",
-  "companies": ["585597684f6ad8244e26748f"]
-}, {
-  "_id": "585597684f6ad8244e26748c",
-  "role": "supervisor",
-  "rut": "supervisor",
-  "name": "Supervisor User",
-  "password": "supervisor",
-  "companies": ["585597684f6ad8244e26748e"]
-}, {
-  "_id": "585597684f6ad8244e26748d",
-  "role": "admin",
-  "rut": "admin",
-  "name": "Admin",
-  "companies": ["585597684f6ad8244e26748e"],
-  "password": "admin"
-}, {  
-  "_id": "585597684f6ad8244e26748f",
-  "rut": "user3",
-  "name": "Normal User 3 (multicompany)",
-  "password": "user",
-  "companies": ["585597684f6ad8244e26748e", "585597684f6ad8244e26748f"]
-}, {
-  "_id": "58c62969397053b49ba2960b",
-  "role": "supervisor",
-  "rut": "supervisor2",
-  "name": "Supervisor User (multicompany)",
-  "password": "supervisor",
-  "companies": ["585597684f6ad8244e26748e", "585597684f6ad8244e26748f"]
-}]
-
-
-
-
+[
+  {"_id":"585597684f6ad8244e26748b", "rut":"user","name":"Normal User","password":"user","role":"user","companies":["585597684f6ad8244e26748e","596d32e05115d65c2ebc6ad4","596d32ad5115d65c2ebc6ad3"],"__v":0},
+  {"_id":"585597684f6ad8244e26748c", "rut":"supervisor","name":"Supervisor User","password":"supervisor","role":"supervisor","companies":["585597684f6ad8244e26748e","596d32e05115d65c2ebc6ad4","596d32ad5115d65c2ebc6ad3"],"__v":0},
+  {"_id":"585597684f6ad8244e26748d", "rut":"admin","name":"Admin","password":"admin","role":"admin","companies":["585597684f6ad8244e26748e","596d32e05115d65c2ebc6ad4","596d32ad5115d65c2ebc6ad3"],"__v":0},
+  {"_id":"585597684f6ad8244e26748e", "rut":"user2","name":"Normal User 2","password":"user","role":"user","companies":["585597684f6ad8244e26748f"],"__v":0},
+  {"_id":"585597684f6ad8244e26748f", "rut":"user3","name":"Normal User 3 (multicompany)","password":"user","role":"user","companies":["585597684f6ad8244e26748e","585597684f6ad8244e26748f"],"__v":0},
+  {"_id":"58c62969397053b49ba2960b", "rut":"supervisor2","name":"Supervisor User (multicompany)","password":"supervisor","role":"supervisor","companies":["585597684f6ad8244e26748e","585597684f6ad8244e26748f"],"__v":0}
+]

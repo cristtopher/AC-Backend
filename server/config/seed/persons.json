@@ -1,38 +1,7 @@
-[{
-  "_id": "5855d9b97f45b135cbb73ad1",
-  "rut": "123-K",
-  "name": "Person 1",
-  "company": "585597684f6ad8244e26748e",
-  "card":  1  
-}, {
-  "_id": "5855d9ba7f45b135cbb73ad2",
-  "rut": "456-K",
-  "name": "Person 2",
-  "company": "585597684f6ad8244e26748e",
-  "card":  2  
-}, {
-  "_id": "5855d9ba7f45b135cbb73ad3",
-  "rut": "789-1",
-  "name": "Person 3",
-  "company": "585597684f6ad8244e26748e",
-  "card":  3
-}, {
-  "_id": "5855d9ba7f45b135cbb73ad4",
-  "rut": "546-1",
-  "name": "Visitor 1",
-  "type": "visitor",
-  "company": "585597684f6ad8244e26748e",
-  "card":  4
-}, {
-  "_id": "58a11dfd3970537236abe72a",
-  "rut": "555-5",
-  "name": "Person 1 (Company 2)",
-  "company": "585597684f6ad8244e26748f",
-  "card":  5
-},{
-  "_id": "58aaac7c4fa8dc8e747a6fee",
-  "rut": "145112931-1",
-  "name": "Tzu-Chiang Shen",
-  "company": "585597684f6ad8244e26748e",
-  "card":  14511293
-}]
+[
+  {"_id":"58a11dfd3970537236abe72a","rut":"555-5","name":"Person 1 (Company 2)","company":"585597684f6ad8244e26748f","card":5,"active":true,"type":"staff","__v":0},
+  {"_id":"59442f6f4b1b565ed3a3236b","__v":0,"active":true,"card":34522,"company":"585597684f6ad8244e26748e","companyInfo":"Axxezo S.A.","name":"DANIELA ROMERO","rut":"17035438-9","type":"staff"},
+  {"_id":"594971d94b1b565ed3a3237a","__v":0,"active":true,"card":79430,"company":"585597684f6ad8244e26748e","companyInfo":"Axxezo S.A","name":"JUAN PABLO MORALES","rut":"17296288-2","type":"staff"},
+  {"_id":"595aab34cbe2e8069cf59270","rut":"16240650-7","name":"CONTRATISTA 1","companyInfo":"EMPRESA CONTRATISTA 1","card":12223,"company":"585597684f6ad8244e26748e","active":true,"type":"contractor","__v":0},
+  {"_id":"595ba29bcbe2e8069cf59278","rut":"17179347-5","name":"Proveedor 1","companyInfo":"Empresa Proveedor 1","company":"585597684f6ad8244e26748e","active":true,"type":"staff","__v":0}
+]
