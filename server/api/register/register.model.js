@@ -37,6 +37,7 @@ RegisterSchema.index({ sector: 1 });
 RegisterSchema.index({ entry: 1 });
 RegisterSchema.index({ isResolved: 1 });
 RegisterSchema.index({ resolvedRegister: 1 });
+RegisterSchema.index({ person: 1, sector : 1, time : 1, type : 1 }, {unique: true});
 
 //-------------------------------------------------------
 //                  Getters/Setters
