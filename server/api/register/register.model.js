@@ -18,7 +18,11 @@ Promise.config({
 var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var RegisterSchema = new mongoose.Schema({
-  personType:       { type: String }, 
+  
+  personType: { type: String },
+  personName: { type: String },
+  personRut: { type: String },
+  
   person:           { type: mongoose.Schema.Types.ObjectId, ref: 'Person' },
   sector:           { type: mongoose.Schema.Types.ObjectId, ref: 'Sector' },
   time:             { type: Date, default: Date.now },
@@ -32,6 +36,8 @@ var RegisterSchema = new mongoose.Schema({
 
 RegisterSchema.index({ person: 1 });
 RegisterSchema.index({ personType: 1 });
+RegisterSchema.index({ personName: 1 });
+RegisterSchema.index({ personRut: 1 });
 RegisterSchema.index({ time: 1 });
 RegisterSchema.index({ sector: 1 });
 RegisterSchema.index({ entry: 1 });
@@ -61,6 +67,8 @@ RegisterSchema.pre('save', function(next) {
   mongoose.model('Person').findById(register.person).exec()
     .then(function(person) {
       register.personType = person.type; 
+      register.personName = person.name; 
+      register.personRut  = person.rut; 
     })
     .then(function() {
       if(register.type === 'entry' || register.isResolved) return;

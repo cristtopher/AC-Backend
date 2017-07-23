@@ -163,6 +163,15 @@ export function sectorRegisters(req, res) {
     if(req.query.personType) {
       baseQuery.where('personType').equals(req.query.personType);
     }
+    
+    if(req.query.personName) {
+      baseQuery.where('personName').equals(new RegExp(`^${req.query.personName}`, 'i'));
+    }
+    
+    if(req.query.personRut) {
+      baseQuery.where('personRut').equals(new RegExp(`^${req.query.personRut}`, 'i'));
+    }
+    
 
     if(req.query.incomplete) {
       baseQuery.where('isResolved').equals(false);
