@@ -175,11 +175,29 @@ export function destroy(req, res) {
  * Change a users password
  */
 export function changePassword(req, res) {
-  var userId = req.user._id;
+  var user = req.user;
+  
+  if (user.role === 'admin') {
+    let password = String(req.body.password);
+    let userId   = req.params.id;
+    
+    return User.findById(userId).exec()
+      .then(user => {
+        user.password = password;
+      
+        return user.save();
+      })
+      .then(() => {
+        res.status(204).end();
+        return null;
+      })
+      .catch(validationError(res));
+  }
+  
   var oldPass = String(req.body.oldPassword);
   var newPass = String(req.body.newPassword);
 
-  return User.findById(userId).exec()
+  return User.findById(user._id).exec()
     .then(user => {
       if(user.authenticate(oldPass)) {
         user.password = newPass;
