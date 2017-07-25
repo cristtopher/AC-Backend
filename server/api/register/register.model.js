@@ -8,7 +8,11 @@ import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import moment from 'moment';
 
-var eventEmitter = require('./register.events').default;
+import { EventEmitter } from 'events';
+
+var RegisterEvents = new EventEmitter();
+
+RegisterEvents.setMaxListeners(0);
 
 // suppress warnings as mongoose-deep-populate has promises without returns.
 Promise.config({
@@ -57,6 +61,14 @@ RegisterSchema.path('time')
 //                  Pre/Post Hooks
 //-------------------------------------------------------
 
+function emitEvent(event) {
+  return function(doc) {      
+    RegisterEvents.emit(`${event}:${doc._id}`, doc);
+    RegisterEvents.emit(event, doc);
+  };
+}
+
+
 RegisterSchema.pre('save', function(next) {
   var register = this;
 
@@ -96,15 +108,32 @@ RegisterSchema.pre('save', function(next) {
 });
 
 
-RegisterSchema.post('save', function(doc) {  
-  eventEmitter.emit('save', doc);
-  eventEmitter.emit(`save:${doc._id}`, doc);
+RegisterSchema.post('save', function(doc) {
+  emitEvent('save')(doc);
 });
+
+RegisterSchema.post('remove', function(doc) {
+  emitEvent('remove')(doc);
+});
+
+RegisterSchema.post('update', function(doc) {
+  emitEvent('update')(doc);
+});
+
+RegisterSchema.post('findOneAndUpdate', function(doc) {
+  emitEvent('update')(doc);
+});
+
+
 //-------------------------------------------------------
 //                     Statics
 //-------------------------------------------------------
 
 RegisterSchema.statics = {
+  getEventEmitter: function() {
+    return RegisterEvents;
+  },
+  
   updatePersonTypes: function(personId, newPersonType) {
     let Register = this;
     

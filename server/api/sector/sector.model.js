@@ -168,8 +168,8 @@ SectorSchema.methods = {
     console.log(`creating register with data = ${JSON.stringify(registerData)}`);
 
     // create register with incoming data if personId is set
-    if(registerData.person) {
-      return Register.create(registerData);
+    if(registerData.person) {      
+      return new Register(registerData).save();
     }
   
     // If not, find if person rut exists
@@ -186,7 +186,7 @@ SectorSchema.methods = {
           registerData.isUnauthorized  = true;
           registerData.person          = null;
 
-          return Register.create(registerData);
+          return new Register(registerData).save();
         } else {
           console.log(`person with rut = ${registerData.rut} exists in DB. creating register`);
           registerData.person = person;
@@ -200,8 +200,8 @@ SectorSchema.methods = {
             .then(function(registers) {
               if(Object.keys(registers).length == 0){
                 console.log('Creating new register');
-                
-                return Register.create(registerData);
+
+                return new Register(registerData).save();                
               } else {
                 console.log('Register not created. Same type, time, person, sector already created');
 
