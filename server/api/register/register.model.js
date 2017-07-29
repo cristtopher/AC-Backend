@@ -26,6 +26,8 @@ var RegisterSchema = new mongoose.Schema({
   personType: { type: String },
   personName: { type: String },
   personRut: { type: String },
+  personCompanyInfo: { type: String },
+  
   
   person:           { type: mongoose.Schema.Types.ObjectId, ref: 'Person' },
   sector:           { type: mongoose.Schema.Types.ObjectId, ref: 'Sector' },
@@ -78,9 +80,10 @@ RegisterSchema.pre('save', function(next) {
 
   mongoose.model('Person').findById(register.person).exec()
     .then(function(person) {
-      register.personType = person.type; 
-      register.personName = person.name; 
-      register.personRut  = person.rut; 
+      register.personType        = person.type; 
+      register.personName        = person.name; 
+      register.personRut         = person.rut; 
+      register.personCompanyInfo = person.companyInfo;
     })
     .then(function() {
       if(register.type === 'entry' || register.isResolved) return;

@@ -172,6 +172,9 @@ export function sectorRegisters(req, res) {
       baseQuery.where('personRut').equals(new RegExp(`^${req.query.personRut}`, 'i'));
     }
     
+    if(req.query.personCompany) {
+      baseQuery.where('personCompanyInfo').equals(new RegExp(`^${req.query.personCompany}`, 'i'));
+    }
 
     if(req.query.incomplete) {
       baseQuery.where('isResolved').equals(false);
