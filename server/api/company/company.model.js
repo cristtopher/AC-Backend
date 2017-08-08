@@ -11,6 +11,7 @@ import Register from '../register/register.model';
 import Sector from '../sector/sector.model';
 import Person from '../person/person.model';
 
+mongoose.Promise = Promise;
 var readFileAsync = Promise.promisify(require('fs').readFile);
 
 var CompanySchema = new mongoose.Schema({
@@ -142,36 +143,33 @@ CompanySchema.statics = {
       .then(function(excel) {
         let sheet = excel[0];
         
+        let pendingPromises = []; 
+        
         sheet.data.forEach((row, i) => {
-          if(row[1] && row[3] && row[4] && row[5]) {
-            var status = {
-              activo: true,
-              inactivo: false
-            };
-
-            if(i > 0) {
-              Person.findOne({rut: row[0]}, function(err, personR) {
-                if(err) {
-                  console.log(err);
-                  return;
-                }
-
+          var status = {
+            activo: true,
+            inactivo: false
+          };
+          
+          if( i > 0 ) {
+            pendingPromises.push(Person.findOne({ rut: row[0] }).exec()
+              .then(personR => {
                 if(personR) {
                   var id = personR._id;
-  
-                  var body = { active: status[row[5].toLowerCase()], 
+
+                  var body = {
                     name: row[1], 
                     company: userCompanyId,
                     companyInfo: row[2],
                     type: row[3].toLowerCase(),
-                    card: row[4]
+                    card: row[4],
+                    active: status[row[5].toLowerCase()]
                   };
-                  
-                  // TODO: @mgarces: should this query run in background?
-                  Person.findOneAndUpdate({_id: id}, body, { upsert: true, setDefaultsOnInsert: true, runValidators: true, new: true }).exec();
+                
+                  return Person.findOneAndUpdate({_id: id}, body, { upsert: true, setDefaultsOnInsert: true, runValidators: true, new: true }).exec();
                 } else {
                   var personCreate = new Person();
-                  
+                
                   personCreate.rut         = row[0];
                   personCreate.name        = row[1];
                   personCreate.company     = userCompanyId;
@@ -180,15 +178,29 @@ CompanySchema.statics = {
                   personCreate.card        = row[4];
                   personCreate.active      = status[row[5].toLowerCase()];
 
-                  personCreate.save();
+                  return personCreate.save();
                 }
-              });
-            }
-          } else {
-            console.log('Row empty or not complete');
+              }));
           }
         });
+        
+        var data = [['Import Excel Results']];
+
+        Promise.all(pendingPromises.map(promise => promise.reflect()))
+          .each((inspection, idx)  => {
+            if(inspection.isFulfilled()){
+              console.log(idx, `OK`)
+              data.push(['Ok']);
+            } else {
+              console.log(idx, `NOT OK REASON`, JSON.stringify(inspection.reason().errors));
+              data.push(['Not ok', JSON.stringify(inspection.reason().errors)]);
+            }
+          });
+        
       });
+    
+    var buffer = xlsx.build([{ name: 'mySheetName', data: data }]);
+    return new Promise(resolve => resolve(buffer));
   },
   
   createPerson: function(companyId, personData) {
