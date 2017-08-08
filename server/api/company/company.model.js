@@ -186,7 +186,7 @@ CompanySchema.statics = {
         
         var data = [['Import Excel Results']];
 
-        Promise.all(pendingPromises.map(promise => promise.reflect()))
+        return Promise.all(pendingPromises.map(promise => promise.reflect()))
           .each((inspection, idx)  => {
             if(inspection.isFulfilled()){
               console.log(idx, `OK`)
@@ -195,12 +195,11 @@ CompanySchema.statics = {
               console.log(idx, `NOT OK REASON`, JSON.stringify(inspection.reason().errors));
               data.push(['Not ok', JSON.stringify(inspection.reason().errors)]);
             }
-          });
-        
-      });
-    
-    var buffer = xlsx.build([{ name: 'mySheetName', data: data }]);
-    return new Promise(resolve => resolve(buffer));
+          })
+          .then(() => {
+            return xlsx.build([{ name: 'mySheetName', data: data }]);;
+          })
+      });    
   },
   
   createPerson: function(companyId, personData) {
