@@ -144,14 +144,17 @@ CompanySchema.statics = {
         let sheet = excel[0];
         
         let pendingPromises = []; 
+        let rutArray = [];
         
         sheet.data.forEach((row, i) => {
           var status = {
             activo: true,
             inactivo: false
           };
-          
+
           if( i > 0 ) {
+            rutArray.push(row[0]);
+
             pendingPromises.push(Person.findOne({ rut: row[0] }).exec()
               .then(personR => {
                 if(personR) {
@@ -184,16 +187,16 @@ CompanySchema.statics = {
           }
         });
         
-        var data = [['Import Excel Results']];
+        var data = [['Import Excel Results'], [], ['RUT', 'RESULT', 'ERROR'], []];
 
         return Promise.all(pendingPromises.map(promise => promise.reflect()))
           .each((inspection, idx)  => {
             if(inspection.isFulfilled()){
-              console.log(idx, `OK`)
-              data.push(['Ok']);
+              //console.log(idx, `OK`);
+              data.push([rutArray[idx], 'Success']);
             } else {
-              console.log(idx, `NOT OK REASON`, JSON.stringify(inspection.reason().errors));
-              data.push(['Not ok', JSON.stringify(inspection.reason().errors)]);
+              //console.log(idx, `NOT OK REASON`, JSON.stringify(inspection.reason().errors));
+              data.push([rutArray[idx], 'Failed', JSON.stringify(inspection.reason().errors)]);
             }
           })
           .then(() => {
