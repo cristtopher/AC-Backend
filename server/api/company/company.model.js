@@ -192,11 +192,12 @@ CompanySchema.statics = {
         return Promise.all(pendingPromises.map(promise => promise.reflect()))
           .each((inspection, idx)  => {
             if(inspection.isFulfilled()){
-              //console.log(idx, `OK`);
+              console.log(idx, `OK`);
               data.push([rutArray[idx], 'Success']);
             } else {
-              //console.log(idx, `NOT OK REASON`, JSON.stringify(inspection.reason().errors));
-              data.push([rutArray[idx], 'Failed', JSON.stringify(inspection.reason().errors)]);
+              console.log(idx, `NOT OK REASON`, JSON.stringify(inspection.reason()));
+              console.log(idx, `NOT OK REASON`, JSON.stringify(inspection.reason().errors));
+              data.push([rutArray[idx], 'Failed', JSON.stringify(inspection.reason())]);
             }
           })
           .then(() => {
