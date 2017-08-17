@@ -3,20 +3,13 @@ image: node:boron
 
 pipelines:
   branches:
-    master:
-      - step:
-          caches:
-            - node
-          script: # Modify the commands below to build your repository.
-            - npm install
-            - npm test
     production:
       - step:
           caches:
             - node
           script: # Modify the commands below to build your repository.
             - npm install
-            - npm test
+            #- npm test
             - docker login axxezo.azurecr.io -u axxezo -p Gp/THWeHCoql15kUZdig88PFf5oRWM8g
             - docker build -t axxezo.azurecr.io/unwp-backend .
             - docker push axxezo.azurecr.io/unwp-backend
