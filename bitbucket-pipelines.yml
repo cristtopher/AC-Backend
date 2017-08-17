@@ -2,12 +2,11 @@
 image: node:boron
 
 pipelines:
-  branches:
-    production:
-      - step:
-          caches:
-            - node
-          script: # Modify the commands below to build your repository.
+  default:
+    - step:
+        caches:
+          - node
+        script:
             - npm install
             #- npm test
             - docker login axxezo.azurecr.io -u axxezo -p Gp/THWeHCoql15kUZdig88PFf5oRWM8g
