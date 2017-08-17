@@ -10,7 +10,7 @@ pipelines:
             - npm install
             #- npm test
             - docker login axxezo.azurecr.io -u axxezo -p Gp/THWeHCoql15kUZdig88PFf5oRWM8g
-            - docker build -t axxezo.azurecr.io/unwp-backend .
-            - docker push axxezo.azurecr.io/unwp-backend
+            - docker build -t axxezo.azurecr.io/unwp-backend:v1 .
+            - docker push axxezo.azurecr.io/unwp-backend:v1
 options:
   docker: true
