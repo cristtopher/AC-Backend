@@ -57,28 +57,9 @@ CompanySchema.statics = {
       ]);
     })
     .spread(function(incompleteRegisters, weeklyRegisters) {      
-      var _weeklyHistory = {
-        entry: [],
-        depart: []
-      };
+      let keyList = [];
+      let dataRedux = [];
       
-      for(var i = 0; i <= 6; i++) {
-        let upperDate = i == 0 ? now : moment(now).startOf('day').subtract(i - 1, 'days');  
-        let lowerDate = i == 0 ? moment(now).startOf('day') : moment(now).startOf('day').subtract(i, 'days');
-        
-        let timeFilteredRegisters = _.filter(weeklyRegisters, r => r.time < upperDate && r.time > lowerDate);
-        
-        let entriesFound = _.filter(timeFilteredRegisters, r => r.type === 'entry');
-        let departsFound = _.filter(timeFilteredRegisters, r => r.type === 'depart');
-    
-        console.log(`for ${lowerDate.toDate()} => entriesFound: ${entriesFound.length}, departsFound: ${departsFound.length}`);
-    
-        _weeklyHistory.entry.push({ datetime: lowerDate.unix() * 1000, count: _.size(entriesFound) });
-        _weeklyHistory.depart.push({ datetime: lowerDate.unix() * 1000, count: _.size(departsFound) });
-      }
-
-      var keyList = [];
-      var dataRedux = [];
       for(var e in incompleteRegisters) {
         if(!_.includes(keyList, incompleteRegisters[e].person.toString())) {
           keyList.push(incompleteRegisters[e].person.toString());
@@ -91,7 +72,7 @@ CompanySchema.statics = {
         staffCount: _.filter(dataRedux, r => r.personType === 'staff').length,
         contractorCount: _.filter(dataRedux, r => r.personType === 'contractor').length,
         visitCount: _.filter(dataRedux, r => r.personType === 'visitor').length,
-        weeklyHistory: _weeklyHistory
+        weeklyRegisters: weeklyRegisters
       };  
     });    
   },
