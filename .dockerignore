@@ -1,2 +1,8 @@
 node_modules
 npm-debug.log
+*.md
+!README.md
+
+# Exclude GIT
+.git
+.gitignore
