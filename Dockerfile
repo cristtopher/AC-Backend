@@ -1,5 +1,6 @@
 FROM node:boron
-MAINTAINER Cristtopher Quintana T. "cquintana@axxezo.com"
+MAINTAINER Cristtopher Quintana T. <cquintana@axxezo.com>
+
 # Create app directory
 WORKDIR /usr/src/app
 
@@ -12,7 +13,7 @@ COPY . .
 EXPOSE 5001
 
 # change default user
-USER node
+#USER node
 
 # Run app
 CMD [ "npm", "start" ]
