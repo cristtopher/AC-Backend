@@ -18,7 +18,7 @@ pipelines:
        - step:
           script:
             - npm install
-            - npm install -g gulp
+            - npm install -g gulp typescript
             - gulp build
             - export NODE_ENV=production
             - export PORT=5001
