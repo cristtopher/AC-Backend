@@ -10,7 +10,7 @@ pipelines:
             - node -v
             - npm install
             - npm install -g gulp
-            #- npm test
+            - #- npm test
   # Only on the main branch 
   # push & build image to the container registry
   branches:
