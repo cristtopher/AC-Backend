@@ -7,12 +7,9 @@ pipelines:
         caches:
           - node
         script:
-            - npm install --global gulp
+            - node -v
+            - npm install -g gulp
             - npm install
-  branches:
-    master:
-      - step:
-         script:
             - gulp build
             - export NODE_ENV=production
             #- npm test
