@@ -7,7 +7,9 @@ pipelines:
         caches:
           - node
         script:
+            - npm install --global gulp
             - npm install
+            - gulp build
             #- npm test
             - docker login axxezo.azurecr.io -u axxezo -p Gp/THWeHCoql15kUZdig88PFf5oRWM8g
             - docker build -t axxezo.azurecr.io/unwp-backend:v1 .
