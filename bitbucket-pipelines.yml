@@ -9,7 +9,6 @@ pipelines:
         script:
             - node -v
             - npm install
-            - npm install -g gulp
             #- npm test
   # Only on the main branch 
   # push & build image to the container registry
@@ -18,7 +17,7 @@ pipelines:
        - step:
           script:
             - npm install
-            - npm install -g gulp
+            - npm install -g gulp gulp-cli
             - npm install gulp --save-dev
             - export NODE_ENV=production
             - export PORT=5001
