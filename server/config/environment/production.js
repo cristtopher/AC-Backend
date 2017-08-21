@@ -19,6 +19,6 @@ module.exports = {
     uri: process.env.MONGODB_URI
       || process.env.MONGOHQ_URL
       || process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME
-      || 'mongodb://axxezodb:OHO7eBCZFRx6LJObtemhHQvEn7Xy0WK3xuKrpc19ANZ7O7Z1knSKRXveoQ1mvPvcWa1dPI1FMwpKxBbhQEmU0Q==@axxezodb.documents.azure.com:10255/axxezo?ssl=true&replicaSet=globaldb'
+      || 'mongodb://axxezodb:OHO7eBCZFRx6LJObtemhHQvEn7Xy0WK3xuKrpc19ANZ7O7Z1knSKRXveoQ1mvPvcWa1dPI1FMwpKxBbhQEmU0Q==@axxezodb.documents.azure.com:10255/unwp?ssl=true&replicaSet=globaldb'
   }
 };
