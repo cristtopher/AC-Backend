@@ -9,7 +9,12 @@ pipelines:
         script:
             - npm install --global gulp
             - npm install
+  branches:
+    master:
+      - step:
+         script:
             - gulp build
+            - export NODE_ENV=production
             #- npm test
             - docker login axxezo.azurecr.io -u axxezo -p Gp/THWeHCoql15kUZdig88PFf5oRWM8g
             - docker build -t axxezo.azurecr.io/unwp-backend:v1 .
