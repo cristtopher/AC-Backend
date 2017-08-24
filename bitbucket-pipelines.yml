@@ -8,11 +8,7 @@ pipelines:
           - node
         script:
             - node -v
-            - npm install -g gulp
             - npm install
-            - gulp build
-            - export NODE_ENV=production
-            - export PORT=5001
             #- npm test
             - docker login axxezo.azurecr.io -u axxezo -p Gp/THWeHCoql15kUZdig88PFf5oRWM8g
             - docker build -t axxezo.azurecr.io/unwp-backend:v1 .
