@@ -141,6 +141,13 @@ CompanySchema.statics = {
                 if(personR) {
                   var id = personR._id;
 
+                  if(row[4]){
+                    console.log('Card defined ok');
+                  } else {
+                    console.log('Card not defined. Setting as -1');
+                    row[4] = -1;
+                  }
+
                   var body = {
                     name: row[1], 
                     company: userCompanyId,
@@ -169,20 +176,31 @@ CompanySchema.statics = {
         });
         
         var data = [['Import Excel Results'], [], ['RUT', 'RESULT', 'ERROR'], []];
+        let errors = 0;
 
         return Promise.all(pendingPromises.map(promise => promise.reflect()))
           .each((inspection, idx)  => {
             if(inspection.isFulfilled()){
-              console.log(idx, `OK`);
               data.push([rutArray[idx], 'Success']);
             } else {
-              console.log(idx, `NOT OK REASON`, JSON.stringify(inspection.reason()));
-              console.log(idx, `NOT OK REASON`, JSON.stringify(inspection.reason().errors));
-              data.push([rutArray[idx], 'Failed', JSON.stringify(inspection.reason())]);
+              console.log(idx, `FAILED:`, JSON.stringify(inspection.reason()));
+              errors = 1;
+
+              if(JSON.stringify(inspection.reason()).indexOf('Cast to number failed') !== -1){
+                console.log('No fue posible convertir un string a numero');
+                data.push([rutArray[idx], 'Failed', 'No fue posible convertir un string a numero']);
+              } else if(JSON.stringify(inspection.reason()).indexOf('duplicate key error index') !== -1) {
+                console.log('Datos duplicados no cumplen con el modelo');
+                data.push([rutArray[idx], 'Failed', 'Datos duplicados no cumplen con el modelo']);
+              } else {
+                console.log('Excepcion no capturada. Imprimiendo excepcion completa');
+                data.push([rutArray[idx], 'Failed', 'Excepcion no capturada:' + JSON.stringify(inspection.reason())]);
+              }
+              
             }
           })
           .then(() => {
-            return xlsx.build([{ name: 'mySheetName', data: data }]);;
+            return [errors, xlsx.build([{ name: 'mySheetName', data: data }])];;
           })
       });    
   },
