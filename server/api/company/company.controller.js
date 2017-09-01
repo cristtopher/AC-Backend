@@ -224,7 +224,7 @@ export function importExcel(req, res) {
 
       if(output[0] == 1){
         console.log('Import finished with at least 1 error');
-        res.statusCode = 200;
+        res.statusCode = 422;
       }
 
       return res.end(output[1]);  
