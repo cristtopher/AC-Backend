@@ -10,8 +10,10 @@ pipelines:
             - node -v
             - npm install
             #- npm test
-            - docker login axxezo.azurecr.io -u axxezo -p Gp/THWeHCoql15kUZdig88PFf5oRWM8g
-            - docker build -t axxezo.azurecr.io/unwp-backend:v1 .
-            - docker push axxezo.azurecr.io/unwp-backend:v1
+            - docker login $CONTAINER_REGISTRY_URI -u $CONTAINER_REGISTRY_USERNAME -p $CONTAINER_REGISTRY_PASSWORD
+            - VERSION=v1
+            - docker build -t $CONTAINER_REGISTRY_URI/$IMAGE_NAME:$VERSION -t $CONTAINER_REGISTRY_URI/$IMAGE_NAME:latest .
+            - docker push $CONTAINER_REGISTRY_URI/$IMAGE_NAME:$VERSION
+            - docker push $CONTAINER_REGISTRY_URI/$IMAGE_NAME:latest
 options:
   docker: true
