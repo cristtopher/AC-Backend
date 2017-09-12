@@ -1,5 +1,6 @@
 FROM node:boron
-MAINTAINER Cristtopher Quintana T. <cquintana@axxezo.com>
+LABEL maintainer="Cristtopher Quintana T. <cquintana@axxezo.com>"
+LABEL system="AccessControl"
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -12,15 +13,17 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-# Set up ENV and PORT to production environment
-ENV NODE_ENV=production
-ENV PORT=5001
+# Define ENVs to setup at image build time
+ARG NODE_ENV
+ENV PORT 5001
 
 EXPOSE 5001
 
 # Build app
-CMD [ "gulp", "build" ]
-RUN [ "mv", "node_modules", "dist/" ]
+#CMD [ "gulp", "build" ]
+#RUN [ "mv", "node_modules", "dist/" ]
+
+RUN echo $NODE_ENV
 
 # Run app
-CMD [ "node", "dist/server/" ]
+#CMD [ "node", "dist/server/" ]
