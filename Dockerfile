@@ -20,10 +20,10 @@ ENV PORT 5001
 EXPOSE 5001
 
 # Build app
-#CMD [ "gulp", "build" ]
-#RUN [ "mv", "node_modules", "dist/" ]
+CMD [ "gulp", "build" ]
+RUN [ "mv", "node_modules", "dist/" ]
 
 RUN echo $NODE_ENV
 
 # Run app
-#CMD [ "node", "dist/server/" ]
+CMD [ "node", "dist/server/" ]
