@@ -165,11 +165,11 @@ CompanySchema.statics = {
                   personCreate.name        = row[1];
                   personCreate.company     = userCompanyId;
                   personCreate.companyInfo = row[2];
-                  personCreate.type        = row[3].toLowerCase();
+                  personCreate.type        = row[3] ? row[3].toLowerCase() : undefined;
                   personCreate.card        = row[4];
-                  personCreate.active      = status[row[5].toLowerCase()];
+                  personCreate.active      = row[5] ? status[row[5].toLowerCase()] : undefined;
 
-                  return personCreate.save();
+                  return personCreate.save()
                 }
               }));
           }

@@ -10,8 +10,8 @@ var PersonEvents = new EventEmitter();
 PersonEvents.setMaxListeners(0);
 
 var PersonSchema = new mongoose.Schema({
-  rut:     { type: String },
-  name:    { type: String },
+  rut:     { type: String, required: true },
+  name:    { type: String, required: true },
   company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
   companyInfo: { type: String },
   type:    { type: String, enum: ['staff', 'contractor', 'visitor', 'supplier'], default: 'staff' },
