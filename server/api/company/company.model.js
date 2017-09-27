@@ -136,7 +136,7 @@ CompanySchema.statics = {
           if( i > 0 ) {
             rutArray.push(row[0]);
 
-            pendingPromises.push(Person.findOne({ rut: row[0] }).exec()
+            pendingPromises.push(Person.findOne({ rut: row[0], company: userCompanyId }).exec()
               .then(personR => {
                 if(personR) {
                   var id = personR._id;
@@ -152,9 +152,9 @@ CompanySchema.statics = {
                     name: row[1], 
                     company: userCompanyId,
                     companyInfo: row[2],
-                    type: row[3].toLowerCase(),
+                    type: row[3] ? row[3].toLowerCase() : undefined,
                     card: row[4],
-                    active: status[row[5].toLowerCase()]
+                    active: row[5] ? status[row[5].toLowerCase()] : undefined
                   };
                 
                   return Person.findOneAndUpdate({_id: id}, body, { upsert: true, setDefaultsOnInsert: true, runValidators: true, new: true }).exec();
@@ -183,17 +183,31 @@ CompanySchema.statics = {
             if(inspection.isFulfilled()){
               data.push([rutArray[idx], 'Success']);
             } else {
-              console.log(idx, `FAILED:`, JSON.stringify(inspection.reason()));
+              console.log('FAIL', rutArray[idx], JSON.stringify(inspection.reason()));
               errors = 1;
 
               if(JSON.stringify(inspection.reason()).indexOf('Cast to number failed') !== -1){
                 console.log('No fue posible convertir un string a numero');
                 data.push([rutArray[idx], 'Failed', 'No fue posible convertir un string a numero']);
+
               } else if(JSON.stringify(inspection.reason()).indexOf('duplicate key error index') !== -1) {
                 console.log('Datos duplicados no cumplen con el modelo');
-                data.push([rutArray[idx], 'Failed', 'Datos duplicados no cumplen con el modelo']);
+                data.push([rutArray[idx], 'Failed', 'Duplicado']);
+
+              } else if(JSON.stringify(inspection.reason()).indexOf('Path `type` is required') !== -1) {
+                console.log('Perfil no fue especificado');
+                data.push([rutArray[idx], 'Failed', 'Falta Perfil']);
+
+              } else if(JSON.stringify(inspection.reason()).indexOf('Path `active` is required') !== -1) {
+                console.log('Estado no fue especificado');
+                data.push([rutArray[idx], 'Failed', 'Falta Estado']);
+
+              } else if(JSON.stringify(inspection.reason()).indexOf('Path `rut` is required') !== -1) {
+                console.log('Rut no fue especificado');
+                data.push([rutArray[idx], 'Failed', 'Falta Rut']);
+
               } else {
-                console.log('Excepcion no capturada. Imprimiendo excepcion completa');
+                console.log('Excepcion no capturada. Imprimiendo excepcion completa', JSON.stringify(inspection.reason()));
                 data.push([rutArray[idx], 'Failed', 'Excepcion no capturada:' + JSON.stringify(inspection.reason())]);
               }
               

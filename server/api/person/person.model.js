@@ -14,9 +14,9 @@ var PersonSchema = new mongoose.Schema({
   name:    { type: String, required: true },
   company: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
   companyInfo: { type: String },
-  type:    { type: String, enum: ['staff', 'contractor', 'visitor', 'supplier'], default: 'staff' },
+  type:    { type: String, enum: ['staff', 'contractor', 'visitor', 'supplier'], required : true },
   card:    { type: Number },
-  active:  { type: Boolean, default: true }
+  active:  { type: Boolean, required : true }
 });
 
 PersonSchema.index({ rut: 1, company : 1, card : 1 }, {unique: true});
