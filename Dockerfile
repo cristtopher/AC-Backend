@@ -21,7 +21,7 @@ ENV PORT 5001
 EXPOSE 5001
 
 # Build app
-CMD [ "gulp", "build" ]
+RUN gulp build
 RUN mkdir ac-backend
 RUN mv dist ac-backend
 RUN mv node_modules ac-backend

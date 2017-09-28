@@ -89,7 +89,7 @@ SectorSchema.statics = {
           if(registers[i].person === null) {
             console.log('Person can not be resolved, it is null');
             rowA = [registers[i].type, 'NA', 'NA', 'NA', registers[i].time];
-          } else if(_.has(registers[i], 'resolvedRegister')) {
+          } else if(registers[i].resolvedRegister != null) {
             rowA = [
               registers[i].person.rut, 
               registers[i].person.name, 
