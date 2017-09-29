@@ -15,7 +15,7 @@ pipelines:
          caches:
            - node
          script:
-          - npm install
+          #- npm install
           #- npm test
           - docker login $CONTAINER_REGISTRY_URI -u $CONTAINER_REGISTRY_USERNAME -p $CONTAINER_REGISTRY_PASSWORD
           - VERSION=v1
