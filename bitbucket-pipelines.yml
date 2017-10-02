@@ -15,7 +15,7 @@ pipelines:
          caches:
            - node
          script:
-          - npm install
+          #- npm install
           #- npm test
           - apt-get update
           - apt-get install -y jq
