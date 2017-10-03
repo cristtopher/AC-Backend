@@ -7,8 +7,7 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package.json .
-RUN npm i --quiet -g gulp
-RUN npm i --quiet
+RUN npm i --quiet -g gulp && npm i --quiet
 
 # Bundle app source
 COPY . .
@@ -21,10 +20,10 @@ ENV PORT 5001
 EXPOSE 5001
 
 # Build app
-RUN gulp build
-RUN mkdir ac-backend
-RUN mv dist ac-backend
-RUN mv node_modules ac-backend
+RUN gulp build && \
+    mkdir ac-backend && \
+    mv dist ac-backend && \
+    mv node_modules ac-backend
 
 # Run app
 CMD [ "node", "ac-backend/dist/server/" ]
