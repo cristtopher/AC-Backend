@@ -1,6 +1,6 @@
 {
-  "name": "axxezo",
-  "version": "1.0.0",
+  "name": "AccessControl",
+  "version": "1.0.1",
   "main": "server/index.js",
   "dependencies": {
     "bluebird": "^3.3.3",

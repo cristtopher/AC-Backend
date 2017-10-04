@@ -82,7 +82,7 @@ CompanySchema.statics = {
       .then(function(sectors) { 
         let baseRegisterQuery = Register.find();
         
-        if (query.top) {
+        if(query.top) {
           baseRegisterQuery.limit(parseInt(query.top, 10));
         }        
         
@@ -133,21 +133,28 @@ CompanySchema.statics = {
             inactivo: false
           };
 
-          if( i > 0 ) {
+          if(i > 0) {
             rutArray.push(row[0]);
 
-            pendingPromises.push(Person.findOne({ rut: row[0] }).exec()
+            pendingPromises.push(Person.findOne({ rut: row[0], company: userCompanyId }).exec()
               .then(personR => {
                 if(personR) {
                   var id = personR._id;
+
+                  if(row[4]) {
+                    console.log('Card defined ok');
+                  } else {
+                    console.log('Card not defined. Setting as -1');
+                    row[4] = -1;
+                  }
 
                   var body = {
                     name: row[1], 
                     company: userCompanyId,
                     companyInfo: row[2],
-                    type: row[3].toLowerCase(),
+                    type: row[3] ? row[3].toLowerCase() : undefined,
                     card: row[4],
-                    active: status[row[5].toLowerCase()]
+                    active: row[5] ? status[row[5].toLowerCase()] : undefined
                   };
                 
                   return Person.findOneAndUpdate({_id: id}, body, { upsert: true, setDefaultsOnInsert: true, runValidators: true, new: true }).exec();
@@ -158,9 +165,9 @@ CompanySchema.statics = {
                   personCreate.name        = row[1];
                   personCreate.company     = userCompanyId;
                   personCreate.companyInfo = row[2];
-                  personCreate.type        = row[3].toLowerCase();
+                  personCreate.type        = row[3] ? row[3].toLowerCase() : undefined;
                   personCreate.card        = row[4];
-                  personCreate.active      = status[row[5].toLowerCase()];
+                  personCreate.active      = row[5] ? status[row[5].toLowerCase()] : undefined;
 
                   return personCreate.save();
                 }
@@ -169,21 +176,41 @@ CompanySchema.statics = {
         });
         
         var data = [['Import Excel Results'], [], ['RUT', 'RESULT', 'ERROR'], []];
+        let errors = 0;
 
         return Promise.all(pendingPromises.map(promise => promise.reflect()))
-          .each((inspection, idx)  => {
-            if(inspection.isFulfilled()){
-              console.log(idx, `OK`);
+          .each((inspection, idx) => {
+            if(inspection.isFulfilled()) {
               data.push([rutArray[idx], 'Success']);
             } else {
-              console.log(idx, `NOT OK REASON`, JSON.stringify(inspection.reason()));
-              console.log(idx, `NOT OK REASON`, JSON.stringify(inspection.reason().errors));
-              data.push([rutArray[idx], 'Failed', JSON.stringify(inspection.reason())]);
+              console.log('FAIL', rutArray[idx], JSON.stringify(inspection.reason()));
+              errors = 1;
+
+              if(JSON.stringify(inspection.reason()).indexOf('Cast to number failed') !== -1) {
+                console.log('No fue posible convertir un string a numero');
+                data.push([rutArray[idx], 'Failed', 'No fue posible convertir texto a numero']);
+              } else if(JSON.stringify(inspection.reason()).indexOf('duplicate key error index') !== -1) {
+                console.log('Datos duplicados no cumplen con el modelo');
+                data.push([rutArray[idx], 'Failed', 'Duplicado']);
+              } else if(JSON.stringify(inspection.reason()).indexOf('Path `rut` is required') !== -1) {
+                console.log('Rut no fue especificado');
+                data.push([rutArray[idx], 'Failed', 'Falta Rut']);
+              } else if(JSON.stringify(inspection.reason()).indexOf('Path `type` is required') !== -1) {
+                console.log('Perfil no fue especificado');
+                data.push([rutArray[idx], 'Failed', 'Falta Perfil']);
+              } else if(JSON.stringify(inspection.reason()).indexOf('Path `active` is required') !== -1) {
+                console.log('Estado no fue especificado');
+                data.push([rutArray[idx], 'Failed', 'Falta Estado']);
+              } else {
+                console.log('Excepcion no capturada. Imprimiendo excepcion completa', JSON.stringify(inspection.reason()));
+                data.push([rutArray[idx], 'Failed', 'Excepcion no capturada:' + JSON.stringify(inspection.reason())]);
+              }
+
             }
           })
           .then(() => {
-            return xlsx.build([{ name: 'mySheetName', data: data }]);;
-          })
+            return [errors, xlsx.build([{ name: 'mySheetName', data: data }])];
+          });
       });    
   },
   

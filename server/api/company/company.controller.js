@@ -218,10 +218,16 @@ export function importExcel(req, res) {
   }
 
   return Company.importExcel(req.file.path, req.params.id)
-    .then(excel => {      
+    .then(output => {
       res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
       res.setHeader('Content-Disposition', 'attachment; filename=persons-export.xlsx');
-      return res.end(excel);
+
+      if(output[0] == 1){
+        console.log('Import finished with at least 1 error');
+        res.statusCode = 422;
+      }
+
+      return res.end(output[1]);  
     })
     .catch(handleError(res));
 }
