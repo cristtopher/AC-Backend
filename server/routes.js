@@ -15,6 +15,7 @@ export default function(app) {
   app.use('/api/persons', require('./api/person'));
   app.use('/api/registers', require('./api/register'));
   app.use('/api/pdas', require('./api/pda'));
+  app.use('/api/vehicles', require('./api/vehicle'));
   
   app.use('/auth', require('./auth').default);
 
