@@ -16,7 +16,8 @@ import moment from 'moment';
 
 import Sector from './sector.model';
 import Register from '../register/register.model';
-//import Person from '../person/person.model';
+import Vehicle from '../vehicle/vehicle.model';
+import Person from '../person/person.model';
 
 import * as _ from 'lodash';
 
@@ -72,7 +73,7 @@ function handleError(res, statusCode) {
   };
 }
 
-// Gets a list of Companies
+// Gets a list of Sectors
 export function index(req, res) {
   let baseQuery = Sector.find();
 
@@ -186,7 +187,7 @@ export function sectorRegisters(req, res) {
   // Non page-based JSON result
   if(!req.query.paging) {
     return baseQueryFactory()
-        .deepPopulate('person sector resolvedRegister.sector')
+        .deepPopulate('person sector vehicle resolvedRegister.sector resolvedRegister.vehicle')
         .sort({_id: -1 })
         .exec()
         .then(respondWithResult(res))
@@ -200,7 +201,7 @@ export function sectorRegisters(req, res) {
 
   let queriesPromises = [
     baseQueryFactory()
-      .deepPopulate('person sector resolvedRegister.sector')
+      .deepPopulate('person sector vehicle resolvedRegister.sector resolvedRegister.vehicle')
       .skip((pageIndex - 1) * REGISTERS_PER_PAGE)
       .limit(REGISTERS_PER_PAGE)
       .sort({_id: -1 })
@@ -219,6 +220,17 @@ export function sectorRegisters(req, res) {
 
       return docs;
     })
+    .then(respondWithResult(res))
+    .catch(handleError(res));
+}
+
+
+// Get vehicles by sector
+export function sectorVehicles(req, res) {
+  let baseQuery = Vehicle.find()
+    .where('sector').equals(req.params.id);
+
+  return baseQuery.exec()
     .then(respondWithResult(res))
     .catch(handleError(res));
 }

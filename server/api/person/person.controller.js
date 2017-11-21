@@ -14,7 +14,6 @@ import jsonpatch from 'fast-json-patch';
 import Person from './person.model';
 import Register from '../register/register.model';
 
-
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
   return function(entity) {

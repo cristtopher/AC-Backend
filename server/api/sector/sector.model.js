@@ -9,6 +9,7 @@ import xlsx from 'node-xlsx';
 
 import Register from '../register/register.model';
 import Person   from '../person/person.model';
+import Vehicle  from '../vehicle/vehicle.model';
 
 var SectorSchema = new mongoose.Schema({
   name:        { type: String },
@@ -189,7 +190,7 @@ SectorSchema.methods = {
 
                 return registers;                
               }
-            })
+            });
         }
       });
   }

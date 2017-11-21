@@ -71,7 +71,7 @@ export function index(req, res) {
   let user = req.user;
   
   var baseQuery = Register.find()
-    .deepPopulate('person sector resolvedRegister.sector')
+    .deepPopulate('person sector vehicle resolvedRegister.sector resolvedRegister.vehicle')
     .where('type').equals('entry');
                           
   if(user.role !== 'admin') {
@@ -117,7 +117,7 @@ export function patch(req, res) {
   }
 
   return Register.findById(req.params.id)
-    .deepPopulate('person sector resolvedRegister.sector')
+    .deepPopulate('person sector vehicle resolvedRegister.sector resolvedRegister.vehicle')
     .exec()
     .then(handleEntityNotFound(res))
     .then(patchUpdates(req.body))
